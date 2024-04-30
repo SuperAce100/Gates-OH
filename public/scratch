@@ -1,0 +1,15 @@
+<div class="person">
+  <h3>Asanshay Gupta</h3>
+  <p>Donner 319</p>
+  <div class="indicator flex-right available"></div>
+</div>
+<div class="person">
+  <h3>Kayvon Fatahalian</h3>
+  <p>Gates 366</p>
+  <div class="indicator flex-right"></div>
+</div>
+<div class="person">
+  <h3>Antonio Kambire</h3>
+  <p>Donner 321</p>
+  <div class="indicator flex-right"></div>
+</div>

@@ -1,0 +1,90 @@
+body {
+  font-family: "Inter Tight", Inter, Arial, Helvetica, sans-serif;
+  /* background-color: skyblue; */
+  background-image: url(./background2.jpg);
+  background-size: 100% auto;
+  color: #161f27;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.body {
+  display: flex;
+  height: 100vh;
+}
+
+.container {
+  margin: 50px;
+  width: 50%;
+  padding: 40px;
+  padding-top: 15px;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 24px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.people {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.person {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.person:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+}
+
+.person > p {
+  padding-left: 20px;
+  font-weight: 300;
+}
+
+.person > h3 {
+  font-weight: 500;
+}
+
+.header > p {
+  margin-left: auto;
+  font-weight: 400;
+}
+
+.header > h3 {
+  font-weight: bold;
+}
+
+.header {
+  border-radius: 16px 16px 0 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.indicator {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  margin-right: 10px;
+  background-color: #f25c54;
+  margin-left: auto;
+}
+
+.available {
+  background-color: #5bba6f;
+}
