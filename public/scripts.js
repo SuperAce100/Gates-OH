@@ -3,7 +3,6 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getDatabase, ref, onValue, update } from "firebase/database";
 import firebaseConfig from "../firebase-config.json";
-import { init } from "events";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
@@ -60,13 +59,16 @@ function updateUserData(data) {
   renderPeople();
 }
 
-function initDB() {
-  const db = getDatabase();
-  const userDataRef = ref(db, "users/");
-  onValue(userDataRef, (snapshot) => {
+const db = getDatabase();
+const userDataRef = ref(db, "users/");
+onValue(
+  userDataRef,
+  (snapshot) => {
+    console.log("Data updated!");
     const data = snapshot.val();
     updateUserData(data);
-  });
-}
-
-initDB();
+  },
+  (error) => {
+    console.error("Failed to read data:", error);
+  }
+);
