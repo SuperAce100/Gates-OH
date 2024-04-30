@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gates OH Test</title>
+    <link rel="icon" href="favicon.ico" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -20,31 +21,9 @@
           <h3>Space</h3>
           <p>Available?</p>
         </div>
+        <div id="rows"></div>
       </div>
     </div>
   </body>
-  <script type="module">
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-analytics.js";
-    // TODO: Add SDKs for Firebase products that you want to use
-    // https://firebase.google.com/docs/web/setup#available-libraries
-
-    // Your web app's Firebase configuration
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-    const firebaseConfig = {
-      apiKey: "AIzaSyAGmGHVKLxIHsT9ikcRXniud5pAZb7pU0Y",
-      authDomain: "gates-oh.firebaseapp.com",
-      projectId: "gates-oh",
-      storageBucket: "gates-oh.appspot.com",
-      messagingSenderId: "880940805741",
-      appId: "1:880940805741:web:1631c19f516d966ac49964",
-      measurementId: "G-PHFDH66KC9",
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-  </script>
-  <script src="scripts.js"></script>
+  <script src="../dist/bundle.js"></script>
 </html>

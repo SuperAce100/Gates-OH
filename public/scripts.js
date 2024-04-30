@@ -1,64 +1,72 @@
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getDatabase, ref, onValue, update } from "firebase/database";
+import firebaseConfig from "../firebase-config.json";
+import { init } from "events";
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
+// firebaseConfig = json.parse(config);
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
 const people = [];
 
-people.push(
-  {
-    id: 1,
-    name: "Asanshay Gupta",
-    preferredName: "Asanshay",
-    room: "Donner 319",
-    available: true,
-  },
-  {
-    id: 2,
-    name: "Kayvon Fatahalian",
-    preferredName: "Kayvon",
-    room: "Gates 366",
-    available: false,
-  },
-  {
-    id: 3,
-    name: "Antonio Kambiré",
-    preferredName: "Antonio",
-    room: "Donner 321",
-    available: false,
-  }
-);
+function renderPeople() {
+  const peopleContainer = document.getElementById("rows");
+  peopleContainer.innerHTML = "";
 
-console.log(people.length);
+  people.forEach((person) => {
+    const personDiv = document.createElement("div");
+    personDiv.classList.add("person");
 
-const peopleContainer = document.getElementById("people");
+    const nameHeading = document.createElement("h3");
+    nameHeading.textContent = person.name;
 
-people.forEach((person) => {
-  const personDiv = document.createElement("div");
-  personDiv.classList.add("person");
+    const roomParagraph = document.createElement("p");
+    roomParagraph.textContent = person.room;
 
-  const nameHeading = document.createElement("h3");
-  nameHeading.textContent = person.name;
-
-  const roomParagraph = document.createElement("p");
-  roomParagraph.textContent = person.room;
-
-  const indicatorDiv = document.createElement("div");
-  indicatorDiv.classList.add("indicator");
-  if (person.available) {
-    indicatorDiv.classList.add("available");
-  }
-
-  personDiv.appendChild(nameHeading);
-  personDiv.appendChild(roomParagraph);
-  personDiv.appendChild(indicatorDiv);
-
-  personDiv.addEventListener("click", () => {
+    const indicatorDiv = document.createElement("div");
+    indicatorDiv.classList.add("indicator");
     if (person.available) {
-      indicatorDiv.classList.remove("available");
-      person.available = false;
-    } else {
       indicatorDiv.classList.add("available");
-      person.available = true;
     }
+
+    personDiv.appendChild(nameHeading);
+    personDiv.appendChild(roomParagraph);
+    personDiv.appendChild(indicatorDiv);
+
+    personDiv.addEventListener("click", () => {
+      const db = getDatabase();
+      const personRef = ref(db, `users/user-${person.id}`);
+      let newAvailability = !person.available;
+      update(personRef, { available: newAvailability }).then(() => {
+        console.log("Availability updated!");
+      });
+    });
+
+    personDiv.id = `person-${person.id}`;
+
+    peopleContainer.appendChild(personDiv);
   });
+}
 
-  personDiv.id = `person-${person.id}`;
+function updateUserData(data) {
+  people.length = 0;
+  for (let key in data) {
+    people.push(data[key]);
+  }
+  renderPeople();
+}
 
-  peopleContainer.appendChild(personDiv);
-});
+function initDB() {
+  const db = getDatabase();
+  const userDataRef = ref(db, "users/");
+  onValue(userDataRef, (snapshot) => {
+    const data = snapshot.val();
+    updateUserData(data);
+  });
+}
+
+initDB();
