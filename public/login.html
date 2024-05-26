@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gates OH Test</title>
+    <title>Login</title>
     <link rel="icon" href="favicon.ico" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -14,16 +14,17 @@
     />
   </head>
   <body>
-    <div class="container glass">
-      <h1>Your Office</h1>
-      <div class="people glass" id="people">
-        <div class="header">
-          <h3>Space</h3>
-          <p>Available?</p>
-        </div>
-        <div id="rows"></div>
-      </div>
+    <div class="container glass form-container">
+      <h1>Sign In</h1>
+      <form action="" id="login-form">
+        <label for="email">Email</label>
+        <input class="glass" type="email" id="email" name="email" />
+        <label for="password">Password</label>
+        <input class="glass" type="password" id="password" name="password" />
+        <button type="submit" class="glass-button">Login</button>
+        <div id="error-message"></div>
+      </form>
     </div>
+    <script src="./dist/loginScripts-bundle.js"></script>
   </body>
-  <script src="./dist/bundle.js"></script>
 </html>

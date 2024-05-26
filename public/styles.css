@@ -101,6 +101,7 @@ h1 {
   margin-right: 10px;
   background-color: #f25c54;
   margin-left: auto;
+  border: 1px solid rgba(0, 0, 0, 0.3);
 }
 
 .available {
@@ -128,4 +129,112 @@ h1 {
     padding-right: 5px;
     padding-left: 10px;
   }
+}
+
+.form-container {
+  width: 400px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  justify-content: center;
+  padding: 10px;
+}
+
+.form-container > h1 {
+  margin-bottom: 0px;
+}
+
+input[type="email"] {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: large;
+  color: #161f27;
+  outline: none;
+  transition: 0.2s;
+}
+
+input[type="email"]:hover {
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.07);
+}
+
+input[type="email"]:focus {
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.07);
+}
+
+input[type="password"] {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: large;
+  color: #161f27;
+  outline: none;
+  transition: 0.2s;
+}
+
+input[type="password"]:hover {
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.07);
+}
+
+input[type="password"]:focus {
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.07);
+}
+
+label {
+  color: #777;
+  margin-top: 10px;
+  font-family: Inter, Arial, Helvetica, sans-serif;
+  margin-bottom: 3px;
+}
+
+.glass-button {
+  display: inline-block;
+  padding: 10px;
+  border: 0;
+  text-decoration: none;
+  border-radius: 10px;
+  background-color: #0093af;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  opacity: 0.7;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(30px);
+  color: rgba(255, 255, 255, 1);
+  cursor: pointer;
+  font-size: larger;
+  margin-top: 20px;
+  transition: 0.5s;
+}
+
+.glass-button:hover {
+  opacity: 0.9;
+}
+
+.glass-button:active {
+  opacity: 1;
+  transition: 0s;
+}
+
+#error-message {
+  color: #f25c54;
+  font-size: small;
+  margin-top: 10px;
+  text-align: center;
+  font-family: Inter, Arial, Helvetica, sans-serif;
+}
+
+.profile {
+  margin-bottom: 20px;
+  padding: 20px;
+  border-radius: 16px;
+}
+
+.profile > h2 {
+  margin: 0px;
 }

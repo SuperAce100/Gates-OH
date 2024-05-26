@@ -1,14 +1,16 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getDatabase, ref, onValue, update } from "firebase/database";
-import firebaseConfig from "../firebase-config.json";
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-
-// firebaseConfig = json.parse(config);
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+import app from "./firebase-config.js";
+import {
+  getDatabase,
+  ref,
+  onValue,
+  update,
+  query,
+  orderByChild,
+  equalTo,
+  get,
+} from "firebase/database";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { onLog } from "firebase/app";
 
 const people = [];
 
@@ -36,14 +38,14 @@ function renderPeople() {
     personDiv.appendChild(roomParagraph);
     personDiv.appendChild(indicatorDiv);
 
-    personDiv.addEventListener("click", () => {
-      const db = getDatabase();
-      const personRef = ref(db, `users/user-${person.id}`);
-      let newAvailability = !person.available;
-      update(personRef, { available: newAvailability }).then(() => {
-        console.log("Availability updated!");
-      });
-    });
+    // personDiv.addEventListener("click", () => {
+    //   const db = getDatabase();
+    //   const personRef = ref(db, `users/user-${person.id}`);
+    //   let newAvailability = !person.available;
+    //   update(personRef, { available: newAvailability }).then(() => {
+    //     console.log("Availability updated!");
+    //   });
+    // });
 
     personDiv.id = `person-${person.id}`;
 
@@ -64,7 +66,6 @@ const userDataRef = ref(db, "users/");
 onValue(
   userDataRef,
   (snapshot) => {
-    console.log("Data updated!");
     const data = snapshot.val();
     updateUserData(data);
   },
@@ -72,3 +73,77 @@ onValue(
     console.error("Failed to read data:", error);
   }
 );
+
+console.log("Inside of office");
+
+function updateAvailability(id, available) {
+  const personRef = ref(db, `users/user-${id}`);
+  update(personRef, { available }).then(() => {
+    console.log("Availability updated!");
+  });
+}
+
+function onLogout() {
+  const usersRef = ref(db, "users");
+  const userQuery = query(usersRef, orderByChild("user-id"), equalTo(uid));
+
+  get(userQuery)
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        console.log("User data:", snapshot.val());
+        const userData = snapshot.val();
+        const key = Object.keys(userData)[0];
+
+        updateAvailability(userData[key].id, false);
+      } else {
+        console.log("No user found with the UID:", uid);
+      }
+    })
+    .catch((error) => {
+      console.log(uid);
+      console.error("Error fetching user data:", error);
+    });
+}
+
+const auth = getAuth(app);
+let uid = null;
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    uid = user.uid;
+
+    const usersRef = ref(db, "users");
+    const userQuery = query(usersRef, orderByChild("user-id"), equalTo(uid));
+
+    get(userQuery)
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          console.log("User data:", snapshot.val());
+          const userData = snapshot.val();
+          const key = Object.keys(userData)[0];
+          document.getElementById("heading").textContent =
+            userData[key].preferredName + "'s Office";
+
+          updateAvailability(userData[key].id, true);
+        } else {
+          console.log("No user found with the UID:", uid);
+        }
+      })
+      .catch((error) => {
+        console.log(uid);
+        console.error("Error fetching user data:", error);
+      });
+  } else {
+    if (uid) {
+      onLogout();
+    }
+    console.log("User is signed out.");
+    window.location.assign("/login.html");
+  }
+});
+
+window.addEventListener("beforeunload", (event) => {
+  if (auth.currentUser) {
+    onLogout();
+  }
+});

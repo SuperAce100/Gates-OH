@@ -4,6 +4,18 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
-    "firebase": "^10.11.1"
-  }
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "firebase": "^10.11.1",
+    "firebase-admin": "^12.1.0"
+  },
+  "scripts": {
+    "start": "npx webpack; node server.js"
+  },
+  "name": "gates-oh",
+  "description": "Summer 2024 CURIS Research - Drop in Anytime, from Anywhere: A Virtual Gates Office App for Students to get the Attention of Professors",
+  "version": "1.0.0",
+  "main": "server.js",
+  "author": "",
+  "license": "ISC"
 }
