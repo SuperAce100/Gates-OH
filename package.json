@@ -1,13 +1,16 @@
 {
   "devDependencies": {
+    "dotenv": "^16.4.5",
     "webpack": "^5.91.0",
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
+    "@zoom/videosdk": "^1.11.6",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "firebase": "^10.11.1",
-    "firebase-admin": "^12.1.0"
+    "firebase-admin": "^12.1.0",
+    "jsrsasign": "^11.1.0"
   },
   "scripts": {
     "start": "npx webpack; node server.js"

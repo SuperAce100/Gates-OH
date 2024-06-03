@@ -10,7 +10,14 @@ import {
   get,
 } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { onLog } from "firebase/app";
+
+import KJUR from "jsrsasign";
+
+import ZoomVideo from "@zoom/videosdk";
+const RESOLUTION = { width: 1280, height: 720 };
+const sdkKey = process.env.ZOOM_SDK_KEY;
+const sdkSecret = process.env.ZOOM_SDK_SECRET;
+const client = ZoomVideo.createClient();
 
 const people = [];
 
@@ -33,9 +40,12 @@ function renderPeople() {
     if (person.available) {
       indicatorDiv.classList.add("available");
     }
+    const spacer = document.createElement("div");
+    spacer.classList.add("spacer");
 
     personDiv.appendChild(nameHeading);
     personDiv.appendChild(roomParagraph);
+    personDiv.appendChild(spacer);
     personDiv.appendChild(indicatorDiv);
 
     // personDiv.addEventListener("click", () => {
@@ -49,8 +59,65 @@ function renderPeople() {
 
     personDiv.id = `person-${person.id}`;
 
-    peopleContainer.appendChild(personDiv);
+    let outerDiv = document.createElement("div");
+
+    outerDiv.classList.add("person-container");
+    outerDiv.appendChild(personDiv);
+
+    let videoDiv = document.createElement("div");
+    videoDiv.classList.add("video-container");
+    outerDiv.appendChild(videoDiv);
+
+    if (person.available) {
+      outerDiv.classList.add("expandable");
+      videoDiv.addEventListener("mouseover", () => {
+        connectToVideo(person, videoDiv);
+      });
+      videoDiv.addEventListener("mouseout", () => {
+        leaveVideo(person, videoDiv);
+      });
+    }
+
+    peopleContainer.appendChild(outerDiv);
   });
+}
+
+function connectToVideo(person, container) {
+  // connect to person's video as yourself
+
+  // get current authenticated user
+  const auth = getAuth(app);
+  let uid = null;
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      uid = user.uid;
+    }
+  });
+  // get user's name from db
+  const usersRef = ref(db, "users");
+  const userQuery = query(usersRef, orderByChild("user-id"), equalTo(uid));
+  get(userQuery)
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        const userData = snapshot.val();
+        const key = Object.keys(userData)[0];
+        const username = userData[key].preferredName;
+        const sessionName = person.room;
+        const sessionPasscode = "";
+        container.innerHTML = "Username: " + username + "<br>Room: " + sessionName;
+        // joinMeeting(username, sessionName, sessionPasscode, container, false);
+        console.log("Connected to video");
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching user data:", error);
+    });
+}
+
+function leaveVideo(person, container) {
+  // leave the video
+  container.innerHTML = "";
+  // client.leave();
 }
 
 function updateUserData(data) {
@@ -103,6 +170,8 @@ function onLogout() {
       console.log(uid);
       console.error("Error fetching user data:", error);
     });
+
+  client.leave(true);
 }
 
 const auth = getAuth(app);
@@ -123,6 +192,10 @@ onAuthStateChanged(auth, (user) => {
           const key = Object.keys(userData)[0];
           document.getElementById("heading").textContent =
             userData[key].preferredName + "'s Office";
+
+          let videoContainer = document.querySelector("video-player-container");
+
+          joinMeeting(userData[key].preferredName, userData[key].room, "", videoContainer, true);
 
           updateAvailability(userData[key].id, true);
         } else {
@@ -147,3 +220,59 @@ window.addEventListener("beforeunload", (event) => {
     onLogout();
   }
 });
+
+function generateJWT(sdkKey, sdkSecret, sessionName, role, sessionKey, userIdentity) {
+  const iat = Math.round(new Date().getTime() / 1000) - 30;
+  const exp = iat + 60 * 60 * 2;
+  const oHeader = { alg: "HS256", typ: "JWT" };
+
+  const oPayload = {
+    app_key: sdkKey,
+    tpc: sessionName,
+    role_type: role,
+    session_key: sessionKey,
+    user_identity: userIdentity,
+    version: 1,
+    iat: iat,
+    exp: exp,
+  };
+
+  const sHeader = JSON.stringify(oHeader);
+  const sPayload = JSON.stringify(oPayload);
+  const sdkJWT = KJUR.jws.JWS.sign("HS256", sHeader, sPayload, sdkSecret);
+  return sdkJWT;
+}
+
+// Zoom Integration
+function joinMeeting(username, sessionName, sessionPasscode, container, isHost) {
+  const jwtToken = generateJWT(
+    sdkKey,
+    sdkSecret,
+    sessionName,
+    isHost ? 1 : 0,
+    sessionPasscode,
+    username
+  );
+
+  let stream;
+
+  client
+    .init("en-US", "Global", { patchJsMedia: true })
+    .then(() => {
+      return client.join(sessionName, jwtToken, username, sessionPasscode);
+    })
+    .then(() => {
+      stream = client.getMediaStream();
+      return stream.startVideo();
+    })
+    .then(() => {
+      const userId = client.getCurrentUserInfo().userId;
+      return stream.attachVideo(userId, RESOLUTION);
+    })
+    .then((userVideo) => {
+      container.appendChild(userVideo);
+    })
+    .catch((error) => {
+      console.error("Error joining meeting:", error);
+    });
+}

@@ -52,16 +52,30 @@ h1 {
   overflow: hidden;
 }
 
+.person-container {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  transition: 0.5s;
+}
+
+.spacer {
+  /* spacer between labels and indicator */
+  flex: 1;
+}
+
 .person {
   display: flex;
   align-items: center;
   justify-content: start;
   padding-left: 20px;
   padding-right: 20px;
+  height: fit-content;
   transition: 0.5s;
 }
 
-.person:hover {
+.person-container:hover {
   background-color: rgba(0, 0, 0, 0.06);
   cursor: pointer;
 }
@@ -73,6 +87,24 @@ h1 {
 
 .person > h3 {
   font-weight: 500;
+}
+
+.expandable:hover > .video-container {
+  height: 500px;
+  margin: 20px;
+  margin-top: 0px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.video-container {
+  height: 0px;
+  transition: 0.5s;
+  margin: 0px;
 }
 
 .header > p {
@@ -237,4 +269,28 @@ label {
 
 .profile > h2 {
   margin: 0px;
+}
+
+#my-video-container {
+  border-radius: 12px;
+  background: #ffffff4d;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* adjust the CSS to your liking */
+
+video-player-container {
+  width: 101%;
+}
+
+video-player {
+  width: 101%;
+  height: auto;
+  aspect-ratio: 16/9;
+  margin: -2px;
 }
