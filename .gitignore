@@ -68,3 +68,5 @@ node_modules/
 .env
 
 zoom-sdk.json
+
+commands.zsh

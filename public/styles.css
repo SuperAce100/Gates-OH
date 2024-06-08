@@ -90,7 +90,9 @@ h1 {
 }
 
 .expandable:hover > .video-container {
-  height: 500px;
+  width: calc(100% - 40px);
+  aspect-ratio: 16/9;
+  height: auto;
   margin: 20px;
   margin-top: 0px;
   border-radius: 12px;
@@ -105,6 +107,9 @@ h1 {
   height: 0px;
   transition: 0.5s;
   margin: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .header > p {
@@ -272,6 +277,7 @@ label {
 }
 
 #my-video-container {
+  margin-top: 10px;
   border-radius: 12px;
   background: #ffffff4d;
   width: 100%;

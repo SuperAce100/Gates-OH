@@ -25,7 +25,20 @@ function renderPeople() {
   const peopleContainer = document.getElementById("rows");
   peopleContainer.innerHTML = "";
 
+  const auth = getAuth(app);
+  let uid = null;
+  const user = auth.currentUser;
+  if (user) {
+    uid = user.uid;
+  }
+
   people.forEach((person) => {
+    const person_uid = person["user-id"];
+
+    if (person_uid === uid) {
+      console.log("Skipping current user");
+      return;
+    }
     const personDiv = document.createElement("div");
     personDiv.classList.add("person");
 
@@ -88,11 +101,12 @@ function connectToVideo(person, container) {
   // get current authenticated user
   const auth = getAuth(app);
   let uid = null;
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      uid = user.uid;
-    }
-  });
+  // get current user's uid without OnAuthStateChanged
+  const user = auth.currentUser;
+  if (user) {
+    uid = user.uid;
+  }
+
   // get user's name from db
   const usersRef = ref(db, "users");
   const userQuery = query(usersRef, orderByChild("user-id"), equalTo(uid));
@@ -105,7 +119,7 @@ function connectToVideo(person, container) {
         const sessionName = person.room;
         const sessionPasscode = "";
         container.innerHTML = "Username: " + username + "<br>Room: " + sessionName;
-        // joinMeeting(username, sessionName, sessionPasscode, container, false);
+        joinMeeting(username, sessionName, sessionPasscode, container, false);
         console.log("Connected to video");
       }
     })
