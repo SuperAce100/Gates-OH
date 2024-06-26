@@ -300,3 +300,7 @@ video-player {
   aspect-ratio: 16/9;
   margin: -2px;
 }
+
+#label {
+  margin-left: 20px;
+}

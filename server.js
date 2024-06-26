@@ -78,6 +78,14 @@ app.get("/logout", (req, res) => {
   res.redirect("/login");
 });
 
+app.get("/offices/:id/visit", checkAuth, (req, res) => {
+  res.sendFile(__dirname + "/public/visitor.html");
+});
+
+app.get("/offices/:id/monitor", (req, res) => {
+  res.sendFile(__dirname + "/public/monitor.html");
+});
+
 // Start the server
 const port = 3000;
 app.listen(port, () => {

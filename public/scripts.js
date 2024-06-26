@@ -158,7 +158,7 @@ onValue(
 console.log("Inside of office");
 
 function updateAvailability(id, available) {
-  const personRef = ref(db, `users/user-${id}`);
+  const personRef = ref(db, `users/${id}`);
   update(personRef, { available }).then(() => {
     console.log("Availability updated!");
   });
