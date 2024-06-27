@@ -301,6 +301,57 @@ video-player {
   margin: -2px;
 }
 
-#label {
-  margin-left: 20px;
+.monitor-label {
+  font-size: 2em;
+  transition: 1s;
+  flex-grow: 5;
+  text-align: center;
+}
+
+.monitor-large {
+  font-size: 3em;
+  font-family: Inter, Arial, Helvetica, sans-serif;
+  transition: 1s;
+}
+
+.monitor-location {
+  color: grey;
+}
+
+.monitor-container {
+  margin-top: -10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.monitor-subcontainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+}
+
+#enableSoundButton {
+  font-size: smaller;
+  margin-top: 0px;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+}
+
+.monitor-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  color: white;
+  font-size: small;
+  font-family: Inter, Arial, Helvetica, sans-serif;
+  width: 95%;
 }

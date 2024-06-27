@@ -14,12 +14,18 @@
     />
   </head>
   <body>
-    <div class="container glass">
-      <h1 id="heading">Your Office</h1>
-      <div class="status glass" id="offices">
-        <p id="label">No one is here</p>
+    <div class="monitor-container">
+      <div class="monitor-subcontainer">
+        <p id="label" class="monitor-label">No one is here</p>
       </div>
+      <div class="footer monitor-footer">
+        <p id="location" class="monitor-location">Your Office</p>
+        <div class="spacer"></div>
+        <button id="enableSoundButton" class="glass-button">Click to enable sound</button>
+      </div>
+</body>
     </div>
+    
   </body>
   <script src="../../dist/monitorScripts-bundle.js"></script>
 </html>
