@@ -81,7 +81,11 @@ function startTimer() {
   if (timerInterval) clearInterval(timerInterval);
   startTime = Date.now();
   timerInterval = setInterval(() => {
-    console.log(`Time elapsed: ${getTimeSeconds()} seconds`);
+    const elapsedSeconds = getTimeSeconds();
+    console.log(`Time elapsed: ${elapsedSeconds} seconds`);
+    if (elapsedSeconds === 10) {
+      tenSeconds();
+    }
   }, 1000);
 }
 
@@ -89,12 +93,18 @@ function stopTimer() {
   if (timerInterval) clearInterval(timerInterval);
   timerInterval = null;
   startTime = null;
+  document.getElementById("my-video-container").classList.add("monitor-video-hidden");
 }
 
 function getTimeSeconds() {
   if (!startTime) return 0;
   let elapsedTime = Date.now() - startTime;
   return Math.floor(elapsedTime / 1000);
+}
+
+function tenSeconds() {
+  console.log("10 seconds have elapsed!");
+  document.getElementById("my-video-container").classList.remove("monitor-video-hidden");
 }
 
 function initializeAudio() {

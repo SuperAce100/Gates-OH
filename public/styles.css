@@ -355,3 +355,15 @@ video-player {
   font-family: Inter, Arial, Helvetica, sans-serif;
   width: 95%;
 }
+
+.monitor-video {
+  width: 60%;
+  transition: 2s;
+  max-height: 500px;
+}
+
+#my-video-container.monitor-video-hidden {
+  max-height: 0px;
+  box-shadow: none;
+  border: none;
+}
