@@ -364,6 +364,69 @@ video-player {
 
 #my-video-container.monitor-video-hidden {
   max-height: 0px;
+  overflow: hidden;
   box-shadow: none;
   border: none;
+}
+
+#hallcam-video-container {
+  margin-top: 10px;
+  border-radius: 12px;
+  background: #ffffff4d;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#preview-video-container {
+  margin-top: 10px;
+  border-radius: 12px;
+  background: #ffffff4d;
+  width: 40%;
+  height: auto;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hallcam-video {
+  width: 60%;
+  transition: 2s;
+  max-height: 500px;
+}
+
+.preview-video {
+  width: 30%;
+  transition: 4s;
+  max-height: 300px;
+}
+
+#preview-video-container.preview-video-hidden {
+  max-height: 0px;
+  overflow: hidden;
+  box-shadow: none;
+  border: none;
+}
+
+.visitor-page {
+  /* no scrolling */
+  overflow: hidden;
+}
+
+.visitor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.hallcam-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: scale(0);
 }

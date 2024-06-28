@@ -82,7 +82,7 @@ function startTimer() {
   startTime = Date.now();
   timerInterval = setInterval(() => {
     const elapsedSeconds = getTimeSeconds();
-    console.log(`Time elapsed: ${elapsedSeconds} seconds`);
+    // console.log(`Time elapsed: ${elapsedSeconds} seconds`);
     if (elapsedSeconds === 10) {
       tenSeconds();
     }

@@ -13,11 +13,20 @@
       rel="stylesheet"
     />
   </head>
-  <body>
+  <body class="visitor-page">
     <div class="container glass">
-      <h1 id="heading">___'s office</h1>
-      <div class="status glass" id="offices">
-        <p id="label">Drop in?</p>
+      <div class="visitor-header">
+        <h1 id="heading">___'s office</h1>
+        <div class="video preview-video preview-video-hidden" id="preview-video-container">
+          <video-player-container></video-player-container>
+        </div>
+      </div>
+
+      <div class="hallcam-container" id="hallcam-container">
+        <div class="video hallcam-video" id="hallcam-video-container">
+          <video-player-container></video-player-container>
+        </div>
+        <button class="glass-button" id="talkButton">Drop in!</button>
       </div>
     </div>
   </body>

@@ -29,7 +29,7 @@ onValue(
     console.log("data", data);
     const office = data[Object.keys(data)[0]];
     console.log("office", office);
-    document.getElementById("heading").textContent = "Visiting " + office.name;
+    document.getElementById("heading").textContent = office.name;
   },
   (error) => {
     console.error("Error reading data:", error);
@@ -55,7 +55,7 @@ const unsubscriber = onValue(
     const data = snapshot.val();
     const user = data[Object.keys(data)[0]];
     console.log("user", user);
-    document.getElementById("label").textContent = user.name;
+    // document.getElementById("label").textContent = user.name;
     // make the office's currentVisitorId equal to the user's id
 
     user_id = user.id;
@@ -71,10 +71,53 @@ const unsubscriber = onValue(
   }
 );
 
+let timerInterval = null;
+let startTime = null;
+
+function startTimer() {
+  if (timerInterval) clearInterval(timerInterval);
+  startTime = Date.now();
+  let hallcamContainer = document.getElementById("hallcam-container");
+
+  hallcamContainer.style.transform = "scale(1)";
+  hallcamContainer.style.transition = "transform 20s linear";
+  timerInterval = setInterval(() => {
+    const elapsedSeconds = getTimeSeconds();
+    // console.log(`Time elapsed: ${elapsedSeconds} seconds`);
+
+    if (elapsedSeconds === 10) {
+      tenSeconds();
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = null;
+  startTime = null;
+  document.getElementById("preview-video-container").classList.add("preview-video-hidden");
+  let hallcamContainer = document.getElementById("hallcam-container");
+
+  hallcamContainer.style.transform = "scale(0)";
+  hallcamContainer.style.transition = "transform 0.1s linear";
+}
+
+function getTimeSeconds() {
+  if (!startTime) return 0;
+  let elapsedTime = Date.now() - startTime;
+  return Math.floor(elapsedTime / 1000);
+}
+
+function tenSeconds() {
+  console.log("10 seconds have elapsed!");
+  document.getElementById("preview-video-container").classList.remove("preview-video-hidden");
+}
+
 function joinOffice() {
   const officeRef = ref(db, `offices/${id}`);
   update(officeRef, { currentVisitorId: user_id }).then(() => {
     console.log("Current visitor updated!");
+    startTimer(); // Start the timer when joining the office
   });
 
   // make the user's currentOffice equal to the office's id using the snapshot
@@ -84,12 +127,11 @@ function joinOffice() {
   });
 }
 
-joinOffice();
-
 async function leaveOffice() {
   const officeRef = ref(db, `offices/${id}`);
   update(officeRef, { currentVisitorId: null }).then(() => {
     console.log("Current visitor cleared!");
+    stopTimer(); // Stop the timer when leaving the office
   });
 
   // make the user's currentOffice equal to the office's id using the snapshot
