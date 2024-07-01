@@ -87,7 +87,8 @@ app.get("/offices/:id/monitor", (req, res) => {
 });
 
 // Start the server
-const port = 3000;
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
