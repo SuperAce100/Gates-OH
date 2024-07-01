@@ -1,1 +1,1 @@
-web: node index.js
+web: npx webpack; node server.js
