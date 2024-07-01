@@ -209,7 +209,7 @@ onAuthStateChanged(auth, (user) => {
 
           let videoContainer = document.querySelector("video-player-container");
 
-          joinMeeting(userData[key].preferredName, m, "", videoContainer, true);
+          joinMeeting(userData[key].preferredName, userData[key].room, "", videoContainer, true);
 
           updateAvailability(userData[key].id, true);
         } else {
