@@ -84,10 +84,10 @@ function renderPeople() {
     if (person.available) {
       outerDiv.classList.add("expandable");
       videoDiv.addEventListener("mouseover", () => {
-        connectToVideo(person, videoDiv);
+        // connectToVideo(person, videoDiv);
       });
       videoDiv.addEventListener("mouseout", () => {
-        leaveVideo(person, videoDiv);
+        // leaveVideo(person, videoDiv);
       });
     }
 
@@ -209,7 +209,7 @@ onAuthStateChanged(auth, (user) => {
 
           let videoContainer = document.querySelector("video-player-container");
 
-          joinMeeting(userData[key].preferredName, userData[key].room, "", videoContainer, true);
+          joinMeeting(userData[key].preferredName, m, "", videoContainer, true);
 
           updateAvailability(userData[key].id, true);
         } else {
@@ -273,6 +273,7 @@ function joinMeeting(username, sessionName, sessionPasscode, container, isHost) 
   client
     .init("en-US", "Global", { patchJsMedia: true })
     .then(() => {
+      console.log("Joining ", sessionName, " with JWT token:", jwtToken, " as ", username);
       return client.join(sessionName, jwtToken, username, sessionPasscode);
     })
     .then(() => {
