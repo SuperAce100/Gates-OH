@@ -28,6 +28,13 @@ let unsubscriber = null;
 let timerInterval = null;
 let startTime = null;
 
+addEventListener("DOMContentLoaded", () => {
+  // Start Zoom video stream
+  joinMeeting(id, "Gates-OH", "", true).then(() => {
+    startCurrentUserVideo();
+  });
+});
+
 onValue(
   officeRef,
   async (snapshot) => {
@@ -37,11 +44,6 @@ onValue(
     document.getElementById("location").textContent = office.name;
     console.log("Current Visitor: ", office.currentVisitorId);
     visitorId = office.currentVisitorId;
-
-    // Start Zoom video stream
-    joinMeeting(id, "Gates-OH", "", true).then(() => {
-      startCurrentUserVideo();
-    });
 
     // Check if there is no current visitor
     if (!office.currentVisitorId) {
