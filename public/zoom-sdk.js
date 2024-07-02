@@ -58,7 +58,7 @@ async function startCurrentUserVideo() {
   }
 }
 
-function displayUserVideo(username, container) {
+function displayUserVideo(username, container, isPreview = false) {
   function attachVideo(user) {
     const stream = client.getMediaStream();
     stream
@@ -80,12 +80,23 @@ function displayUserVideo(username, container) {
     container.innerHTML = `${username} has not connected`;
   }
 
-  client.on("user-added", (user) => {
-    if (user.displayName === username) {
-      console.log(`User joined: ${user.displayName}`);
-      attachVideo(user);
-    }
-  });
+  if (!isPreview) {
+    client.on("user-added", (event) => {
+      const newUser = event.user;
+      if (newUser.displayName === username) {
+        console.log(`User joined: ${newUser.displayName}`);
+        attachVideo(newUser);
+      }
+    });
+
+    client.on("video-active-change", (event) => {
+      const user = client.getAllUser().find((user) => user.userId === event.userId);
+      if (user && user.displayName === username) {
+        console.log(`User started video: ${user.displayName}`);
+        attachVideo(user);
+      }
+    });
+  }
 }
 
 function leaveMeeting(container) {

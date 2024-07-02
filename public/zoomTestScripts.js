@@ -13,7 +13,7 @@ addEventListener("DOMContentLoaded", async () => {
 
   // Connect to video streams after joining the meeting
   displayUserVideo("kayvonf", videoContainer);
-  displayUserVideo("asanshay", previewContainer);
+  displayUserVideo("asanshay", previewContainer, true);
 });
 
 addEventListener("beforeunload", () => {
