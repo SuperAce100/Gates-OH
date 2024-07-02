@@ -28,7 +28,7 @@ function generateJWT(sdkKey, sdkSecret, sessionName, role, sessionKey, userIdent
   return KJUR.jws.JWS.sign("HS256", sHeader, sPayload, sdkSecret);
 }
 
-function joinMeeting(username, sessionName, sessionPasscode, isHost) {
+async function joinMeeting(username, sessionName, sessionPasscode, isHost) {
   const jwtToken = generateJWT(
     sdkKey,
     sdkSecret,
@@ -38,32 +38,44 @@ function joinMeeting(username, sessionName, sessionPasscode, isHost) {
     username
   );
 
-  client
-    .init("en-US", "Global", { patchJsMedia: true })
-    .then(() => {
-      console.log("Joining ", sessionName, " with JWT token:", jwtToken, " as ", username);
-      return client.join(sessionName, jwtToken, username, sessionPasscode);
-    })
-    .catch((error) => {
-      console.error("Error joining meeting:", error);
-    });
+  try {
+    await client.init("en-US", "Global", { patchJsMedia: true });
+    console.log("Joining ", sessionName, " with JWT token:", jwtToken, " as ", username);
+    await client.join(sessionName, jwtToken, username, sessionPasscode);
+  } catch (error) {
+    console.error("Error joining meeting:", error);
+  }
 }
 
 function connectToVideo(username, container) {
-  client.getAllUser().forEach((user) => {
+  function attachVideo(user) {
+    const stream = client.getMediaStream();
+    stream
+      .startVideo()
+      .then(() => {
+        return stream.attachVideo(user.userId, RESOLUTION);
+      })
+      .then((userVideo) => {
+        container.appendChild(userVideo);
+      })
+      .catch((error) => {
+        console.error("Error connecting to video:", error);
+      });
+  }
+
+  const users = client.getAllUser();
+  const user = users.find((user) => user.displayName === username);
+
+  if (user) {
+    attachVideo(user);
+  } else {
+    container.innerHTML = `${username} has not connected`;
+  }
+
+  client.on("user-added", (user) => {
     if (user.displayName === username) {
-      client
-        .getMediaStream()
-        .startVideo()
-        .then(() => {
-          return client.getMediaStream().attachVideo(user.userId, RESOLUTION);
-        })
-        .then((userVideo) => {
-          container.appendChild(userVideo);
-        })
-        .catch((error) => {
-          console.error("Error connecting to video:", error);
-        });
+      console.log(`User joined: ${user.displayName}`);
+      attachVideo(user);
     }
   });
 }
