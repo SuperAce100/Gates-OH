@@ -1,4 +1,4 @@
-import { joinMeeting, connectToVideo, leaveMeeting } from "./zoom-sdk.js";
+import { joinMeeting, leaveMeeting, displayUserVideo, startCurrentUserVideo } from "./zoom-sdk.js";
 
 addEventListener("DOMContentLoaded", async () => {
   console.log("Joining Meeting");
@@ -9,9 +9,11 @@ addEventListener("DOMContentLoaded", async () => {
   const videoContainer = document.getElementById("zoom-test-video-container-1");
   const previewContainer = document.getElementById("zoom-test-video-container-2");
 
+  await startCurrentUserVideo();
+
   // Connect to video streams after joining the meeting
-  connectToVideo("asanshay", videoContainer);
-  connectToVideo("kayvonf", previewContainer);
+  displayUserVideo("kayvonf", previewContainer);
+  displayUserVideo("asanshay", videoContainer);
 });
 
 addEventListener("beforeunload", () => {

@@ -47,14 +47,22 @@ async function joinMeeting(username, sessionName, sessionPasscode, isHost) {
   }
 }
 
-function connectToVideo(username, container) {
+async function startCurrentUserVideo() {
+  const stream = client.getMediaStream();
+  try {
+    await stream.startVideo();
+    const userId = client.getCurrentUserInfo().userId;
+    await stream.attachVideo(userId, RESOLUTION);
+  } catch (error) {
+    console.error("Error starting current user's video:", error);
+  }
+}
+
+function displayUserVideo(username, container) {
   function attachVideo(user) {
     const stream = client.getMediaStream();
     stream
-      .startVideo()
-      .then(() => {
-        return stream.attachVideo(user.userId, RESOLUTION);
-      })
+      .attachVideo(user.userId, RESOLUTION)
       .then((userVideo) => {
         container.appendChild(userVideo);
       })
@@ -92,4 +100,4 @@ function leaveMeeting(container) {
     });
 }
 
-export { joinMeeting, connectToVideo, leaveMeeting };
+export { joinMeeting, startCurrentUserVideo, displayUserVideo, leaveMeeting };
