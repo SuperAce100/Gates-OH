@@ -9,7 +9,7 @@ import {
   equalTo,
   get,
 } from "firebase/database";
-import { joinMeeting, startCurrentUserVideo } from "./zoom-sdk.js";
+import { displayUserVideo, joinMeeting, startCurrentUserVideo } from "./zoom-sdk.js";
 
 let tokens = window.location.pathname.split("/");
 let id = tokens[tokens.length - 2];
@@ -111,6 +111,7 @@ function getTimeSeconds() {
 function tenSeconds() {
   console.log("10 seconds have elapsed!");
   document.getElementById("my-video-container").classList.remove("monitor-video-hidden");
+  displayUserVideo(visitorId, document.getElementById("visitor-video-container"));
 }
 
 function initializeAudio() {
