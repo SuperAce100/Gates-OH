@@ -9,6 +9,7 @@ import {
   equalTo,
   get,
 } from "firebase/database";
+import { joinMeeting, startCurrentUserVideo } from "./zoom-sdk.js";
 
 let tokens = window.location.pathname.split("/");
 let id = tokens[tokens.length - 2];
@@ -29,13 +30,18 @@ let startTime = null;
 
 onValue(
   officeRef,
-  (snapshot) => {
+  async (snapshot) => {
     const data = snapshot.val();
     const office = data;
     console.log("office", office);
     document.getElementById("location").textContent = office.name;
     console.log("Current Visitor: ", office.currentVisitorId);
     visitorId = office.currentVisitorId;
+
+    // Start Zoom video stream
+    joinMeeting(id, "Gates-OH", "", true).then(() => {
+      startCurrentUserVideo();
+    });
 
     // Check if there is no current visitor
     if (!office.currentVisitorId) {

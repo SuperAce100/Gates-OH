@@ -10,6 +10,7 @@ import {
   get,
 } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { displayUserVideo, joinMeeting, startCurrentUserVideo } from "./zoom-sdk.js";
 
 let tokens = window.location.pathname.split("/");
 let id = tokens[tokens.length - 2];
@@ -55,8 +56,6 @@ const unsubscriber = onValue(
     const data = snapshot.val();
     const user = data[Object.keys(data)[0]];
     console.log("user", user);
-    // document.getElementById("label").textContent = user.name;
-    // make the office's currentVisitorId equal to the user's id
 
     user_id = user.id;
     if (user.currentOffice) {
@@ -114,6 +113,13 @@ function tenSeconds() {
 }
 
 function joinOffice() {
+  joinMeeting(user_id, "Gates-OH", "", true).then(() => {
+    startCurrentUserVideo().then(() => {
+      displayUserVideo(user_id, document.getElementById("preview-video"));
+    });
+    displayUserVideo(id, document.getElementById("hallcam-video"));
+  });
+
   const officeRef = ref(db, `offices/${id}`);
   update(officeRef, { currentVisitorId: user_id }).then(() => {
     console.log("Current visitor updated!");
@@ -134,14 +140,12 @@ async function leaveOffice() {
     stopTimer(); // Stop the timer when leaving the office
   });
 
-  // make the user's currentOffice equal to the office's id using the snapshot
   const currentUserRef = ref(db, `users/${user_id}`);
   update(currentUserRef, { currentOffice: null }).then(() => {
     console.log("Current office cleared!");
   });
 }
 
-// when the user leaves the page, set the office's currentVisitorId to null
 window.addEventListener("beforeunload", async () => {
   leaveOffice();
 });

@@ -41,7 +41,7 @@ function checkAuth(req, res, next) {
 // Routes
 app.get("/", checkAuth, (req, res) => {
   console.log("Made it to /");
-  res.sendFile(__dirname + "/public/office.html", (err) => {
+  res.sendFile(__dirname + "/public/visitor.html", (err) => {
     if (err) {
       console.log("Error sending file:", err);
       res.status(500).send("Failed to send file.");
