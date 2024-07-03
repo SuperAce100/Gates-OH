@@ -15,24 +15,25 @@
   </head>
   <body>
     <div class="container glass">
-      <h1 id="heading">Testing joining video as asanshay</h1>
-      <div class="profile glass">
-        <div class="zoom-test-row">
-          <div class="zoom-test-video">
-            <h2 id="video">Kayvonf (joined as asanshay)</h2>
-            <div class="video">
-              <video-player-container id="zoom-test-video-container-1"></video-player-container>
-            </div>
-          </div>
-          <div class="zoom-test-video">
-            <h2 id="video">Asanshay (my own video preview)</h2>
-            <div class="video">
-              <video-player-container id="zoom-test-video-container-2"></video-player-container>
-            </div>
+      <div class="row header-row">
+        <h1 id="heading">Virtual Gates</h1>
+        <div class="dropdown">
+          <button class="dropbtn">Choose interaction type</button>
+          <div class="glass dropdown-content" id="dropdownContent">
+            <a href="#" id="scale">Scale</a>
+            <a href="#" id="blur">Blur</a>
+            <a href="#" id="slide">Slide</a>
           </div>
         </div>
       </div>
+      <div class="people glass" id="people">
+        <div class="header">
+          <h3>Space</h3>
+          <p>Door open?</p>
+        </div>
+        <div id="rows"></div>
+      </div>
     </div>
   </body>
-  <script src="./dist/zoomTestScripts-bundle.js"></script>
+  <script src="./dist/scripts-bundle.js"></script>
 </html>
