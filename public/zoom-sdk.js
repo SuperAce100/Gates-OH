@@ -49,53 +49,60 @@ async function joinMeeting(username, sessionName, sessionPasscode, isHost) {
 
 async function startCurrentUserVideo() {
   const stream = client.getMediaStream();
+  const videoElement = document.createElement("video");
+  videoElement.autoplay = true;
+  videoElement.muted = true;
+  videoElement.setAttribute("playsinline", "true"); // Ensures it works on iOS
+
   try {
-    await stream.startVideo();
     const userId = client.getCurrentUserInfo().userId;
-    await stream.attachVideo(userId, RESOLUTION);
+    await stream.startVideo({
+      videoElement: videoElement, // Ensure this is correctly passed
+      userId: userId,
+    });
+    console.log("Current user video started without attaching to DOM");
   } catch (error) {
     console.error("Error starting current user's video:", error);
   }
 }
 
-function displayUserVideo(username, container, isPreview = false) {
-  function attachVideo(user) {
+async function displayUserVideo(username, container, isPreview = false) {
+  async function attachVideo(user) {
     const stream = client.getMediaStream();
-    stream
-      .attachVideo(user.userId, RESOLUTION)
-      .then((userVideo) => {
-        container.appendChild(userVideo);
-      })
-      .catch((error) => {
-        console.error("Error connecting to video:", error);
-      });
+    try {
+      const userVideo = await stream.attachVideo(user.userId, RESOLUTION);
+      container.appendChild(userVideo);
+    } catch (error) {
+      console.error("Error connecting to video:", error);
+    }
   }
 
   const users = client.getAllUser();
   const user = users.find((user) => user.displayName === username);
 
   if (user) {
-    attachVideo(user);
+    console.log("User found:", user.displayName);
+    await attachVideo(user);
   } else {
     container.innerHTML = `${username} has not connected`;
   }
 
   if (!isPreview) {
-    client.on("user-added", (event) => {
+    client.on("user-added", async (event) => {
       const newUser = event.user;
       if (newUser.displayName === username) {
         console.log(`User joined: ${newUser.displayName}`);
-        attachVideo(newUser);
+        await attachVideo(newUser);
       }
     });
 
-    client.on("video-active-change", (event) => {
-      const user = client.getAllUser().find((user) => user.userId === event.userId);
-      if (user && user.displayName === username) {
-        console.log(`User started video: ${user.displayName}`);
-        attachVideo(user);
-      }
-    });
+    // client.on("video-active-change", async (event) => {
+    //   const user = client.getAllUser().find((user) => user.userId === event.userId);
+    //   if (user && user.displayName === username) {
+    //     console.log(`User started video: ${user.displayName}`);
+    //     await attachVideo(user);
+    //   }
+    // });
   }
 }
 
