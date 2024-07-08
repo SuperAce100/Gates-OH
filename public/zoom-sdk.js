@@ -52,12 +52,12 @@ async function startCurrentUserVideo() {
   const videoElement = document.createElement("video");
   videoElement.autoplay = true;
   videoElement.muted = true;
-  videoElement.setAttribute("playsinline", "true"); // Ensures it works on iOS
+  videoElement.setAttribute("playsinline", "true");
 
   try {
     const userId = client.getCurrentUserInfo().userId;
     await stream.startVideo({
-      videoElement: videoElement, // Ensure this is correctly passed
+      videoElement: videoElement,
       userId: userId,
     });
     console.log("Current user video started without attaching to DOM");
@@ -81,6 +81,7 @@ async function displayUserVideo(username, container, isPreview = false) {
   const user = users.find((user) => user.displayName === username);
 
   if (user) {
+    container.innerHTML = "";
     console.log("User found:", user.displayName);
     await attachVideo(user);
   } else {
@@ -106,6 +107,19 @@ async function displayUserVideo(username, container, isPreview = false) {
   }
 }
 
+async function detachVideo(username, container) {
+  const users = client.getAllUser();
+  const user = users.find((user) => user.displayName === username);
+
+  if (user) {
+    const stream = client.getMediaStream();
+    await stream.detachVideo(user.userId);
+    container.innerHTML = `${username} has disconnected`;
+  } else {
+    container.innerHTML = `${username} has not connected`;
+  }
+}
+
 function leaveMeeting(container) {
   client
     .leave()
@@ -118,4 +132,64 @@ function leaveMeeting(container) {
     });
 }
 
-export { joinMeeting, startCurrentUserVideo, displayUserVideo, leaveMeeting };
+async function requestPermissions(container, content) {
+  const permissionsForm = document.createElement("div");
+
+  permissionsForm.className = "container glass permissions-form";
+  permissionsForm.id = "permissions-form";
+
+  const label = document.createElement("p");
+  label.id = "label";
+  label.className = "monitor-label";
+  label.innerText = "Accept permissions to join meeting";
+
+  const videoContainer = document.createElement("div");
+  videoContainer.className = "video";
+  videoContainer.id = "permissions-video-container";
+
+  const videoPlayerContainer = document.createElement("video-player-container");
+  videoPlayerContainer.id = "permissions-video";
+
+  videoContainer.appendChild(videoPlayerContainer);
+
+  const acceptButton = document.createElement("button");
+  acceptButton.id = "accept-permissions-button";
+  acceptButton.className = "glass-button denied";
+  acceptButton.innerText = "Join!";
+  acceptButton.disabled = true;
+
+  permissionsForm.appendChild(label);
+  permissionsForm.appendChild(videoContainer);
+  permissionsForm.appendChild(acceptButton);
+
+  container.appendChild(permissionsForm);
+
+  const acceptPermissionsEvent = new Event("AcceptedPermissions");
+
+  content.style.display = "none";
+  await joinMeeting("test", "filterTest", "", true);
+  await startCurrentUserVideo();
+  await displayUserVideo("test", document.getElementById("permissions-video"), true);
+  acceptButton.disabled = false;
+
+  acceptButton.addEventListener("click", async function () {
+    await detachVideo("test", document.getElementById("permissions-video"));
+    document.dispatchEvent(acceptPermissionsEvent);
+  });
+
+  document.addEventListener("AcceptedPermissions", async function () {
+    content.style.display = "block";
+    permissionsForm.style.display = "none";
+  });
+
+  return acceptPermissionsEvent;
+}
+
+export {
+  joinMeeting,
+  startCurrentUserVideo,
+  displayUserVideo,
+  detachVideo,
+  leaveMeeting,
+  requestPermissions,
+};

@@ -38,6 +38,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   );
 
+  stopTimer();
+
   // get the currently authenticated user's uid
   const auth = getAuth(app);
   let uid = null;

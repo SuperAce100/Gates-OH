@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Filter Test</title>
+    <link rel="icon" href="../../favicon.ico" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Inter:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="visitor-page">
+    <div class="container glass" id="main-content">
+      <div class="filter-header">
+        <h1 id="heading">Filter Test</h1>
+        <div class="row filter-row">
+          <button class="filter-button glass-button" id="blur-filter-button">Blur</button>
+          <button class="filter-button glass-button" id="brightness-filter-button">
+            Brightness
+          </button>
+          <button class="filter-button glass-button" id="contrast-filter-button">Contrast</button>
+          <button class="filter-button glass-button" id="grayscale-filter-button">Grayscale</button>
+          <button class="filter-button glass-button" id="hue-rotate-filter-button">
+            Hue-Rotate
+          </button>
+          <button class="filter-button glass-button" id="scale-filter-button">Scale</button>
+          <button class="filter-button glass-button" id="translate-filter-button">Translate</button>
+          <button class="filter-button glass-button" id="3d-filter-button">3D Transforms</button>
+          <button class="filter-button glass-button" id="clear-filter-button">Clear</button>
+        </div>
+      </div>
+
+      <div class="row filter-row">
+        <div class="filter-container filter-video video">
+          <video src="./test-video.mp4" autoplay loop muted></video>
+        </div>
+
+        <div class="filter-container" id="filter-container">
+          <div class="video" id="filter-video-container">
+            <video-player-container id="filter-video"></video-player-container>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="" id="permissions-container"></div>
+  </body>
+  <script src="../dist/filterTestScripts-bundle.js"></script>
+</html>

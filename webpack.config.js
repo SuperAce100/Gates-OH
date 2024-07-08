@@ -13,6 +13,7 @@ module.exports = {
     visitorScripts: "./public/visitorScripts.js",
     zoomTestScripts: "./public/zoomTestScripts.js",
     zoomTestScripts2: "./public/zoomTestScripts2.js",
+    filterTestScripts: "./public/filterTestScripts.js",
   },
   output: {
     filename: "[name]-bundle.js",
