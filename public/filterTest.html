@@ -35,13 +35,15 @@
       </div>
 
       <div class="row filter-row">
-        <div class="filter-container filter-video video">
-          <video src="./test-video.mp4" autoplay loop muted></video>
+        <div class="filter-container" id="filter-container">
+          <div class="video" id="filter-video-container">
+            <video-player-container id="filter-video"></video-player-container>
+          </div>
         </div>
 
         <div class="filter-container" id="filter-container">
           <div class="video" id="filter-video-container">
-            <video-player-container id="filter-video"></video-player-container>
+            <video-player-container id="filter-video-incoming"></video-player-container>
           </div>
         </div>
       </div>

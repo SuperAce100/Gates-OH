@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 document.addEventListener("AcceptedPermissions", async function () {
   await displayUserVideo("test", document.getElementById("filter-video"), true);
+  await displayUserVideo("test2", document.getElementById("filter-video-incoming"), true);
 });
 
 function clearFilters() {
