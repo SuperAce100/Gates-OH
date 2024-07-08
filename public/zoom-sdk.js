@@ -97,13 +97,13 @@ async function displayUserVideo(username, container, isPreview = false) {
       }
     });
 
-    // client.on("video-active-change", async (event) => {
-    //   const user = client.getAllUser().find((user) => user.userId === event.userId);
-    //   if (user && user.displayName === username) {
-    //     console.log(`User started video: ${user.displayName}`);
-    //     await attachVideo(user);
-    //   }
-    // });
+    client.on("video-active-change", async (event) => {
+      const user = client.getAllUser().find((user) => user.userId === event.userId);
+      if (user && user.displayName === username) {
+        console.log(`User started video: ${user.displayName}`);
+        await attachVideo(user);
+      }
+    });
   }
 }
 
@@ -132,7 +132,7 @@ function leaveMeeting(container) {
     });
 }
 
-async function requestPermissions(container, content) {
+async function requestPermissions(container, content, username, meetingName) {
   const permissionsForm = document.createElement("div");
 
   permissionsForm.className = "container glass permissions-form";
@@ -167,13 +167,13 @@ async function requestPermissions(container, content) {
   const acceptPermissionsEvent = new Event("AcceptedPermissions");
 
   content.style.display = "none";
-  await joinMeeting("test", "filterTest", "", true);
+  await joinMeeting(username, meetingName, "", true);
   await startCurrentUserVideo();
-  await displayUserVideo("test", document.getElementById("permissions-video"), true);
+  await displayUserVideo(username, document.getElementById("permissions-video"), true);
   acceptButton.disabled = false;
 
   acceptButton.addEventListener("click", async function () {
-    await detachVideo("test", document.getElementById("permissions-video"));
+    await detachVideo(username, document.getElementById("permissions-video"));
     document.dispatchEvent(acceptPermissionsEvent);
   });
 

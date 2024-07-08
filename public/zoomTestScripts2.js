@@ -1,19 +1,17 @@
-import { joinMeeting, leaveMeeting, displayUserVideo, startCurrentUserVideo } from "./zoom-sdk.js";
+import { leaveMeeting, displayUserVideo, requestPermissions } from "./zoom-sdk.js";
 
-addEventListener("DOMContentLoaded", async () => {
-  console.log("Joining Meeting");
+document.addEventListener("DOMContentLoaded", async function () {
+  const acceptPermissionsEvent = requestPermissions(
+    document.getElementById("permissions"),
+    document.getElementById("main-content"),
+    "test2",
+    "test-meeting"
+  );
+});
 
-  // Join the meeting first
-  await joinMeeting("kayvonf", "Gates-OH", "", true);
-
-  const videoContainer = document.getElementById("zoom-test-video-container-1");
-  const previewContainer = document.getElementById("zoom-test-video-container-2");
-
-  await startCurrentUserVideo();
-
-  // Connect to video streams after joining the meeting
-  displayUserVideo("kayvonf", previewContainer);
-  displayUserVideo("asanshay", videoContainer);
+document.addEventListener("AcceptedPermissions", async function () {
+  await displayUserVideo("test", document.getElementById("zoom-test-video-container-1"), true);
+  await displayUserVideo("test2", document.getElementById("zoom-test-video-container-2"), true);
 });
 
 addEventListener("beforeunload", () => {

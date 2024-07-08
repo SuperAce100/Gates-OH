@@ -3,7 +3,9 @@ import { requestPermissions, displayUserVideo } from "./zoom-sdk.js";
 document.addEventListener("DOMContentLoaded", async function () {
   const acceptPermissionsEvent = requestPermissions(
     document.getElementById("permissions-container"),
-    document.getElementById("main-content")
+    document.getElementById("main-content"),
+    "test",
+    "test-meeting"
   );
 });
 
