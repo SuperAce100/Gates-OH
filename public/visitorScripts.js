@@ -10,9 +10,21 @@ import {
   get,
 } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { displayUserVideo, joinMeeting, startCurrentUserVideo } from "./zoom-sdk.js";
+import { displayUserVideo, requestPermissions } from "./zoom-sdk.js";
 
-document.addEventListener("DOMContentLoaded", function () {
+let interactionType = "scale";
+
+// get the currently authenticated user's uid
+document.addEventListener("DOMContentLoaded", async function () {
+  const auth = getAuth(app);
+  let uid = null;
+  const user = auth.currentUser;
+  if (user) {
+    uid = user.uid;
+  }
+
+  let user_id = null;
+
   let tokens = window.location.pathname.split("/");
   let id = tokens[tokens.length - 2];
 
@@ -38,18 +50,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   );
 
-  stopTimer();
-
-  // get the currently authenticated user's uid
-  const auth = getAuth(app);
-  let uid = null;
-  const user = auth.currentUser;
-  if (user) {
-    uid = user.uid;
-  }
-
-  let user_id = null;
-
   // get the entry from the users table where uid is the same as the currently authenticated user
   const userRef = ref(db, "users");
   const userQuery = query(userRef, orderByChild("uid"), equalTo(uid));
@@ -65,7 +65,16 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("leaving office!");
         unsubscriber();
       } else {
-        joinOffice();
+        const acceptPermissionsEvent = requestPermissions(
+          document.getElementById("permissions"),
+          document.getElementById("main-content"),
+          user_id,
+          "Gates-OH"
+        );
+        document.addEventListener("AcceptedPermissions", async function () {
+          await joinOffice();
+          runInteraction();
+        });
       }
     },
     (error) => {
@@ -73,60 +82,16 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   );
 
-  let timerInterval = null;
-  let startTime = null;
-
-  function startTimer() {
-    if (timerInterval) clearInterval(timerInterval);
-    startTime = Date.now();
-    let hallcamContainer = document.getElementById("hallcam-container");
-
-    hallcamContainer.style.transform = "scale(1)";
-    hallcamContainer.style.transition = "transform 20s linear";
-    timerInterval = setInterval(() => {
-      const elapsedSeconds = getTimeSeconds();
-      // console.log(`Time elapsed: ${elapsedSeconds} seconds`);
-
-      if (elapsedSeconds === 10) {
-        tenSeconds();
-      }
-    }, 1000);
-  }
-
-  function stopTimer() {
-    if (timerInterval) clearInterval(timerInterval);
-    timerInterval = null;
-    startTime = null;
-    document.getElementById("preview-video-container").classList.add("preview-video-hidden");
-    let hallcamContainer = document.getElementById("hallcam-container");
-
-    hallcamContainer.style.transform = "scale(0)";
-    hallcamContainer.style.transition = "transform 0.1s linear";
-  }
-
-  function getTimeSeconds() {
-    if (!startTime) return 0;
-    let elapsedTime = Date.now() - startTime;
-    return Math.floor(elapsedTime / 1000);
-  }
-
-  function tenSeconds() {
-    console.log("10 seconds have elapsed!");
-    document.getElementById("preview-video-container").classList.remove("preview-video-hidden");
-  }
-
-  function joinOffice() {
-    joinMeeting(user_id, "Gates-OH", "", true).then(() => {
-      startCurrentUserVideo().then(() => {
-        displayUserVideo(user_id, document.getElementById("preview-video"));
-      });
-      displayUserVideo(id, document.getElementById("hallcam-video"));
-    });
+  async function joinOffice() {
+    document.getElementById("hallcam-container").style.display = "none";
+    await displayUserVideo(id, document.getElementById("hallcam-video"));
+    await displayUserVideo(user_id, document.getElementById("preview-video"));
+    document.getElementById("hallcam-container").style.display = "flex";
+    document.getElementById("talkButton").addEventListener("click", () => {});
 
     const officeRef = ref(db, `offices/${id}`);
     update(officeRef, { currentVisitorId: user_id }).then(() => {
       console.log("Current visitor updated!");
-      startTimer(); // Start the timer when joining the office
     });
 
     // make the user's currentOffice equal to the office's id using the snapshot
@@ -136,11 +101,26 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  function runInteraction() {
+    document
+      .getElementById("hallcam-video-container")
+      .classList.add("animate-dropin-" + interactionType);
+    document
+      .getElementById("hallcam-video-container")
+      .addEventListener("animationend", function () {
+        this.classList.remove("animate-dropin-" + interactionType);
+      });
+
+    setTimeout(() => {
+      document.getElementById("preview-video-container").classList.remove("preview-video-hidden");
+    }, 10000);
+  }
+
   async function leaveOffice() {
     const officeRef = ref(db, `offices/${id}`);
     update(officeRef, { currentVisitorId: null }).then(() => {
       console.log("Current visitor cleared!");
-      stopTimer(); // Stop the timer when leaving the office
+      // stop animation?
     });
 
     const currentUserRef = ref(db, `users/${user_id}`);
