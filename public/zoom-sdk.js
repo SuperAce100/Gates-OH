@@ -132,6 +132,31 @@ function leaveMeeting(container) {
     });
 }
 
+function generateCameraDropdown(container) {
+  const stream = client.getMediaStream();
+  const cameras = stream.getCameraList();
+
+  const dropdown = document.createElement("select");
+  dropdown.id = "camera-dropdown";
+  dropdown.className = "glass";
+  dropdown.style.appearance = "none";
+  dropdown.style.outline = "none";
+
+  dropdown.addEventListener("change", async function () {
+    const selectedCamera = cameras[this.selectedIndex];
+    await stream.switchCamera(selectedCamera.deviceId);
+  });
+
+  cameras.forEach((camera) => {
+    const option = document.createElement("option");
+    option.value = camera.deviceId;
+    option.text = camera.label;
+    dropdown.appendChild(option);
+  });
+
+  container.appendChild(dropdown);
+}
+
 async function requestPermissions(container, content, username, meetingName) {
   const permissionsForm = document.createElement("div");
 
@@ -152,6 +177,9 @@ async function requestPermissions(container, content, username, meetingName) {
 
   videoContainer.appendChild(videoPlayerContainer);
 
+  const cameraDropdownContainer = document.createElement("div");
+  cameraDropdownContainer.id = "camera-dropdown-container";
+
   const acceptButton = document.createElement("button");
   acceptButton.id = "accept-permissions-button";
   acceptButton.className = "glass-button denied";
@@ -160,6 +188,7 @@ async function requestPermissions(container, content, username, meetingName) {
 
   permissionsForm.appendChild(label);
   permissionsForm.appendChild(videoContainer);
+  permissionsForm.appendChild(cameraDropdownContainer);
   permissionsForm.appendChild(acceptButton);
 
   container.appendChild(permissionsForm);
@@ -170,6 +199,8 @@ async function requestPermissions(container, content, username, meetingName) {
   await joinMeeting(username, meetingName, "", true);
   await startCurrentUserVideo();
   await displayUserVideo(username, document.getElementById("permissions-video"), true);
+  generateCameraDropdown(cameraDropdownContainer);
+
   acceptButton.disabled = false;
 
   acceptButton.addEventListener("click", async function () {

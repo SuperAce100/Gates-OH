@@ -798,3 +798,11 @@ video {
 .filter-button {
   font-size: small;
 }
+
+#camera-dropdown {
+  padding: 10px;
+  margin-top: 20px;
+  border-radius: 8px;
+  background-color: #0093af99;
+  color: white;
+}
