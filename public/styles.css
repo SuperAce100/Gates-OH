@@ -421,6 +421,7 @@ video-player {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 20px;
 }
 
 .hallcam-container {
@@ -760,6 +761,38 @@ video {
 #hallcam-video-container.animate-dropin-scale {
   overflow: hidden;
   animation: dropin-scale 25s ease-in-out;
+}
+
+@keyframes dropin-slide {
+  0% {
+    max-height: 0px;
+    opacity: 1;
+  }
+  100% {
+    max-height: 720px;
+    opacity: 1;
+  }
+}
+
+#hallcam-video-container.animate-dropin-slide {
+  overflow: hidden;
+  animation: dropin-slide 25s ease-in-out;
+}
+
+@keyframes dropin-blur {
+  0% {
+    filter: blur(100px);
+    opacity: 1;
+  }
+  100% {
+    filter: blur(0px);
+    opacity: 1;
+  }
+}
+
+#hallcam-video-container.animate-dropin-blur {
+  overflow: hidden;
+  animation: dropin-blur 15s ease-out;
 }
 
 .filter-button {

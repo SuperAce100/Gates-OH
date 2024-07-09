@@ -1,21 +1,17 @@
 import app from "./firebase-config.js";
-import {
-  getDatabase,
-  ref,
-  onValue,
-  update,
-  query,
-  orderByChild,
-  equalTo,
-  get,
-} from "firebase/database";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getDatabase, ref, onValue, update, query, orderByChild, equalTo } from "firebase/database";
+import { getAuth } from "firebase/auth";
 import { displayUserVideo, requestPermissions } from "./zoom-sdk.js";
 
 let interactionType = "scale";
 
 // get the currently authenticated user's uid
 document.addEventListener("DOMContentLoaded", async function () {
+  document.getElementById("main-content").style.display = "none";
+
+  document.getElementById("home-button").addEventListener("click", () => {
+    window.location.href = "/";
+  });
   const auth = getAuth(app);
   let uid = null;
   const user = auth.currentUser;
@@ -31,6 +27,12 @@ document.addEventListener("DOMContentLoaded", async function () {
   console.log("id", id);
 
   const db = getDatabase(app);
+
+  const globalRef = ref(db, "globalValues");
+  onValue(globalRef, (snapshot) => {
+    const data = snapshot.val();
+    interactionType = data.interactionType;
+  });
 
   // get the entry from the offices table where urlid = id
   const officeRef = ref(db, "offices");

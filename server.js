@@ -41,7 +41,7 @@ function checkAuth(req, res, next) {
 // Routes
 app.get("/", checkAuth, (req, res) => {
   console.log("Made it to /");
-  res.sendFile(__dirname + "/public/visitor.html", (err) => {
+  res.sendFile(__dirname + "/public/office.html", (err) => {
     if (err) {
       console.log("Error sending file:", err);
       res.status(500).send("Failed to send file.");
@@ -78,6 +78,11 @@ app.get("/logout", (req, res) => {
   res.redirect("/login");
 });
 
+app.get("/offices/:id/dropin", checkAuth, (req, res) => {
+  res.sendFile(__dirname + "/public/visitor.html");
+});
+
+// maintain legacy routes
 app.get("/offices/:id/visit", checkAuth, (req, res) => {
   res.sendFile(__dirname + "/public/visitor.html");
 });
