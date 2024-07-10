@@ -9,14 +9,24 @@ import {
   equalTo,
   get,
 } from "firebase/database";
-import { displayUserVideo, joinMeeting, startCurrentUserVideo } from "./zoom-sdk.js";
+import { displayUserVideo, requestPermissions } from "./zoom-sdk.js";
+
+let tokens = window.location.pathname.split("/");
+let id = tokens[tokens.length - 2];
+
+console.log("id", id);
 
 document.addEventListener("DOMContentLoaded", function () {
-  let tokens = window.location.pathname.split("/");
-  let id = tokens[tokens.length - 2];
+  // Start Zoom video stream
+  const acceptPermissionsEvent = requestPermissions(
+    document.getElementById("permissions"),
+    document.getElementById("main-content"),
+    id,
+    "Gates-OH"
+  );
+});
 
-  console.log("id", id);
-
+document.addEventListener("AcceptedPermissions", function () {
   const db = getDatabase(app);
 
   const audio = new Audio("../../soft-ding.mp3");
@@ -28,11 +38,6 @@ document.addEventListener("DOMContentLoaded", function () {
   let unsubscriber = null;
   let timerInterval = null;
   let startTime = null;
-
-  // Start Zoom video stream
-  joinMeeting(id, "Gates-OH", "", true).then(() => {
-    startCurrentUserVideo();
-  });
 
   onValue(
     officeRef,

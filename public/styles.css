@@ -792,7 +792,7 @@ video {
 
 #hallcam-video-container.animate-dropin-blur {
   overflow: hidden;
-  animation: dropin-blur 15s ease-out;
+  animation: dropin-blur 4s ease-in;
 }
 
 .filter-button {
