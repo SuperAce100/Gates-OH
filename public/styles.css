@@ -806,3 +806,19 @@ video {
   background-color: #0093af99;
   color: white;
 }
+
+#mic-dropdown {
+  padding: 10px;
+  margin-top: 20px;
+  border-radius: 8px;
+  background-color: #0093af99;
+  color: white;
+}
+
+#speaker-dropdown {
+  padding: 10px;
+  margin-top: 20px;
+  border-radius: 8px;
+  background-color: #0093af99;
+  color: white;
+}

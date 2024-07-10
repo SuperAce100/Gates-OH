@@ -1,7 +1,7 @@
 import app from "./firebase-config.js";
 import { getDatabase, ref, onValue, update, query, orderByChild, equalTo } from "firebase/database";
 import { getAuth } from "firebase/auth";
-import { displayUserVideo, requestPermissions } from "./zoom-sdk.js";
+import { displayUserVideo, playUserAudio, requestPermissions } from "./zoom-sdk.js";
 
 let interactionType = "scale";
 
@@ -115,7 +115,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     setTimeout(() => {
       document.getElementById("preview-video-container").classList.remove("preview-video-hidden");
-    }, 10000);
+      playUserAudio(id, 100);
+    }, 7000);
   }
 
   async function leaveOffice() {

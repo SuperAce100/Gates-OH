@@ -9,7 +9,7 @@ import {
   equalTo,
   get,
 } from "firebase/database";
-import { displayUserVideo, requestPermissions } from "./zoom-sdk.js";
+import { displayUserVideo, playUserAudio, requestPermissions } from "./zoom-sdk.js";
 
 let tokens = window.location.pathname.split("/");
 let id = tokens[tokens.length - 2];
@@ -118,6 +118,7 @@ document.addEventListener("AcceptedPermissions", function () {
   async function tenSeconds() {
     console.log("10 seconds have elapsed!");
     await displayUserVideo(visitorId, document.getElementById("visitor-video-container"));
+    playUserAudio(visitorId, 100);
     document.getElementById("my-video-container").classList.remove("monitor-video-hidden");
   }
 
