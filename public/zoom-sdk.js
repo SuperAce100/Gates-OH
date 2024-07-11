@@ -74,11 +74,11 @@ async function startCurrentUserAudio() {
     await stream.muteAllUserAudioLocally();
     await stream.startAudio(userId);
 
-    document.dispatchEvent(newAudioStreamEvent);
-    stream.muteUserAudioLocally(userId);
+    await stream.muteUserAudioLocally(userId);
 
     client.on("user-added", async (e) => {
-      await stream.muteUserAudioLocally(e.userId);
+      await stream.adjustUserAudioVolumeLocally(e[0].userId, 0);
+      console.log("Muting user audio", e[0].userId);
     });
 
     console.log("Current user audio started");
