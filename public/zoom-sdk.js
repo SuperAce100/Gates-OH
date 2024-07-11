@@ -77,7 +77,7 @@ async function startCurrentUserAudio() {
     document.dispatchEvent(newAudioStreamEvent);
     stream.muteUserAudioLocally(userId);
 
-    document.addEventListener("user-added", async (e) => {
+    client.on("user-added", async (e) => {
       await stream.muteUserAudioLocally(e.userId);
     });
 
