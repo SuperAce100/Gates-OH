@@ -1,7 +1,7 @@
 import app from "./firebase-config.js";
 import { getDatabase, ref, onValue, update, query, orderByChild, equalTo } from "firebase/database";
 import { getAuth } from "firebase/auth";
-import { displayUserVideo, playUserAudio, requestPermissions } from "./zoom-sdk.js";
+import { displayUserVideo, leaveMeeting, playUserAudio, requestPermissions } from "./zoom-sdk.js";
 
 let interactionType = "scale";
 
@@ -130,6 +130,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     update(currentUserRef, { currentOffice: null }).then(() => {
       console.log("Current office cleared!");
     });
+
+    leaveMeeting(document.getElementById("preview-video-container"));
   }
 
   window.addEventListener("beforeunload", async () => {

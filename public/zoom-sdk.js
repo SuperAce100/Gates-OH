@@ -74,10 +74,10 @@ async function startCurrentUserAudio() {
     await stream.muteAllUserAudioLocally();
     await stream.startAudio(userId);
 
-    const newAudioStreamEvent = new CustomEvent("new-audio-stream", { userId: userId });
     document.dispatchEvent(newAudioStreamEvent);
+    stream.muteUserAudioLocally(userId);
 
-    document.addEventListener("new-audio-stream", async (e) => {
+    document.addEventListener("user-added", async (e) => {
       await stream.muteUserAudioLocally(e.userId);
     });
 
@@ -95,7 +95,7 @@ async function playUserAudio(username, volume) {
   if (user) {
     const stream = client.getMediaStream();
     try {
-      stream.adjustUserAudioVolumeLocally(userId, volume);
+      stream.adjustUserAudioVolumeLocally(user.userId, volume);
       console.log(`Playing ${username}'s audio at volume: ${volume}`);
     } catch (error) {
       console.error("Error playing user's audio:", error);
