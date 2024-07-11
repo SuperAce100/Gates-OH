@@ -73,7 +73,13 @@ async function startCurrentUserAudio() {
     const userId = client.getCurrentUserInfo().userId;
     await stream.muteAllUserAudioLocally();
     await stream.startAudio(userId);
-    await stream.muteUserAudioLocally(userId);
+
+    const newAudioStreamEvent = new CUstomEvent("new-audio-stream", userId);
+    document.dispatchEvent(newAudioStreamEvent);
+
+    document.addEventListener("new-audio-stream", async (userId) => {
+      await stream.muteUserAudioLocally(userId);
+    });
 
     console.log("Current user audio started");
   } catch (error) {
