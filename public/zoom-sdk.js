@@ -74,7 +74,7 @@ async function startCurrentUserAudio() {
     await stream.muteAllUserAudioLocally();
     await stream.startAudio(userId);
 
-    const newAudioStreamEvent = new CUstomEvent("new-audio-stream", userId);
+    const newAudioStreamEvent = new CustomEvent("new-audio-stream", userId);
     document.dispatchEvent(newAudioStreamEvent);
 
     document.addEventListener("new-audio-stream", async (userId) => {
