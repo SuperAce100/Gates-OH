@@ -74,11 +74,11 @@ async function startCurrentUserAudio() {
     await stream.muteAllUserAudioLocally();
     await stream.startAudio(userId);
 
-    const newAudioStreamEvent = new CustomEvent("new-audio-stream", userId);
+    const newAudioStreamEvent = new CustomEvent("new-audio-stream", { userId: userId });
     document.dispatchEvent(newAudioStreamEvent);
 
-    document.addEventListener("new-audio-stream", async (userId) => {
-      await stream.muteUserAudioLocally(userId);
+    document.addEventListener("new-audio-stream", async (e) => {
+      await stream.muteUserAudioLocally(e.userId);
     });
 
     console.log("Current user audio started");
@@ -124,6 +124,7 @@ async function displayUserVideo(username, container, isPreview = false) {
     console.log("User found:", user.displayName);
     await attachVideo(user);
   } else {
+    console.log(users);
     container.innerHTML = `${username} has not connected`;
   }
 
