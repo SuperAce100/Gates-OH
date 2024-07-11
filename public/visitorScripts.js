@@ -67,11 +67,16 @@ document.addEventListener("DOMContentLoaded", async function () {
         console.log("leaving office!");
         unsubscriber();
       } else {
+        let message =
+          "You are about to enter " +
+          document.getElementById("heading").textContent +
+          ". Click to confirm your video and audio permissions.";
         const acceptPermissionsEvent = requestPermissions(
           document.getElementById("permissions"),
           document.getElementById("main-content"),
           user_id,
-          "Gates-OH"
+          "Gates-OH",
+          message
         );
         document.addEventListener("AcceptedPermissions", async function () {
           await joinOffice();
@@ -88,8 +93,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     document.getElementById("hallcam-container").style.display = "none";
     await displayUserVideo(id, document.getElementById("hallcam-video"));
     await displayUserVideo(user_id, document.getElementById("preview-video"));
-    document.getElementById("hallcam-container").style.display = "flex";
-    document.getElementById("talkButton").addEventListener("click", () => {});
+    document.getElementById("hallcam-container").style.display = "block";
 
     const officeRef = ref(db, `offices/${id}`);
     update(officeRef, { currentVisitorId: user_id }).then(() => {
@@ -113,10 +117,19 @@ document.addEventListener("DOMContentLoaded", async function () {
         this.classList.remove("animate-dropin-" + interactionType);
       });
 
-    setTimeout(() => {
-      document.getElementById("preview-video-container").classList.remove("preview-video-hidden");
-      playUserAudio(id, 100);
-    }, 7000);
+    document.getElementById("preview-video-container").classList.remove("preview-video-hidden");
+    // const duration = 5000; // 5 seconds
+    // const interval = 100; // 100 milliseconds
+    // const steps = duration / interval;
+    // const stepSize = 100 / steps;
+    // let currentVolume = 0;
+    // const volumeInterval = setInterval(() => {
+    //   currentVolume += stepSize;
+    //   playUserAudio(id, currentVolume / 100);
+    //   if (currentVolume >= 100) {
+    //     clearInterval(volumeInterval);
+    //   }
+    // }, interval);
   }
 
   async function leaveOffice() {

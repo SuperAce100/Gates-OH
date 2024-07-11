@@ -252,7 +252,13 @@ function generateSpeakerDropdown(container) {
   container.appendChild(dropdown);
 }
 
-async function requestPermissions(container, content, username, meetingName) {
+async function requestPermissions(
+  container,
+  content,
+  username,
+  meetingName,
+  message = "Accept permissions to drop in!"
+) {
   const permissionsForm = document.createElement("div");
 
   permissionsForm.className = "container glass permissions-form";
@@ -261,7 +267,7 @@ async function requestPermissions(container, content, username, meetingName) {
   const label = document.createElement("p");
   label.id = "label";
   label.className = "monitor-label";
-  label.innerText = "Accept permissions to drop in!";
+  label.innerText = message;
 
   const videoContainer = document.createElement("div");
   videoContainer.className = "video";
