@@ -16,8 +16,12 @@
   <body>
     <div id="main-content">
       <div class="monitor-container">
-        <div class="monitor-subcontainer">
-          <p id="label" class="monitor-label">No one is here</p>
+        <p id="label" class="monitor-label">No one is here</p>
+
+        <div class="video preview-video monitor-preview-video" id="preview-video-container">
+          <video-player-container id="preview-video"></video-player-container>
+        </div>
+        <div class="monitor-video-supercontainer">
           <div class="video monitor-video" id="my-video-container">
             <video-player-container id="visitor-video-container"></video-player-container>
           </div>
@@ -25,7 +29,6 @@
         <div class="footer monitor-footer">
           <p id="location" class="monitor-location">Your Office</p>
           <div class="spacer"></div>
-          <button id="enableSoundButton" class="glass-button">Click to enable sound</button>
         </div>
       </div>
     </div>

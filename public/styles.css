@@ -277,18 +277,18 @@ label {
 }
 
 #my-video-container {
-  margin-top: 10px;
   border-radius: 12px;
   background: #ffffff4d;
-  width: 100%;
-  height: auto;
   aspect-ratio: 16/9;
   overflow: hidden;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  max-height: calc(100vh - 20px);
+  min-height: 100%;
+  width: auto;
+  margin: auto;
+  z-index: -20;
 }
-
-/* adjust the CSS to your liking */
 
 video-player-container {
   width: 101%;
@@ -304,14 +304,28 @@ video-player {
 .monitor-label {
   font-size: 2em;
   transition: 1s;
-  flex-grow: 5;
   text-align: center;
+  position: absolute;
+  width: 100%;
+  border: 2px solid blue;
+  z-index: 10;
 }
 
 .monitor-large {
+  margin: 0px;
   font-size: 3em;
   font-family: Inter, Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  text-align: left;
+  position: absolute;
+  width: fit-content;
+  top: 20px;
+  left: 20px;
   transition: 1s;
+  background-color: #ffffffad;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  padding: 20px;
 }
 
 .monitor-location {
@@ -319,20 +333,18 @@ video-player {
 }
 
 .monitor-container {
-  margin-top: -10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  width: 100vw;
   height: 100vh;
 }
 
-.monitor-subcontainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 30px;
+.monitor-video-supercontainer {
+  width: 100%;
+}
+
+.monitor-preview-video {
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 
 #enableSoundButton {
@@ -357,9 +369,9 @@ video-player {
 }
 
 .monitor-video {
-  width: 60%;
+  width: 100%;
   transition: 2s;
-  max-height: 500px;
+  max-height: 1080px;
 }
 
 #my-video-container.monitor-video-hidden {
@@ -380,6 +392,7 @@ video-player {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.1);
   margin: auto;
+  z-index: 0;
 }
 
 #preview-video-container {
@@ -391,6 +404,7 @@ video-player {
   overflow: hidden;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 999;
 }
 
 .hallcam-video {
@@ -580,7 +594,7 @@ video {
   justify-content: center;
   padding: 10px;
   margin: auto;
-  min-width: min(700px, 80%);
+  min-width: min(fit-content, 80%);
 }
 
 #permissions-video-container {
@@ -846,6 +860,21 @@ video {
 }
 
 #hallcam-video-container.animate-dropin-blur {
+  overflow: hidden;
+  animation: dropin-blur 4s ease-in;
+}
+
+#my-video-container.animate-dropin-scale {
+  overflow: hidden;
+  animation: dropin-scale 25s ease-in-out;
+}
+
+#my-video-container.animate-dropin-slide {
+  overflow: hidden;
+  animation: dropin-slide 25s ease-in-out;
+}
+
+#my-video-container.animate-dropin-blur {
   overflow: hidden;
   animation: dropin-blur 4s ease-in;
 }

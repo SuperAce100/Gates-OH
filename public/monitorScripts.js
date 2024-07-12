@@ -22,7 +22,8 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("permissions"),
     document.getElementById("main-content"),
     id,
-    "Gates-OH"
+    "Gates-OH",
+    "Accept permissions"
   );
 });
 
@@ -36,8 +37,15 @@ document.addEventListener("AcceptedPermissions", function () {
 
   let visitorId = null;
   let unsubscriber = null;
-  let timerInterval = null;
-  let startTime = null;
+
+  let interactionType = null;
+  const globalRef = ref(db, "globalValues");
+  onValue(globalRef, (snapshot) => {
+    const data = snapshot.val();
+    interactionType = data.interactionType;
+  });
+
+  displayUserVideo(id, document.getElementById("preview-video"), true);
 
   onValue(
     officeRef,
@@ -52,16 +60,19 @@ document.addEventListener("AcceptedPermissions", function () {
       // Check if there is no current visitor
       if (!office.currentVisitorId) {
         if (unsubscriber) unsubscriber();
-        stopTimer();
         console.log("No one is currently visiting.");
         document.getElementById("label").textContent = "No one is currently visiting.";
         document.getElementById("label").classList.remove("monitor-large");
         visitorId = null; // Clear the visitorId
+        document.getElementById("my-video-container").classList.add("monitor-video-hidden");
+        document.getElementById("visitor-video-container").innerHTML = "";
         return;
       } else {
         visitorId = office.currentVisitorId;
         unsubscriber = updateCurrentUser(visitorId, unsubscriber);
-        startTimer(); // Start the timer when someone joins
+        await displayUserVideo(visitorId, document.getElementById("visitor-video-container"));
+        await playUserAudio(visitorId, 100);
+        runInteraction();
       }
     },
     (error) => {
@@ -79,8 +90,7 @@ document.addEventListener("AcceptedPermissions", function () {
         const user = data;
         console.log("changing user data with new user", user);
 
-        document.getElementById("label").textContent =
-          user.preferredName + " is currently visiting.";
+        document.getElementById("label").textContent = user.preferredName + " is here.";
         document.getElementById("label").classList.add("monitor-large");
         audio.play();
       },
@@ -90,36 +100,15 @@ document.addEventListener("AcceptedPermissions", function () {
     );
   }
 
-  function startTimer() {
-    if (timerInterval) clearInterval(timerInterval);
-    startTime = Date.now();
-    timerInterval = setInterval(() => {
-      const elapsedSeconds = getTimeSeconds();
-      // console.log(`Time elapsed: ${elapsedSeconds} seconds`);
-      if (elapsedSeconds === 10) {
-        tenSeconds();
-      }
-    }, 1000);
-  }
-
-  function stopTimer() {
-    if (timerInterval) clearInterval(timerInterval);
-    timerInterval = null;
-    startTime = null;
-    document.getElementById("my-video-container").classList.add("monitor-video-hidden");
-  }
-
-  function getTimeSeconds() {
-    if (!startTime) return 0;
-    let elapsedTime = Date.now() - startTime;
-    return Math.floor(elapsedTime / 1000);
-  }
-
-  async function tenSeconds() {
-    console.log("10 seconds have elapsed!");
-    await displayUserVideo(visitorId, document.getElementById("visitor-video-container"));
-    playUserAudio(visitorId, 100);
+  function runInteraction() {
     document.getElementById("my-video-container").classList.remove("monitor-video-hidden");
+
+    document
+      .getElementById("my-video-container")
+      .classList.add("animate-dropin-" + interactionType);
+    document.getElementById("my-video-container").addEventListener("animationend", function () {
+      this.classList.remove("animate-dropin-" + interactionType);
+    });
   }
 
   function initializeAudio() {
