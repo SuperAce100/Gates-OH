@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     let currentVolume = 0;
     const volumeInterval = setInterval(() => {
       currentVolume += stepSize;
-      playUserAudio(id, currentVolume / 100);
+      playUserAudio(id, currentVolume);
       if (currentVolume >= 100) {
         clearInterval(volumeInterval);
       }
