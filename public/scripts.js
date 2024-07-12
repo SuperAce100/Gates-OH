@@ -1,6 +1,6 @@
 import app from "./firebase-config.js";
 import { getDatabase, ref, onValue, update, query, orderByChild, equalTo } from "firebase/database";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 
 const db = getDatabase(app);
 const officesRef = ref(db, "offices");
@@ -9,31 +9,45 @@ let currentUserID = "";
 
 const auth = getAuth(app);
 
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    const uid = user.uid;
-    console.log("UID", uid);
+// Function to get the current user, returns a promise
+function getCurrentUser() {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      unsubscribe(); // Unsubscribe immediately after getting the user
+      resolve(user);
+    }, reject);
+  });
+}
 
-    const userRef = query(ref(db, "users"), orderByChild("user-id"), equalTo(uid));
-    onValue(userRef, (snapshot) => {
-      const userData = snapshot.val();
-      if (userData) {
-        const userKey = Object.keys(userData)[0];
-        currentUserID = userData[userKey].id;
-        console.log("user", userData[userKey]);
+getCurrentUser()
+  .then((user) => {
+    if (user) {
+      const uid = user.uid;
+      console.log("UID", uid);
 
-        onValue(officesRef, (snapshot) => {
-          const data = snapshot.val();
-          const offices = Object.values(data);
-          console.log("offices", offices);
-          displayOffices(offices);
-        });
-      }
-    });
-  } else {
-    console.log("No user is signed in.");
-  }
-});
+      const userRef = query(ref(db, "users"), orderByChild("user-id"), equalTo(uid));
+      onValue(userRef, (snapshot) => {
+        const userData = snapshot.val();
+        if (userData) {
+          const userKey = Object.keys(userData)[0];
+          currentUserID = userData[userKey].id;
+          console.log("user", userData[userKey]);
+
+          onValue(officesRef, (snapshot) => {
+            const data = snapshot.val();
+            const offices = Object.values(data);
+            console.log("offices", offices);
+            displayOffices(offices);
+          });
+        }
+      });
+    } else {
+      console.log("No user is signed in.");
+    }
+  })
+  .catch((error) => {
+    console.error("Error fetching the current user: ", error);
+  });
 
 let interactionRef = ref(db, "globalValues");
 
