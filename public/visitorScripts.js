@@ -67,10 +67,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         console.log("leaving office!");
         unsubscriber();
       } else {
-        let message =
-          "You are about to enter " +
-          document.getElementById("heading").textContent +
-          ". Click to confirm your video and audio permissions.";
+        let message = "Drop by " + document.getElementById("heading").textContent;
         const acceptPermissionsEvent = requestPermissions(
           document.getElementById("permissions"),
           document.getElementById("main-content"),

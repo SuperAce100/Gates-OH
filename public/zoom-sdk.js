@@ -290,14 +290,22 @@ async function requestPermissions(
   const acceptButton = document.createElement("button");
   acceptButton.id = "accept-permissions-button";
   acceptButton.className = "glass-button denied";
-  acceptButton.innerText = "Join!";
+  acceptButton.innerText = message;
   acceptButton.disabled = true;
 
-  permissionsForm.appendChild(label);
-  permissionsForm.appendChild(videoContainer);
-  permissionsForm.appendChild(cameraDropdownContainer);
-  permissionsForm.appendChild(micDropdownContainer);
-  permissionsForm.appendChild(speakerDropdownContainer);
+  const dropdownDiv = document.createElement("div");
+  dropdownDiv.className = "permissions-dropdown-container";
+  dropdownDiv.appendChild(cameraDropdownContainer);
+  dropdownDiv.appendChild(micDropdownContainer);
+  dropdownDiv.appendChild(speakerDropdownContainer);
+
+  const rowDiv = document.createElement("div");
+  rowDiv.className = "row permissions-row";
+
+  rowDiv.appendChild(videoContainer);
+  rowDiv.appendChild(dropdownDiv);
+  permissionsForm.appendChild(rowDiv);
+
   permissionsForm.appendChild(acceptButton);
 
   container.appendChild(permissionsForm);
@@ -314,6 +322,7 @@ async function requestPermissions(
   generateSpeakerDropdown(speakerDropdownContainer);
 
   acceptButton.disabled = false;
+  acceptButton.id = "acceptButton";
 
   acceptButton.addEventListener("click", async function () {
     await detachVideo(username, document.getElementById("permissions-video"));

@@ -579,6 +579,32 @@ video {
   align-items: center;
   justify-content: center;
   padding: 10px;
+  margin: auto;
+  min-width: min(700px, 80%);
+}
+
+#permissions-video-container {
+  aspect-ratio: 16/9;
+  flex: 1;
+  min-width: 50%;
+}
+
+.permissions-dropdown-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 10px;
+  flex: 1;
+}
+
+.permissions-row {
+  gap: 20px;
+  width: 100%;
+}
+
+#acceptButton {
+  font-size: 2em;
 }
 
 .filter-container {
