@@ -115,18 +115,18 @@ document.addEventListener("DOMContentLoaded", async function () {
       });
 
     document.getElementById("preview-video-container").classList.remove("preview-video-hidden");
-    // const duration = 5000; // 5 seconds
-    // const interval = 100; // 100 milliseconds
-    // const steps = duration / interval;
-    // const stepSize = 100 / steps;
-    // let currentVolume = 0;
-    // const volumeInterval = setInterval(() => {
-    //   currentVolume += stepSize;
-    //   playUserAudio(id, currentVolume / 100);
-    //   if (currentVolume >= 100) {
-    //     clearInterval(volumeInterval);
-    //   }
-    // }, interval);
+    const duration = 5000; // 5 seconds
+    const interval = 100; // 100 milliseconds
+    const steps = duration / interval;
+    const stepSize = 100 / steps;
+    let currentVolume = 0;
+    const volumeInterval = setInterval(() => {
+      currentVolume += stepSize;
+      playUserAudio(id, currentVolume / 100);
+      if (currentVolume >= 100) {
+        clearInterval(volumeInterval);
+      }
+    }, interval);
   }
 
   async function leaveOffice() {
