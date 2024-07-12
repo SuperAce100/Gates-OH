@@ -1,15 +1,38 @@
-import { on } from "process";
 import app from "./firebase-config.js";
-import { getDatabase, ref, onValue, update } from "firebase/database";
+import { getDatabase, ref, onValue, update, query, orderByChild, equalTo } from "firebase/database";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const db = getDatabase(app);
 const officesRef = ref(db, "offices");
 
-onValue(officesRef, (snapshot) => {
-  const data = snapshot.val();
-  const offices = Object.values(data);
-  console.log("offices", offices);
-  displayOffices(offices);
+let currentUserID = "";
+
+const auth = getAuth(app);
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    const uid = user.uid;
+    console.log("UID", uid);
+
+    const userRef = query(ref(db, "users"), orderByChild("user-id"), equalTo(uid));
+    onValue(userRef, (snapshot) => {
+      const userData = snapshot.val();
+      if (userData) {
+        const userKey = Object.keys(userData)[0];
+        currentUserID = userData[userKey].id;
+        console.log("user", userData[userKey]);
+
+        onValue(officesRef, (snapshot) => {
+          const data = snapshot.val();
+          const offices = Object.values(data);
+          console.log("offices", offices);
+          displayOffices(offices);
+        });
+      }
+    });
+  } else {
+    console.log("No user is signed in.");
+  }
 });
 
 let interactionRef = ref(db, "globalValues");
@@ -58,6 +81,10 @@ function displayOffices(offices) {
   officesContainer.innerHTML = "";
 
   offices.forEach((office) => {
+    if (office.urlid === currentUserID) {
+      console.log(office.urlid, currentUserID);
+      return;
+    }
     const officeDiv = document.createElement("div");
     officeDiv.classList.add("person");
 
