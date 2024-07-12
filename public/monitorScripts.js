@@ -7,6 +7,7 @@ import {
   query,
   orderByChild,
   equalTo,
+  limitToLast,
   get,
 } from "firebase/database";
 import { displayUserVideo, playUserAudio, requestPermissions } from "./zoom-sdk.js";
@@ -60,8 +61,11 @@ document.addEventListener("AcceptedPermissions", function () {
       // Check if there is no current visitor
       if (!office.currentVisitorId) {
         if (unsubscriber) unsubscriber();
-        console.log("No one is currently visiting.");
-        document.getElementById("label").textContent = "No one is currently visiting.";
+
+        let visitLog = await generateVisitLog();
+        console.log("VisitLog: ", visitLog);
+        document.getElementById("label").innerHTML = visitLog;
+
         document.getElementById("label").classList.remove("monitor-large");
         visitorId = null; // Clear the visitorId
         document.getElementById("my-video-container").classList.add("monitor-video-hidden");
@@ -111,6 +115,46 @@ document.addEventListener("AcceptedPermissions", function () {
     });
   }
 
+  async function generateVisitLog() {
+    let wordOptions = [
+      "dropped by at",
+      "visited at",
+      "stopped by at",
+      "came over at",
+      "arrived at",
+      "showed up at",
+      "swung by at",
+      "popped in at",
+      "checked in at",
+      "made an appearance at",
+      "passed by at",
+    ];
+
+    function getRandomWord(wordOptions) {
+      return wordOptions[Math.floor(Math.random() * wordOptions.length)];
+    }
+
+    const visitLogRef = ref(db, `offices/${id}/visitLog`);
+    const queryRef = query(visitLogRef, orderByChild("time"), limitToLast(5));
+    try {
+      const snapshot = await get(queryRef);
+      const visitLogs = snapshot.val();
+      let sentences = [];
+      for (const key in visitLogs) {
+        const visitLog = visitLogs[key];
+        const sentence = `${visitLog.preferredName} ${getRandomWord(wordOptions)} ${
+          visitLog.time
+        }.`;
+        sentences.push(sentence);
+      }
+      const result = sentences.join("<br>");
+      console.log(result);
+      return result;
+    } catch (error) {
+      console.error("Error reading visit log:", error);
+    }
+  }
+
   function initializeAudio() {
     audio.play().catch(() => {
       console.log("Audio playback not allowed until user interaction.");
@@ -120,5 +164,4 @@ document.addEventListener("AcceptedPermissions", function () {
   document.addEventListener("click", initializeAudio, { once: true });
 
   // Ensure the button initializes the audio context
-  document.getElementById("enableSoundButton").addEventListener("click", initializeAudio);
 });

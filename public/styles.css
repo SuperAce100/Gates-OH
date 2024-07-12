@@ -307,8 +307,8 @@ video-player {
   text-align: center;
   position: absolute;
   width: 100%;
-  border: 2px solid blue;
   z-index: 10;
+  top: 40%;
 }
 
 .monitor-large {

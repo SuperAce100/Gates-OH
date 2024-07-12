@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   let user_id = null;
+  let preferredName = null;
 
   let tokens = window.location.pathname.split("/");
   let id = tokens[tokens.length - 2];
@@ -63,6 +64,8 @@ document.addEventListener("DOMContentLoaded", async function () {
       console.log("user", user);
 
       user_id = user.id;
+      preferredName = user.preferredName;
+
       if (user.currentOffice) {
         console.log("leaving office!");
         unsubscriber();
@@ -87,6 +90,23 @@ document.addEventListener("DOMContentLoaded", async function () {
   );
 
   async function joinOffice() {
+    const visitLogRef = ref(db, `offices/${id}/visitLog`);
+    // current time in HH:MM format
+    const currentTime = new Date().toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+
+    const visitData = {
+      preferredName: preferredName,
+      id: user_id,
+      time: currentTime,
+    };
+    update(visitLogRef, { [currentTime]: visitData }).then(() => {
+      console.log("Visit log updated!");
+    });
+
     document.getElementById("hallcam-container").style.display = "none";
     await displayUserVideo(id, document.getElementById("hallcam-video"));
     await displayUserVideo(user_id, document.getElementById("preview-video"));
