@@ -1,6 +1,6 @@
 import app from "./firebase-config.js";
 import { getDatabase, ref, onValue, update, query, orderByChild, equalTo } from "firebase/database";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { displayUserVideo, leaveMeeting, playUserAudio, requestPermissions } from "./zoom-sdk.js";
 
 let interactionType = "scale";
@@ -14,11 +14,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   });
   const auth = getAuth(app);
   let uid = null;
-  const user = auth.currentUser;
-  if (user) {
-    uid = user.uid;
-    console.log("UID: ", uid);
-  }
 
   let user_id = null;
   let preferredName = null;
@@ -54,41 +49,52 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   );
 
-  // get the entry from the users table where uid is the same as the currently authenticated user
-  const userRef = ref(db, "users");
-  const userQuery = query(userRef, orderByChild("uid"), equalTo(uid));
-  const unsubscriber = onValue(
-    userQuery,
-    (snapshot) => {
-      const data = snapshot.val();
-      const user = data[Object.keys(data)[0]];
-      console.log("user", user);
+  auth.onAuthStateChanged((currentUser) => {
+    if (currentUser) {
+      uid = currentUser.uid;
+      console.log("User: ", currentUser);
+      console.log("UID: ", uid);
+      // get the entry from the users table where uid is the same as the currently authenticated user
+      const userRef = ref(db, "users");
+      const userQuery = query(userRef, orderByChild("user-id"), equalTo(uid));
+      const unsubscriber = onValue(
+        userQuery,
+        (snapshot) => {
+          const data = snapshot.val();
+          console.log("data", data);
+          const user = data[Object.keys(data)[0]];
+          console.log("user", user);
 
-      user_id = user.id;
-      preferredName = user.preferredName;
+          user_id = user.id;
+          preferredName = user.preferredName;
 
-      if (user.currentOffice) {
-        console.log("leaving office!");
-        unsubscriber();
-      } else {
-        let message = "Drop by " + document.getElementById("heading").textContent;
-        const acceptPermissionsEvent = requestPermissions(
-          document.getElementById("permissions"),
-          document.getElementById("main-content"),
-          user_id,
-          "Gates-OH",
-          message
-        );
-        document.addEventListener("AcceptedPermissions", async function () {
-          await joinOffice();
-          runInteraction();
-        });
-      }
-    },
-    (error) => {
-      console.error("Error reading data:", error);
+          if (user.currentOffice) {
+            console.log("leaving office!");
+            unsubscriber();
+          } else {
+            let message = "Drop by " + document.getElementById("heading").textContent;
+            const acceptPermissionsEvent = requestPermissions(
+              document.getElementById("permissions"),
+              document.getElementById("main-content"),
+              user_id,
+              "Gates-OH",
+              message
+            );
+            document.addEventListener("AcceptedPermissions", async function () {
+              await joinOffice();
+              runInteraction();
+            });
+          }
+        },
+        (error) => {
+          console.error("Error reading data:", error);
+        }
+      );
+    } else {
+      console.error("No user is signed in.");
+      window.location.href = "/login";
     }
-  );
+  });
 
   async function joinOffice() {
     const visitLogRef = ref(db, `offices/${id}/visitLog`);
