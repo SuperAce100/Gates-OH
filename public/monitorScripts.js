@@ -116,17 +116,17 @@ document.addEventListener("AcceptedPermissions", function () {
 
   async function generateVisitLog(container) {
     let wordOptions = [
-      "dropped by at",
-      "visited at",
-      "stopped by at",
-      "came over at",
-      "arrived at",
-      "showed up at",
-      "swung by at",
-      "popped in at",
-      "checked in at",
-      "made an appearance at",
-      "passed by at",
+      "dropped by",
+      "visited",
+      "stopped by",
+      "came over",
+      "arrived",
+      "showed up",
+      "swung by",
+      "popped in",
+      "checked in",
+      "made an appearance",
+      "passed by",
     ];
 
     function getRandomWord(wordOptions) {
@@ -143,14 +143,26 @@ document.addEventListener("AcceptedPermissions", function () {
         let sentences = [];
         for (const key in visitLogs) {
           const visitLog = visitLogs[key];
-          const formattedTime = new Date(visitLog.time).toLocaleString("en-US", {
+          const visitTime = new Date(visitLog.time);
+          const now = new Date();
+
+          const isToday =
+            visitTime.getDate() === now.getDate() &&
+            visitTime.getMonth() === now.getMonth() &&
+            visitTime.getFullYear() === now.getFullYear();
+
+          const formattedTime = visitTime.toLocaleString("en-US", {
             hour: "numeric",
             minute: "numeric",
-            weekday: "long",
           });
+
+          const dayDescriptor = isToday
+            ? "today"
+            : visitTime.toLocaleString("en-US", { weekday: "long" });
+
           const sentence = `${visitLog.preferredName} ${getRandomWord(
             wordOptions
-          )} ${formattedTime}.`;
+          )} ${dayDescriptor} at ${formattedTime}.`;
           sentences.push(sentence);
         }
         const result = sentences.join("<br>");
