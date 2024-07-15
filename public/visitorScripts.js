@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   const user = auth.currentUser;
   if (user) {
     uid = user.uid;
+    console.log("UID: ", uid);
   }
 
   let user_id = null;
