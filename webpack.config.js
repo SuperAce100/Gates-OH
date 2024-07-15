@@ -14,6 +14,7 @@ module.exports = {
     zoomTestScripts: "./public/zoomTestScripts.js",
     zoomTestScripts2: "./public/zoomTestScripts2.js",
     filterTestScripts: "./public/filterTestScripts.js",
+    signupScripts: "./public/signupScripts.js",
   },
   output: {
     filename: "[name]-bundle.js",

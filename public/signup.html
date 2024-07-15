@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up</title>
+    <link rel="icon" href="favicon.ico" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Inter:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container glass form-container">
+      <h1>Sign Up</h1>
+      <form action="" id="signup-form">
+        <label for="full-name">Full Name</label>
+        <input class="glass" type="text" id="full-name" name="full-name" />
+
+        <label for="preferred-name">Preferred Name</label>
+        <input class="glass" type="text" id="preferred-name" name="preferred-name" />
+
+        <label for="username">Username</label>
+        <input class="glass" type="text" id="username" name="username" />
+
+        <label for="email">Email</label>
+        <input class="glass" type="email" id="email" name="email" />
+
+        <label for="password">Password</label>
+        <input class="glass" type="password" id="password" name="password" />
+
+        <button type="submit" class="glass-button">Sign Up</button>
+        <div id="error-message"></div>
+      </form>
+      <p>Already have an account? <a href="login">Log in here</a></p>
+    </div>
+    <script src="./dist/signupScripts-bundle.js"></script>
+  </body>
+</html>

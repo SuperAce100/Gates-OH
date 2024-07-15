@@ -58,6 +58,10 @@ app.get("/login", (req, res) => {
   res.sendFile(__dirname + "/public/login.html"); // Serve login page
 });
 
+app.get("/signup", (req, res) => {
+  res.sendFile(__dirname + "/public/signup.html"); // Serve login page
+});
+
 app.post("/sessionLogin", (req, res) => {
   const idToken = req.body.idToken.toString();
   const expiresIn = 60 * 60 * 24 * 5 * 1000; // 5 days

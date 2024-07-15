@@ -184,6 +184,36 @@ form {
   margin-bottom: 0px;
 }
 
+.form-container > p {
+  margin-left: 10px;
+  margin-bottom: 0px;
+  margin-top: 0px;
+}
+
+.form-container > p > a {
+  color: #0093af;
+}
+
+input[type="text"] {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: large;
+  color: #161f27;
+  outline: none;
+  transition: 0.2s;
+}
+
+input[type="text"]:hover {
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.07);
+}
+
+input[type="text"]:focus {
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.07);
+}
+
 input[type="email"] {
   padding: 10px;
   border-radius: 10px;
