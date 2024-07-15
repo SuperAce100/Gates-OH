@@ -4,7 +4,12 @@ const admin = require("firebase-admin");
 const session = require("express-session");
 
 // Initialize Firebase Admin SDK
-var serviceAccount = require("./secrets/gates-oh-11854eea02c6.json"); // Download this from your Firebase console
+var serviceAccount;
+try {
+  serviceAccount = require("./secrets/gates-oh-11854eea02c6.json");
+} catch (error) {
+  serviceAccount = require("./secrets2/gates-oh-11854eea02c6.json");
+}
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
