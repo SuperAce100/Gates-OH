@@ -62,9 +62,8 @@ document.addEventListener("AcceptedPermissions", function () {
       if (!office.currentVisitorId) {
         if (unsubscriber) unsubscriber();
 
-        let visitLog = await generateVisitLog();
+        let visitLog = await generateVisitLog(document.getElementById("label"));
         console.log("VisitLog: ", visitLog);
-        document.getElementById("label").innerHTML = visitLog;
 
         document.getElementById("label").classList.remove("monitor-large");
         visitorId = null; // Clear the visitorId
@@ -115,7 +114,7 @@ document.addEventListener("AcceptedPermissions", function () {
     });
   }
 
-  async function generateVisitLog() {
+  async function generateVisitLog(container) {
     let wordOptions = [
       "dropped by at",
       "visited at",
@@ -136,23 +135,26 @@ document.addEventListener("AcceptedPermissions", function () {
 
     const visitLogRef = ref(db, `offices/${id}/visitLog`);
     const queryRef = query(visitLogRef, orderByChild("time"), limitToLast(5));
-    try {
-      const snapshot = await get(queryRef);
-      const visitLogs = snapshot.val();
-      let sentences = [];
-      for (const key in visitLogs) {
-        const visitLog = visitLogs[key];
-        const sentence = `${visitLog.preferredName} ${getRandomWord(wordOptions)} ${
-          visitLog.time
-        }.`;
-        sentences.push(sentence);
+
+    // Set up a real-time listener
+    onValue(queryRef, (snapshot) => {
+      try {
+        const visitLogs = snapshot.val();
+        let sentences = [];
+        for (const key in visitLogs) {
+          const visitLog = visitLogs[key];
+          const sentence = `${visitLog.preferredName} ${getRandomWord(wordOptions)} ${
+            visitLog.time
+          }.`;
+          sentences.push(sentence);
+        }
+        const result = sentences.join("<br>");
+        console.log(result);
+        container.innerHTML = result;
+      } catch (error) {
+        console.error("Error reading visit log:", error);
       }
-      const result = sentences.join("<br>");
-      console.log(result);
-      return result;
-    } catch (error) {
-      console.error("Error reading visit log:", error);
-    }
+    });
   }
 
   function initializeAudio() {
