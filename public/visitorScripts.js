@@ -92,11 +92,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   async function joinOffice() {
     const visitLogRef = ref(db, `offices/${id}/visitLog`);
     // current time in HH:MM format
-    const currentTime = new Date().toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    });
+    const currentTime = new Date().toLocaleString();
 
     const visitData = {
       preferredName: preferredName,

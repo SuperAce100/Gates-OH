@@ -143,9 +143,14 @@ document.addEventListener("AcceptedPermissions", function () {
         let sentences = [];
         for (const key in visitLogs) {
           const visitLog = visitLogs[key];
-          const sentence = `${visitLog.preferredName} ${getRandomWord(wordOptions)} ${
-            visitLog.time
-          }.`;
+          const formattedTime = new Date(visitLog.time).toLocaleString("en-US", {
+            hour: "numeric",
+            minute: "numeric",
+            weekday: "long",
+          });
+          const sentence = `${visitLog.preferredName} ${getRandomWord(
+            wordOptions
+          )} ${formattedTime}.`;
           sentences.push(sentence);
         }
         const result = sentences.join("<br>");
