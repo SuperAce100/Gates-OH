@@ -163,7 +163,7 @@ document.addEventListener("AcceptedPermissions", function () {
           const sentence = `${visitLog.preferredName} ${getRandomWord(
             wordOptions
           )} ${dayDescriptor} at ${formattedTime}.`;
-          sentences.push(sentence);
+          sentences.unshift(sentence);
         }
         const result = sentences.join("<br>");
         console.log(result);
