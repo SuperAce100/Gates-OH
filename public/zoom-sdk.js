@@ -1,10 +1,10 @@
 import KJUR from "jsrsasign";
-import ZoomVideo from "@zoom/videosdk";
+import ZoomVideo, { VideoQuality } from "@zoom/videosdk";
 import { getAuth } from "firebase/auth";
 import { getDatabase, ref, query, orderByChild, equalTo, get, update } from "firebase/database";
 import app from "./firebase-config.js";
 
-const RESOLUTION = { width: 1280, height: 720 };
+const RESOLUTION = { width: 1920, height: 1080 };
 const sdkKey = process.env.ZOOM_SDK_KEY;
 const sdkSecret = process.env.ZOOM_SDK_SECRET;
 const client = ZoomVideo.createClient();
@@ -112,7 +112,7 @@ async function displayUserVideo(username, container, isPreview = false) {
   async function attachVideo(user) {
     const stream = client.getMediaStream();
     try {
-      const userVideo = await stream.attachVideo(user.userId, RESOLUTION);
+      const userVideo = await stream.attachVideo(user.userId, VideoQuality.Video_1080P);
       if (isPreview) {
         userVideo.style.transform = "scaleX(-1)";
       }
