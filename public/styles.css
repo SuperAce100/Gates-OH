@@ -331,20 +331,40 @@ video-player {
   margin: -2px;
 }
 
+#label {
+  margin-left: 15%;
+}
+
+#label > span > p {
+  margin-top: 0px;
+  display: inline;
+}
+
+#label > span {
+}
+
+.monitor-name {
+  font-size: 3em;
+  font-weight: bold;
+  margin-right: 30px;
+}
+.monitor-time {
+  font-size: 2em;
+  opacity: 0.5;
+}
+
 .monitor-label {
   font-size: 2em;
   transition: 1s;
-  text-align: center;
+  text-align: left;
   position: absolute;
-  width: 100%;
   z-index: 10;
-  top: 40%;
+  top: 15%;
 }
 
 .monitor-large {
   margin: 0px;
   font-size: 3em;
-  font-family: Inter, Arial, Helvetica, sans-serif;
   font-weight: bold;
   text-align: left;
   position: absolute;

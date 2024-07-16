@@ -141,7 +141,9 @@ document.addEventListener("AcceptedPermissions", function () {
       try {
         const visitLogs = snapshot.val();
         let sentences = [];
+        let index = 0;
         for (const key in visitLogs) {
+          index++;
           const visitLog = visitLogs[key];
           const visitTime = new Date(visitLog.time);
           const now = new Date();
@@ -160,11 +162,14 @@ document.addEventListener("AcceptedPermissions", function () {
             ? "today"
             : visitTime.toLocaleString("en-US", { weekday: "long" });
 
-          const sentence = `${visitLog.preferredName} ${getRandomWord(
-            wordOptions
-          )} ${dayDescriptor} at ${formattedTime}.`;
+          const sentence = `<span style="opacity: ${
+            0.4 + 0.15 * index
+          }"><p class="monitor-name" id="visitlog-${index}">${
+            visitLog.preferredName
+          }</p> <p class="monitor-time">${dayDescriptor} at ${formattedTime}.</p></span>`;
           sentences.unshift(sentence);
         }
+
         const result = sentences.join("<br>");
         console.log(result);
         container.innerHTML = result;
