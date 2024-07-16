@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const acceptPermissionsEvent = requestPermissions(
     document.getElementById("permissions"),
     document.getElementById("main-content"),
-    id,
+    id + " monitor",
     "Gates-OH",
     "Accept permissions"
   );
@@ -46,7 +46,7 @@ document.addEventListener("AcceptedPermissions", function () {
     interactionType = data.interactionType;
   });
 
-  displayUserVideo(id, document.getElementById("preview-video"), true);
+  displayUserVideo(id + " monitor", document.getElementById("preview-video"), true);
 
   onValue(
     officeRef,

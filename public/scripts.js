@@ -33,6 +33,10 @@ getCurrentUser()
           currentUserID = userData[userKey].id;
           console.log("user", userData[userKey]);
 
+          document.getElementById("monitor-button").addEventListener("click", () => {
+            window.location.href = `/offices/${currentUserID}/monitor`;
+          });
+
           onValue(officesRef, (snapshot) => {
             const data = snapshot.val();
             const offices = Object.values(data);

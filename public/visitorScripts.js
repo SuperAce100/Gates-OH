@@ -98,20 +98,18 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   async function joinOffice() {
     const visitLogRef = ref(db, `offices/${id}/visitLog`);
-    // current time in HH:MM format
-    const currentTime = new Date().toLocaleString().replace(/\//g, "-");
-
+    const currentTime = new Date().toLocaleString();
     const visitData = {
       preferredName: preferredName,
       id: user_id,
       time: currentTime,
     };
-    update(visitLogRef, { [currentTime]: visitData }).then(() => {
+    update(visitLogRef, { [currentTime.replace(/\//g, "-")]: visitData }).then(() => {
       console.log("Visit log updated!");
     });
 
     document.getElementById("hallcam-container").style.display = "none";
-    await displayUserVideo(id, document.getElementById("hallcam-video"));
+    await displayUserVideo(id + " monitor", document.getElementById("hallcam-video"));
     await displayUserVideo(user_id, document.getElementById("preview-video"));
     document.getElementById("hallcam-container").style.display = "block";
 
@@ -145,7 +143,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     let currentVolume = 0;
     const volumeInterval = setInterval(() => {
       currentVolume += stepSize;
-      playUserAudio(id, currentVolume);
+      playUserAudio(id + " monitor", currentVolume);
       if (currentVolume >= 100) {
         clearInterval(volumeInterval);
       }

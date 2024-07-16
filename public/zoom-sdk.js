@@ -300,7 +300,7 @@ async function requestPermissions(
   dropdownDiv.appendChild(speakerDropdownContainer);
 
   const rowDiv = document.createElement("div");
-  rowDiv.className = "row permissions-row";
+  rowDiv.className = "permissions-row";
 
   rowDiv.appendChild(videoContainer);
   rowDiv.appendChild(dropdownDiv);
