@@ -93,7 +93,7 @@ async function startCurrentUserAudio() {
 // volume is a number between 0 and 100
 async function playUserAudio(username, volume) {
   const users = client.getAllUser();
-  const user = users.find((user) => user.displayName === username);
+  const user = users.find((user) => user.userIdentity === username);
 
   if (user) {
     const stream = client.getMediaStream();
@@ -123,11 +123,11 @@ async function displayUserVideo(username, container, isPreview = false) {
   }
 
   const users = client.getAllUser();
-  const user = users.find((user) => user.displayName === username);
+  const user = users.find((user) => user.userIdentity === username);
 
   if (user) {
     container.innerHTML = "";
-    console.log("User found:", user.displayName);
+    console.log("User found:", user.userIdentity);
     await attachVideo(user);
   } else {
     console.log(users);
@@ -137,16 +137,16 @@ async function displayUserVideo(username, container, isPreview = false) {
   if (!isPreview) {
     client.on("user-added", async (event) => {
       const newUser = event.user;
-      if (newUser.displayName === username) {
-        console.log(`User joined: ${newUser.displayName}`);
+      if (newUser.userIdentity === username) {
+        console.log(`User joined: ${newUser.userIdentity}`);
         await attachVideo(newUser);
       }
     });
 
     client.on("video-active-change", async (event) => {
       const user = client.getAllUser().find((user) => user.userId === event.userId);
-      if (user && user.displayName === username) {
-        console.log(`User started video: ${user.displayName}`);
+      if (user && user.userIdentity === username) {
+        console.log(`User started video: ${user.userIdentity}`);
         await attachVideo(user);
       }
     });
@@ -155,7 +155,7 @@ async function displayUserVideo(username, container, isPreview = false) {
 
 async function detachVideo(username, container) {
   const users = client.getAllUser();
-  const user = users.find((user) => user.displayName === username);
+  const user = users.find((user) => user.userIdentity === username);
 
   if (user) {
     const stream = client.getMediaStream();

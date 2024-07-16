@@ -22,6 +22,10 @@ body {
   transition: 0.5s;
 }
 
+#main-content {
+  display: none;
+}
+
 /* Responsive adjustments */
 @media (max-width: 1000px) {
   body {
@@ -429,6 +433,7 @@ video-player {
   overflow: hidden;
   box-shadow: none;
   border: none;
+  display: none;
 }
 
 #hallcam-video-container {
