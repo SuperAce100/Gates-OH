@@ -113,6 +113,9 @@ async function displayUserVideo(username, container, isPreview = false) {
     const stream = client.getMediaStream();
     try {
       const userVideo = await stream.attachVideo(user.userId, RESOLUTION);
+      if (isPreview) {
+        userVideo.style.transform = "scaleX(-1)";
+      }
       container.appendChild(userVideo);
     } catch (error) {
       console.error("Error connecting to video:", error);
