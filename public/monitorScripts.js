@@ -66,6 +66,7 @@ document.addEventListener("AcceptedPermissions", function () {
   const officeRef = ref(db, `offices/${id}`);
 
   let visitorId = null;
+  let visitorName = null;
   let unsubscriber = null;
 
   let interactionType = null;
@@ -86,6 +87,7 @@ document.addEventListener("AcceptedPermissions", function () {
       document.getElementById("location").textContent = office.name;
       console.log("Current Visitor: ", office.currentVisitorId);
       visitorId = office.currentVisitorId;
+      visitorName = office.currentVisitorName;
 
       // Check if there is no current visitor
       if (!office.currentVisitorId) {
@@ -120,9 +122,12 @@ document.addEventListener("AcceptedPermissions", function () {
       (snapshot) => {
         const data = snapshot.val();
         const user = data;
+        if (user) {
+          visitorName = user.preferredName;
+        }
         console.log("changing user data with new user", user);
 
-        document.getElementById("label").textContent = user.preferredName + " is here.";
+        document.getElementById("label").textContent = visitorName + " is here.";
         document.getElementById("label").classList.add("monitor-large");
         audio.play();
       },

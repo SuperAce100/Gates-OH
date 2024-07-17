@@ -87,12 +87,12 @@ app.get("/logout", (req, res) => {
   res.redirect("/login");
 });
 
-app.get("/offices/:id/dropin", checkAuth, (req, res) => {
+app.get("/offices/:id/dropin", (req, res) => {
   res.sendFile(__dirname + "/public/visitor.html");
 });
 
 // maintain legacy routes
-app.get("/offices/:id/visit", checkAuth, (req, res) => {
+app.get("/offices/:id/visit", (req, res) => {
   res.sendFile(__dirname + "/public/visitor.html");
 });
 

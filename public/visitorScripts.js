@@ -92,7 +92,29 @@ document.addEventListener("DOMContentLoaded", async function () {
       );
     } else {
       console.error("No user is signed in.");
-      window.location.href = "/login";
+
+      // anonymous login
+      document.getElementById("login-form").style.display = "block";
+      document.getElementById("login-form").addEventListener("submit", async function (event) {
+        event.preventDefault();
+        console.log("Form submitted!");
+        document.getElementById("login-form").style.display = "none";
+        user_id = document.getElementById("name").value.replace(/\s/g, "").toLowerCase() + "-anon";
+        preferredName = document.getElementById("name").value;
+
+        const message = "Drop by " + document.getElementById("heading").textContent;
+        const acceptPermissionsEvent = requestPermissions(
+          document.getElementById("permissions"),
+          document.getElementById("main-content"),
+          user_id,
+          "Gates-OH",
+          message
+        );
+        document.addEventListener("AcceptedPermissions", async function () {
+          await joinOffice();
+          runInteraction();
+        });
+      });
     }
   });
 
@@ -114,7 +136,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     document.getElementById("hallcam-container").style.display = "block";
 
     const officeRef = ref(db, `offices/${id}`);
-    update(officeRef, { currentVisitorId: user_id }).then(() => {
+    update(officeRef, { currentVisitorId: user_id, currentVisitorName: preferredName }).then(() => {
       console.log("Current visitor updated!");
     });
 
@@ -152,7 +174,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   async function leaveOffice() {
     const officeRef = ref(db, `offices/${id}`);
-    update(officeRef, { currentVisitorId: null }).then(() => {
+    update(officeRef, { currentVisitorId: null, currentVisitorName: null }).then(() => {
       console.log("Current visitor cleared!");
       // stop animation?
     });
