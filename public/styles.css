@@ -84,6 +84,10 @@ h1 {
   cursor: pointer;
 }
 
+.person:active {
+  background-color: rgba(0, 0, 0, 0.09);
+}
+
 .person > p {
   padding-left: 20px;
   font-weight: 300;
@@ -147,6 +151,19 @@ h1 {
 
 .available {
   background-color: #5bba6f;
+}
+
+.door-closed > h3 {
+  opacity: 0.5;
+}
+
+.door-closed > p {
+  opacity: 0.5;
+}
+
+.door-closed:hover {
+  cursor: default;
+  background-color: rgba(0, 0, 0, 0.02);
 }
 
 @media (max-width: 480px) {

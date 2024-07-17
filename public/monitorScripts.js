@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-document.addEventListener("AcceptedPermissions", function () {
+document.addEventListener("AcceptedPermissions", async function () {
   const audio = new Audio("../../soft-ding.mp3");
 
   // Get the entry from the offices table where urlid = id
@@ -83,6 +83,8 @@ document.addEventListener("AcceptedPermissions", function () {
   });
 
   displayUserVideo(id + " monitor", document.getElementById("preview-video"), true);
+
+  await update(officeRef, { doorOpen: true });
 
   onValue(
     officeRef,
@@ -230,11 +232,20 @@ document.addEventListener("AcceptedPermissions", function () {
   }
 
   document.addEventListener("click", initializeAudio, { once: true });
-
-  // Ensure the button initializes the audio context
 });
 
-document.addEventListener("beforeunload", function () {
-  console.log("Unloading page");
+async function closeOffice() {
+  const officeRef = ref(db, `offices/${id}`);
+  update(officeRef, { doorOpen: false });
   leaveMeeting(document.getElementById("preview-video"));
+}
+
+document.getElementById("close-button").addEventListener("click", function () {
+  closeOffice();
+  window.location.href = `/`;
+});
+
+document.addEventListener("beforeunload", async function () {
+  closeOffice();
+  console.log("Unloading page");
 });
