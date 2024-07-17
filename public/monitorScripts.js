@@ -10,7 +10,13 @@ import {
   limitToLast,
   get,
 } from "firebase/database";
-import { displayUserVideo, leaveMeeting, playUserAudio, requestPermissions } from "./zoom-sdk.js";
+import {
+  displayUserVideo,
+  leaveMeeting,
+  playUserAudio,
+  requestPermissions,
+  muteAllUsersAudio,
+} from "./zoom-sdk.js";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 let tokens = window.location.pathname.split("/");
@@ -94,6 +100,7 @@ document.addEventListener("AcceptedPermissions", function () {
       // Check if there is no current visitor
       if (!office.currentVisitorId) {
         if (unsubscriber) unsubscriber();
+        muteAllUsersAudio();
 
         let visitLog = await generateVisitLog(document.getElementById("label"));
         console.log("VisitLog: ", visitLog);

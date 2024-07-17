@@ -353,6 +353,7 @@ export {
   startCurrentUserVideo,
   startCurrentUserAudio,
   playUserAudio,
+  muteAllUsersAudio,
   displayUserVideo,
   detachVideo,
   leaveMeeting,

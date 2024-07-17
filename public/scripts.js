@@ -116,6 +116,13 @@ function displayOffices(offices) {
     indicatorDiv.classList.add("indicator");
     if (office.doorOpen) {
       indicatorDiv.classList.add("available");
+
+      // officeDiv redirects to the office page on click
+      officeDiv.addEventListener("click", () => {
+        window.location.href = `offices/${office.urlid}/visit`;
+      });
+    } else {
+      officeDiv.classList.add("door-closed");
     }
 
     const spacer = document.createElement("div");
@@ -123,11 +130,6 @@ function displayOffices(offices) {
 
     officeDiv.append(nameHeading, descriptionParagraph, spacer, indicatorDiv);
     officeDiv.id = office.urlid;
-
-    // officeDiv redirects to the office page on click
-    officeDiv.addEventListener("click", () => {
-      window.location.href = `offices/${office.urlid}/visit`;
-    });
 
     officesContainer.appendChild(officeDiv);
   });
