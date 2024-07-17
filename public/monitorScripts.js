@@ -86,6 +86,8 @@ document.addEventListener("AcceptedPermissions", function () {
       console.log("office", office);
       document.getElementById("location").textContent = office.name;
       console.log("Current Visitor: ", office.currentVisitorId);
+      console.log("Current Visitor Name: ", office.currentVisitorName);
+
       visitorId = office.currentVisitorId;
       visitorName = office.currentVisitorName;
 
@@ -103,7 +105,8 @@ document.addEventListener("AcceptedPermissions", function () {
         return;
       } else {
         visitorId = office.currentVisitorId;
-        unsubscriber = updateCurrentUser(visitorId, unsubscriber);
+        visitorName = office.currentVisitorName;
+        unsubscriber = updateCurrentUser(visitorId);
         await displayUserVideo(visitorId, document.getElementById("visitor-video-container"));
         await playUserAudio(visitorId, 100);
         runInteraction();
@@ -116,14 +119,14 @@ document.addEventListener("AcceptedPermissions", function () {
 
   function updateCurrentUser(user_id) {
     const userRef = ref(db, `users/${user_id}`);
-    console.log("user id", user_id);
+    console.log("user ", visitorName);
     return onValue(
       userRef,
       (snapshot) => {
         const data = snapshot.val();
         const user = data;
         if (user) {
-          visitorName = user.preferredName;
+          visitor_name = user.preferredName;
         }
         console.log("changing user data with new user", user);
 
