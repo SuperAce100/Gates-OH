@@ -126,7 +126,7 @@ document.addEventListener("AcceptedPermissions", function () {
         const data = snapshot.val();
         const user = data;
         if (user) {
-          visitor_name = user.preferredName;
+          visitorName = user.preferredName;
         }
         console.log("changing user data with new user", user);
 

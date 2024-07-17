@@ -70,19 +70,18 @@ async function startCurrentUserAudio() {
   const stream = client.getMediaStream();
 
   try {
-    const userId = client.getCurrentUserInfo().userId;
-    await stream.startAudio(userId);
-
-    const users = await client.getAllUser();
+    const users = client.getAllUser();
     for (const user of users) {
       console.log("Muting user audio", user.userId);
-      await stream.adjustUserAudioVolumeLocally(user.userId, 0);
+      stream.adjustUserAudioVolumeLocally(user.userId, 0);
     }
 
     client.on("user-added", async (e) => {
       await stream.adjustUserAudioVolumeLocally(e[0].userId, 0);
       console.log("Muting user audio", e[0].userId);
     });
+
+    await stream.startAudio();
 
     console.log("Current user audio started");
   } catch (error) {
@@ -105,6 +104,15 @@ async function playUserAudio(username, volume) {
     }
   } else {
     console.error(`${username} is not connected`);
+  }
+}
+
+async function muteAllUsersAudio() {
+  const stream = client.getMediaStream();
+  const users = client.getAllUser();
+
+  for (const user of users) {
+    await stream.adjustUserAudioVolumeLocally(user.userId, 0);
   }
 }
 
