@@ -35,27 +35,20 @@ document.addEventListener("DOMContentLoaded", function () {
       uid = currentUser.uid;
       console.log("User: ", currentUser);
       console.log("UID: ", uid);
-      let userRef = ref(db, `users`);
-      let q = query(userRef, orderByChild("user-id"), equalTo(uid));
-      onValue(q, (snapshot) => {
+      let userRef = ref(db, `offices/${uid}`);
+      onValue(userRef, (snapshot) => {
         const userData = snapshot.val();
         if (userData) {
-          const userKey = Object.keys(userData)[0];
-          const currentUserID = userData[userKey].id;
-          if (currentUserID !== id) {
-            window.location.href = `/offices/${id}/visit`;
-          } else {
-            // Start Zoom video stream
-            const acceptPermissionsEvent = requestPermissions(
-              document.getElementById("permissions"),
-              document.getElementById("main-content"),
-              id + " monitor",
-              "Gates-OH",
-              "Accept permissions"
-            );
-          }
+          const acceptPermissionsEvent = requestPermissions(
+            document.getElementById("permissions"),
+            document.getElementById("main-content"),
+            id,
+            "Gates-OH",
+            "Accept permissions"
+          );
         } else {
           console.error("No user data found.");
+          window.location.href = `/offices/login`;
         }
       });
     } else {
@@ -135,7 +128,7 @@ document.addEventListener("AcceptedPermissions", async function () {
         const data = snapshot.val();
         const user = data;
         if (user) {
-          visitorName = user.preferredName;
+          visitorName = user.displayName;
         }
         console.log("changing user data with new user", user);
 
@@ -211,7 +204,7 @@ document.addEventListener("AcceptedPermissions", async function () {
           const sentence = `<span style="opacity: ${
             0.4 + 0.15 * index
           }"><p class="monitor-name" id="visitlog-${index}">${
-            visitLog.preferredName
+            visitLog.displayName
           }</p> <p class="monitor-time">${dayDescriptor} at ${formattedTime}.</p></span>`;
           sentences.unshift(sentence);
         }

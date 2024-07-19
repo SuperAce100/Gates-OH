@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   let uid = null;
 
   let user_id = null;
-  let preferredName = null;
+  let displayName = null;
 
   let tokens = window.location.pathname.split("/");
   let id = tokens[tokens.length - 2];
@@ -32,15 +32,13 @@ document.addEventListener("DOMContentLoaded", async function () {
   });
 
   // get the entry from the offices table where urlid = id
-  const officeRef = ref(db, "offices");
-  const q = query(officeRef, orderByChild("urlid"), equalTo(id));
-  console.log("q", q);
+  const officeRef = ref(db, `offices/${id}`);
   onValue(
-    q,
+    officeRef,
     (snapshot) => {
       const data = snapshot.val();
       console.log("data", data);
-      const office = data[Object.keys(data)[0]];
+      const office = data;
       console.log("office", office);
       document.getElementById("heading").textContent = office.name;
     },
@@ -54,19 +52,17 @@ document.addEventListener("DOMContentLoaded", async function () {
       uid = currentUser.uid;
       console.log("User: ", currentUser);
       console.log("UID: ", uid);
-      // get the entry from the users table where uid is the same as the currently authenticated user
-      const userRef = ref(db, "users");
-      const userQuery = query(userRef, orderByChild("user-id"), equalTo(uid));
+      const userRef = ref(db, `users/${uid}`);
       const unsubscriber = onValue(
-        userQuery,
+        userRef,
         (snapshot) => {
           const data = snapshot.val();
           console.log("data", data);
-          const user = data[Object.keys(data)[0]];
+          const user = data;
           console.log("user", user);
 
           user_id = user.id;
-          preferredName = user.preferredName;
+          displayName = user.displayName;
 
           if (user.currentOffice) {
             console.log("leaving office!");
@@ -100,7 +96,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         console.log("Form submitted!");
         document.getElementById("login-form").style.display = "none";
         user_id = document.getElementById("name").value.replace(/\s/g, "").toLowerCase() + "-anon";
-        preferredName = document.getElementById("name").value;
+        displayName = document.getElementById("name").value;
 
         const message = "Drop by " + document.getElementById("heading").textContent;
         const acceptPermissionsEvent = requestPermissions(
@@ -122,7 +118,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const visitLogRef = ref(db, `offices/${id}/visitLog`);
     const currentTime = new Date().toLocaleString();
     const visitData = {
-      preferredName: preferredName,
+      displayName: displayName,
       id: user_id,
       time: currentTime,
     };
@@ -136,7 +132,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     document.getElementById("hallcam-container").style.display = "block";
 
     const officeRef = ref(db, `offices/${id}`);
-    update(officeRef, { currentVisitorId: user_id, currentVisitorName: preferredName }).then(() => {
+    update(officeRef, { currentVisitorId: user_id, currentVisitorName: displayName }).then(() => {
       console.log("Current visitor updated!");
     });
 

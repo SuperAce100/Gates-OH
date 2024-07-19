@@ -9,38 +9,15 @@ document.getElementById("signup-form").addEventListener("submit", function (even
   event.preventDefault();
   console.log("Form submitted!");
 
-  const fullName = document.getElementById("full-name").value;
-  const preferredName = document.getElementById("preferred-name").value;
-  const officeName = document.getElementById("office-name").value;
-  const officeDescription = document.getElementById("office-description").value;
-  const username = document.getElementById("username").value.toLowerCase();
+  const displayName = document.getElementById("preferred-name").value;
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
   const errorMessageElement = document.getElementById("error-message");
 
-  if (
-    !fullName ||
-    !preferredName ||
-    !officeName ||
-    !officeDescription ||
-    !username ||
-    !email ||
-    !password
-  ) {
+  if (!displayName || !email || !password) {
     errorMessageElement.innerHTML = "Please fill out all fields.";
     return;
   }
-
-  // check if the username is already taken
-  const userRef = ref(database, "users");
-  const userQuery = query(userRef, orderByChild("id"), equalTo(username));
-  onValue(userQuery, (snapshot) => {
-    const data = snapshot.val();
-    if (data) {
-      errorMessageElement.innerHTML = "Username is already taken.";
-      return;
-    }
-  });
 
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
@@ -48,30 +25,15 @@ document.getElementById("signup-form").addEventListener("submit", function (even
       const user = userCredential.user;
       const userId = user.uid;
 
-      set(ref(database, "users/" + username), {
-        name: fullName,
-        preferredName: preferredName,
-        id: username,
-        "user-id": userId,
+      set(ref(database, "users/" + userId), {
+        displayName: displayName,
+        id: userId,
       })
         .then(() => {
-          console.log("User added to database with username:", username);
+          console.log("User added to database with name:", displayName);
         })
         .catch((error) => {
           console.error("Error adding user to database:", error);
-        });
-
-      set(ref(database, "offices/" + username), {
-        name: officeName,
-        description: officeDescription,
-        urlid: username,
-        doorOpen: false,
-      })
-        .then(() => {
-          console.log("Office added to database with username:", username);
-        })
-        .catch((error) => {
-          console.error("Error adding office to database:", error);
         });
 
       // Get the user's ID token as it is needed to authenticate with the backend

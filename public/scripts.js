@@ -25,7 +25,7 @@ getCurrentUser()
       const uid = user.uid;
       console.log("UID", uid);
 
-      const userRef = query(ref(db, "users"), orderByChild("user-id"), equalTo(uid));
+      const userRef = query(ref(db, "users"), orderByChild("id"), equalTo(uid));
       onValue(userRef, (snapshot) => {
         const userData = snapshot.val();
         if (userData) {
