@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
       console.log("User: ", currentUser);
       console.log("UID: ", uid);
       let userRef = ref(db, `offices/${id}`);
-      onValue(userRef, (snapshot) => {
+      let unsubscriber = onValue(userRef, (snapshot) => {
         const userData = snapshot.val();
         if (userData && userData.id === uid) {
           const acceptPermissionsEvent = requestPermissions(
@@ -46,6 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "Gates-OH",
             "Accept permissions"
           );
+          unsubscriber();
         } else {
           console.error("No user data found.");
           window.location.href = `/offices/login`;

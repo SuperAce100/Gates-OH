@@ -8,6 +8,7 @@ document.getElementById("login-form").addEventListener("submit", function (event
   console.log("Form submitted!");
 
   const email = document.getElementById("urlid").value + "@gatesoh-users.com";
+  const urlid = document.getElementById("urlid").value;
   const password = document.getElementById("password").value;
   const errorMessageElement = document.getElementById("error-message");
 

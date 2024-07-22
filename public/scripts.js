@@ -119,7 +119,7 @@ function displayOffices(offices) {
 
       // officeDiv redirects to the office page on click
       officeDiv.addEventListener("click", () => {
-        window.location.href = `offices/${office.urlid}/visit`;
+        window.location.href = `/offices/${office.urlid}`;
       });
     } else {
       officeDiv.classList.add("door-closed");

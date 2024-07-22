@@ -45,6 +45,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         document.getElementById(
           "main-content"
         ).innerHTML = `<h1>${office.name}'s door is closed.</h1><p>Redirecting to home...</p>`;
+        document.getElementById("main-content").style.display = "block";
         setTimeout(() => {
           window.location.href = "/";
         }, 3000);
