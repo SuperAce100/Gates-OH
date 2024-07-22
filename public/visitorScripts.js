@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   let displayName = null;
 
   let tokens = window.location.pathname.split("/");
-  let id = tokens[tokens.length - 2];
+  let id = tokens[tokens.length - 1];
 
   console.log("id", id);
 
@@ -41,6 +41,14 @@ document.addEventListener("DOMContentLoaded", async function () {
       const office = data;
       console.log("office", office);
       document.getElementById("heading").textContent = office.name;
+      if (!office.doorOpen) {
+        document.getElementById(
+          "main-content"
+        ).innerHTML = `<h1>${office.name}'s door is closed.</h1><p>Redirecting to home...</p>`;
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 3000);
+      }
     },
     (error) => {
       console.error("Error reading data:", error);

@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign Up</title>
-    <link rel="icon" href="favicon.ico" />
-    <link rel="stylesheet" href="styles.css" />
+    <title>Create Office</title>
+    <link rel="icon" href="../../favicon.ico" />
+    <link rel="stylesheet" href="../../styles.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -15,13 +15,16 @@
   </head>
   <body>
     <div class="container glass form-container">
-      <h1>Sign Up</h1>
+      <h1>Create Office</h1>
       <form action="" id="signup-form">
-        <label for="display-name">Preferred Name</label>
-        <input class="glass" type="text" id="preferred-name" name="preferred-name" />
+        <label for="name">Office Name</label>
+        <input class="glass" type="text" id="name" name="name" />
 
-        <label for="email">Email</label>
-        <input class="glass" type="email" id="email" name="email" />
+        <label for="urlid">URL Label</label>
+        <input class="glass" type="text" id="urlid" name="urlid" />
+
+        <label for="description">Description</label>
+        <input class="glass" type="text" id="description" name="description" />
 
         <label for="password">Password</label>
         <input class="glass" type="password" id="password" name="password" />
@@ -29,9 +32,8 @@
         <button type="submit" class="glass-button">Sign Up</button>
         <div id="error-message"></div>
       </form>
-      <p>Already have an account? <a href="login">Log in here</a></p>
-      <p>Want to create an office? <a href="/offices/create">Log in here.</a></p>
+      <p>Already have an account? <a href="/offices/login">Log in here</a></p>
     </div>
-    <script src="./dist/signupScripts-bundle.js"></script>
+    <script src="../../dist/createOfficeScripts-bundle.js"></script>
   </body>
 </html>

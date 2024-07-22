@@ -87,12 +87,15 @@ app.get("/logout", (req, res) => {
   res.redirect("/login");
 });
 
-app.get("/offices/:id/dropin", (req, res) => {
-  res.sendFile(__dirname + "/public/visitor.html");
+app.get("/offices/create", (req, res) => {
+  res.sendFile(__dirname + "/public/createOffice.html");
 });
 
-// maintain legacy routes
-app.get("/offices/:id/visit", (req, res) => {
+app.get("/offices/login", (req, res) => {
+  res.sendFile(__dirname + "/public/officeLogin.html");
+});
+
+app.get("/offices/:id", (req, res) => {
   res.sendFile(__dirname + "/public/visitor.html");
 });
 

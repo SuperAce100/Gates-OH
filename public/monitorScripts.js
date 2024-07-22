@@ -35,14 +35,14 @@ document.addEventListener("DOMContentLoaded", function () {
       uid = currentUser.uid;
       console.log("User: ", currentUser);
       console.log("UID: ", uid);
-      let userRef = ref(db, `offices/${uid}`);
+      let userRef = ref(db, `offices/${id}`);
       onValue(userRef, (snapshot) => {
         const userData = snapshot.val();
-        if (userData) {
+        if (userData && userData.id === uid) {
           const acceptPermissionsEvent = requestPermissions(
             document.getElementById("permissions"),
             document.getElementById("main-content"),
-            id,
+            id + " monitor",
             "Gates-OH",
             "Accept permissions"
           );
@@ -235,7 +235,7 @@ async function closeOffice() {
 
 document.getElementById("close-button").addEventListener("click", function () {
   closeOffice();
-  window.location.href = `/`;
+  window.location.href = `/logout`;
 });
 
 document.addEventListener("beforeunload", async function () {
