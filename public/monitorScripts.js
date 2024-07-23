@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
       let unsubscriber = onValue(userRef, (snapshot) => {
         const userData = snapshot.val();
         if (userData && userData.id === uid) {
-          const acceptPermissionsEvent = requestPermissions(
+          requestPermissions(
             document.getElementById("permissions"),
             document.getElementById("main-content"),
             id + " monitor",

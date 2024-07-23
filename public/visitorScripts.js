@@ -1,6 +1,6 @@
 import app from "./firebase-config.js";
 import { getDatabase, ref, onValue, update, query, orderByChild, equalTo } from "firebase/database";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signInAnonymously } from "firebase/auth";
 import { displayUserVideo, leaveMeeting, playUserAudio, requestPermissions } from "./zoom-sdk.js";
 
 let interactionType = "scale";
@@ -70,22 +70,34 @@ document.addEventListener("DOMContentLoaded", async function () {
           const user = data;
           console.log("user", user);
 
+          if (!user) {
+            update(userRef, { id: uid }).then(() => {
+              console.log("User added to database with id:", uid);
+              return;
+            });
+          }
+
           user_id = user.id;
-          displayName = user.displayName;
+          displayName = user.displayName ? user.displayName : null;
 
           if (user.currentOffice) {
             console.log("leaving office!");
             unsubscriber();
           } else {
             let message = "Drop by " + document.getElementById("heading").textContent;
-            const acceptPermissionsEvent = requestPermissions(
+            requestPermissions(
               document.getElementById("permissions"),
               document.getElementById("main-content"),
-              user_id,
+              uid,
               "Gates-OH",
-              message
+              message,
+              user.displayName == null
             );
-            document.addEventListener("AcceptedPermissions", async function () {
+            document.addEventListener("AcceptedPermissions", async function (e) {
+              displayName = e.detail.username;
+              unsubscriber();
+              update(userRef, { displayName: displayName });
+
               await joinOffice();
               runInteraction();
             });
@@ -98,28 +110,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     } else {
       console.error("No user is signed in.");
 
-      // anonymous login
-      document.getElementById("login-form").style.display = "block";
-      document.getElementById("login-form").addEventListener("submit", async function (event) {
-        event.preventDefault();
-        console.log("Form submitted!");
-        document.getElementById("login-form").style.display = "none";
-        user_id = document.getElementById("name").value.replace(/\s/g, "").toLowerCase() + "-anon";
-        displayName = document.getElementById("name").value;
-
-        const message = "Drop by " + document.getElementById("heading").textContent;
-        const acceptPermissionsEvent = requestPermissions(
-          document.getElementById("permissions"),
-          document.getElementById("main-content"),
-          user_id,
-          "Gates-OH",
-          message
-        );
-        document.addEventListener("AcceptedPermissions", async function () {
-          await joinOffice();
-          runInteraction();
-        });
-      });
+      signInAnonymously(auth);
     }
   });
 

@@ -268,7 +268,8 @@ async function requestPermissions(
   content,
   username,
   meetingName,
-  message = "Accept permissions to drop in!"
+  message = "Accept permissions to drop in!",
+  isAnonymous = false
 ) {
   const permissionsForm = document.createElement("div");
 
@@ -317,11 +318,22 @@ async function requestPermissions(
   rowDiv.appendChild(dropdownDiv);
   permissionsForm.appendChild(rowDiv);
 
+  if (isAnonymous) {
+    const usernameInput = document.createElement("input");
+    usernameInput.type = "text";
+    usernameInput.id = "username";
+    usernameInput.classList.add("glass");
+    usernameInput.name = "username";
+    const usernameLabel = document.createElement("label");
+    usernameLabel.for = "username";
+    usernameLabel.innerText = "Display Name";
+    permissionsForm.appendChild(usernameLabel);
+    permissionsForm.appendChild(usernameInput);
+  }
+
   permissionsForm.appendChild(acceptButton);
 
   container.appendChild(permissionsForm);
-
-  const acceptPermissionsEvent = new Event("AcceptedPermissions");
 
   content.style.display = "none";
   await joinMeeting(username, meetingName, "", true);
@@ -335,17 +347,26 @@ async function requestPermissions(
   acceptButton.disabled = false;
   acceptButton.id = "acceptButton";
 
-  acceptButton.addEventListener("click", async function () {
-    await detachVideo(username, document.getElementById("permissions-video"));
-    document.dispatchEvent(acceptPermissionsEvent);
-  });
-
   document.addEventListener("AcceptedPermissions", async function () {
     content.style.display = "block";
     permissionsForm.style.display = "none";
   });
 
-  return acceptPermissionsEvent;
+  acceptButton.addEventListener("click", async function () {
+    if (isAnonymous) {
+      if (!document.getElementById("username").value) {
+        return;
+      }
+      username = document.getElementById("username").value;
+    }
+
+    await detachVideo(username, document.getElementById("permissions-video"));
+    const acceptPermissionsEvent = new CustomEvent("AcceptedPermissions", {
+      detail: { username: username },
+    });
+
+    document.dispatchEvent(acceptPermissionsEvent);
+  });
 }
 
 export {
