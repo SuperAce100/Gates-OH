@@ -352,17 +352,20 @@ async function requestPermissions(
     permissionsForm.style.display = "none";
   });
 
+  let displayName = null;
+
   acceptButton.addEventListener("click", async function () {
     if (isAnonymous) {
       if (!document.getElementById("username").value) {
         return;
       }
-      username = document.getElementById("username").value;
+      displayName = document.getElementById("username").value;
+      username = displayName;
     }
 
     await detachVideo(username, document.getElementById("permissions-video"));
     const acceptPermissionsEvent = new CustomEvent("AcceptedPermissions", {
-      detail: { username: username },
+      detail: { username: displayName },
     });
 
     document.dispatchEvent(acceptPermissionsEvent);

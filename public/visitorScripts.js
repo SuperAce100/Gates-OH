@@ -95,11 +95,13 @@ document.addEventListener("DOMContentLoaded", async function () {
               user.displayName == null
             );
             document.addEventListener("AcceptedPermissions", async function (e) {
-              const audio = new Audio("../../soft-ding.mp3");
+              const audio = new Audio("../../door-knock.mp3");
               audio.play();
               displayName = e.detail.username;
               unsubscriber();
-              update(userRef, { displayName: displayName });
+              if (displayName) {
+                update(userRef, { displayName: displayName });
+              }
 
               await joinOffice();
               runInteraction();

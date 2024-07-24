@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("AcceptedPermissions", async function () {
-  const audio = new Audio("../../soft-ding.mp3");
+  const audio = new Audio("../../door-knock.mp3");
 
   // Get the entry from the offices table where urlid = id
   const officeRef = ref(db, `offices/${id}`);
