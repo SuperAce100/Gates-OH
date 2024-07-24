@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("main-content"),
             id + " monitor",
             "Gates-OH",
-            "Accept permissions"
+            "Setup office!"
           );
           unsubscriber();
         } else {

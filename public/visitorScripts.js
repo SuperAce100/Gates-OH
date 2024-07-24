@@ -40,6 +40,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       console.log("data", data);
       const office = data;
       console.log("office", office);
+      document.title = office.name;
       document.getElementById("heading").textContent = office.name;
       if (!office.doorOpen) {
         document.getElementById(
