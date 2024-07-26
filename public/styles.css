@@ -339,6 +339,7 @@ label {
   width: auto;
   margin: auto;
   z-index: -20;
+  transition: 0.05s;
 }
 
 video-player-container {
