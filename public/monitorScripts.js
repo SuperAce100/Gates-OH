@@ -123,6 +123,13 @@ document.addEventListener("AcceptedPermissions", async function () {
   function updateCurrentUser(user_id) {
     const userRef = ref(db, `users/${user_id}`);
     console.log("user ", visitorName);
+
+    const progressRef = ref(db, `users/${user_id}/interactionProgress`);
+    onValue(progressRef, (snapshot) => {
+      const data = snapshot.val();
+      document.getElementById("label").textContent = visitorName + " is here, progress: " + data;
+    });
+
     return onValue(
       userRef,
       (snapshot) => {

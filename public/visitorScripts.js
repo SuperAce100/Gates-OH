@@ -106,6 +106,22 @@ document.addEventListener("DOMContentLoaded", async function () {
             document.addEventListener("AcceptedPermissions", async function (e) {
               const audio = new Audio("../../door-knock.mp3");
               audio.play();
+
+              var slider = document.getElementById("myRange");
+              var output = document.getElementById("demo");
+              output.innerHTML = slider.value; // Display the default slider value
+
+              // Update the current slider value (each time you drag the slider handle)
+              slider.oninput = function () {
+                update(userRef, { interactionProgress: this.value });
+              };
+
+              const progressRef = ref(db, `users/${uid}/interactionProgress`);
+              onValue(progressRef, (snapshot) => {
+                const data = snapshot.val();
+                output.innerHTML = data;
+              });
+
               displayName = e.detail.username;
               unsubscriber();
               if (displayName) {
@@ -198,7 +214,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
 
     const currentUserRef = ref(db, `users/${user_id}`);
-    update(currentUserRef, { currentOffice: null }).then(() => {
+    update(currentUserRef, { currentOffice: null, interactionProgress: null }).then(() => {
       console.log("Current office cleared!");
     });
 
