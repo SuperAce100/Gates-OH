@@ -120,6 +120,10 @@ document.addEventListener("DOMContentLoaded", async function () {
               onValue(progressRef, (snapshot) => {
                 const data = snapshot.val();
                 output.innerHTML = data;
+                document.getElementById("hallcam-video-container").style.filter = `blur(${
+                  20 - data / 5
+                }px)`;
+                playUserAudio(id + " monitor", data);
               });
 
               displayName = e.detail.username;
@@ -182,28 +186,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   function runInteraction() {
-    document
-      .getElementById("hallcam-video-container")
-      .classList.add("animate-dropin-" + interactionType);
-    document
-      .getElementById("hallcam-video-container")
-      .addEventListener("animationend", function () {
-        this.classList.remove("animate-dropin-" + interactionType);
-      });
-
     document.getElementById("preview-video-container").classList.remove("preview-video-hidden");
-    const duration = 5000; // 5 seconds
-    const interval = 100; // 100 milliseconds
-    const steps = duration / interval;
-    const stepSize = 100 / steps;
-    let currentVolume = 0;
-    const volumeInterval = setInterval(() => {
-      currentVolume += stepSize;
-      playUserAudio(id + " monitor", currentVolume);
-      if (currentVolume >= 100) {
-        clearInterval(volumeInterval);
-      }
-    }, interval);
   }
 
   async function leaveOffice() {

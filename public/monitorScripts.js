@@ -110,8 +110,8 @@ document.addEventListener("AcceptedPermissions", async function () {
         visitorId = office.currentVisitorId;
         visitorName = office.currentVisitorName;
         unsubscriber = updateCurrentUser(visitorId);
+        unsubscriber();
         await displayUserVideo(visitorId, document.getElementById("visitor-video-container"));
-        await playUserAudio(visitorId, 100);
         runInteraction();
       }
     },
@@ -123,12 +123,6 @@ document.addEventListener("AcceptedPermissions", async function () {
   function updateCurrentUser(user_id) {
     const userRef = ref(db, `users/${user_id}`);
     console.log("user ", visitorName);
-
-    const progressRef = ref(db, `users/${user_id}/interactionProgress`);
-    onValue(progressRef, (snapshot) => {
-      const data = snapshot.val();
-      document.getElementById("label").textContent = visitorName + " is here, progress: " + data;
-    });
 
     return onValue(
       userRef,
@@ -152,12 +146,12 @@ document.addEventListener("AcceptedPermissions", async function () {
 
   function runInteraction() {
     document.getElementById("my-video-container").classList.remove("monitor-video-hidden");
-
-    document
-      .getElementById("my-video-container")
-      .classList.add("animate-dropin-" + interactionType);
-    document.getElementById("my-video-container").addEventListener("animationend", function () {
-      this.classList.remove("animate-dropin-" + interactionType);
+    const progressRef = ref(db, `users/${user_id}/interactionProgress`);
+    onValue(progressRef, (snapshot) => {
+      const data = snapshot.val();
+      output.innerHTML = data;
+      document.getElementById("my-video-container").style.filter = `blur(${20 - data / 5}px)`;
+      playUserAudio(user_id, data);
     });
   }
 
