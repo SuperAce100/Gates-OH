@@ -110,7 +110,7 @@ document.addEventListener("AcceptedPermissions", async function () {
         visitorId = office.currentVisitorId;
         visitorName = office.currentVisitorName;
         unsubscriber = updateCurrentUser(visitorId);
-        unsubscriber();
+        // unsubscriber();
         await displayUserVideo(visitorId, document.getElementById("visitor-video-container"));
         runInteraction();
       }
@@ -123,6 +123,7 @@ document.addEventListener("AcceptedPermissions", async function () {
   function updateCurrentUser(user_id) {
     const userRef = ref(db, `users/${user_id}`);
     console.log("user ", visitorName);
+    audio.play();
 
     return onValue(
       userRef,
@@ -136,7 +137,6 @@ document.addEventListener("AcceptedPermissions", async function () {
 
         document.getElementById("label").textContent = visitorName + " is here.";
         document.getElementById("label").classList.add("monitor-large");
-        audio.play();
       },
       (error) => {
         console.error("Error reading data:", error);
