@@ -137,6 +137,14 @@ document.addEventListener("AcceptedPermissions", async function () {
 
         document.getElementById("label").textContent = visitorName + " is here.";
         document.getElementById("label").classList.add("monitor-large");
+
+        const progressRef = ref(db, `users/${user_id}/interactionProgress`);
+        onValue(progressRef, (snapshot) => {
+          const data = snapshot.val();
+          output.innerHTML = data;
+          document.getElementById("my-video-container").style.filter = `blur(${20 - data / 5}px)`;
+          playUserAudio(user_id, data);
+        });
       },
       (error) => {
         console.error("Error reading data:", error);
@@ -146,13 +154,6 @@ document.addEventListener("AcceptedPermissions", async function () {
 
   function runInteraction() {
     document.getElementById("my-video-container").classList.remove("monitor-video-hidden");
-    const progressRef = ref(db, `users/${user_id}/interactionProgress`);
-    onValue(progressRef, (snapshot) => {
-      const data = snapshot.val();
-      output.innerHTML = data;
-      document.getElementById("my-video-container").style.filter = `blur(${20 - data / 5}px)`;
-      playUserAudio(user_id, data);
-    });
   }
 
   async function generateVisitLog(container) {
