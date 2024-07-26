@@ -141,7 +141,6 @@ document.addEventListener("AcceptedPermissions", async function () {
         const progressRef = ref(db, `users/${user_id}/interactionProgress`);
         onValue(progressRef, (snapshot) => {
           const data = snapshot.val();
-          output.innerHTML = data;
           document.getElementById("my-video-container").style.filter = `blur(${20 - data / 5}px)`;
           playUserAudio(user_id, data);
         });
