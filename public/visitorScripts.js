@@ -1,5 +1,14 @@
 import app from "./firebase-config.js";
-import { getDatabase, ref, onValue, update, query, orderByChild, equalTo } from "firebase/database";
+import {
+  getDatabase,
+  ref,
+  onValue,
+  update,
+  query,
+  orderByChild,
+  equalTo,
+  get,
+} from "firebase/database";
 import { getAuth, onAuthStateChanged, signInAnonymously } from "firebase/auth";
 import { displayUserVideo, leaveMeeting, playUserAudio, requestPermissions } from "./zoom-sdk.js";
 
@@ -122,6 +131,14 @@ document.addEventListener("DOMContentLoaded", async function () {
   async function joinOffice() {
     const visitLogRef = ref(db, `offices/${id}/visitLog`);
     const currentTime = new Date().toLocaleString();
+
+    if (!displayName) {
+      const userRef = ref(db, `users/${user_id}`);
+      const userSnapshot = await get(userRef);
+      const userData = userSnapshot.val();
+      displayName = userData.displayName;
+    }
+
     const visitData = {
       displayName: displayName,
       id: user_id,
