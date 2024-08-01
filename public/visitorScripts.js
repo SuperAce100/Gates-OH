@@ -107,22 +107,29 @@ document.addEventListener("DOMContentLoaded", async function () {
               const audio = new Audio("../../door-knock.mp3");
               audio.play();
 
-              var slider = document.getElementById("myRange");
-              var output = document.getElementById("demo");
-              output.innerHTML = slider.value; // Display the default slider value
+              const scrollOverlay = document.getElementById("scroll-overlay");
+              const userRef = ref(db, `users/${uid}`);
 
-              // Update the current slider value (each time you drag the slider handle)
-              slider.oninput = function () {
-                update(userRef, { interactionProgress: this.value });
+              const updateScrollPosition = () => {
+                const maxScrollTop = scrollOverlay.scrollHeight - scrollOverlay.clientHeight;
+                const scrollPosition = scrollOverlay.scrollTop;
+                const scrollPercentage = (scrollPosition / maxScrollTop) * 100;
+                update(userRef, { interactionProgress: scrollPercentage });
               };
+
+              // Attach the update function to the scroll event
+              scrollOverlay.onscroll = updateScrollPosition;
 
               const progressRef = ref(db, `users/${uid}/interactionProgress`);
               onValue(progressRef, (snapshot) => {
                 const data = snapshot.val();
-                output.innerHTML = data;
                 document.getElementById("hallcam-video-container").style.filter = `blur(${
                   20 - data / 5
                 }px)`;
+                document.getElementById(
+                  "visitor-tutorial"
+                ).style.opacity = `max(calc(100% - 5% * ${data}), 0%)`;
+                document.getElementById("progress-inner").style.width = `${data}%`;
                 playUserAudio(id + " monitor", data);
               });
 

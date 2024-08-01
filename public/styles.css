@@ -500,8 +500,7 @@ video-player {
 }
 
 .visitor-page {
-  /* no scrolling */
-  overflow: hidden;
+  margin: 0px;
 }
 
 .visitor-header {
@@ -510,7 +509,7 @@ video-player {
   align-items: flex-start;
   gap: 20px;
   position: absolute;
-  width: calc(100vw - 20px);
+  width: calc(100vw);
   margin: auto;
   z-index: 999;
 }
@@ -524,6 +523,7 @@ video-player {
 
 .visitor-container {
   width: 100%;
+  height: 100vh;
   backdrop-filter: blur(0px);
   -webkit-backdrop-filter: blur(0px);
 }
@@ -531,11 +531,12 @@ video-player {
 .visitor-footer {
   position: absolute;
   bottom: 0;
-  width: calc(100vw - 20px);
+  width: calc(100vw);
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-bottom: 40px;
+  gap: 20px;
 }
 
 .hallcam-container {
@@ -1055,4 +1056,50 @@ video {
 
 .slider::-moz-range-thumb:hover {
   opacity: 0.8;
+}
+
+#scroll-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto;
+  overflow-y: scroll;
+  opacity: 100%;
+  z-index: 9999;
+}
+
+#scroll-inner {
+  width: 100%;
+  height: 1000vh;
+}
+
+#progress-inner {
+  width: 0%;
+  height: 100%;
+  background-color: #0093af;
+  transition: 0.15s;
+}
+
+#progress {
+  width: 100%;
+  height: 10px;
+  background-color: #ddd;
+}
+
+#visitor-tutorial {
+  position: fixed;
+  top: min(calc(100vw * 9 / 16 / 2 - 0.5em), calc(50% - 0.5em));
+  min-width: 500px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  left: calc(50% - 250px);
+  text-align: center;
+  background: #ffffffad;
+  border-radius: 16px;
+}
+
+#visitor-tutorial > h2 {
+  font-size: 2.5em;
+  font-weight: 300;
 }
