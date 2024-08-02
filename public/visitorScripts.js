@@ -11,6 +11,7 @@ import {
 } from "firebase/database";
 import { getAuth, onAuthStateChanged, signInAnonymously } from "firebase/auth";
 import { displayUserVideo, leaveMeeting, playUserAudio, requestPermissions } from "./zoom-sdk.js";
+import { blurCurve, officeCurve, tutorialCurve, ambienceCurve } from "./curves.js";
 
 let interactionType = "scale";
 
@@ -124,23 +125,17 @@ document.addEventListener("DOMContentLoaded", async function () {
               scrollOverlay.onscroll = updateScrollPosition;
 
               const progressRef = ref(db, `users/${uid}/interactionProgress`);
-              let playedKnock = false;
               onValue(progressRef, (snapshot) => {
                 const data = snapshot.val();
-                document.getElementById("hallcam-video-container").style.filter = `blur(${
-                  20 - data / 5
-                }px)`;
-                document.getElementById(
-                  "visitor-tutorial"
-                ).style.opacity = `max(calc(100% - 5% * ${data}), 0%)`;
-                document.getElementById("progress-inner").style.width = `${data}%`;
-                playUserAudio(id + " monitor", data);
-                whitenoise.volume = Math.max(0, 0.1 - data / 300);
-
-                if (data > 40 && data <= 45 && !playedKnock) {
-                  audio.play();
-                  playedKnock = true;
-                }
+                document.getElementById("hallcam-video-container").style.filter = `blur(${blurCurve(
+                  data
+                )}px)`;
+                document.getElementById("visitor-tutorial").style.opacity = `${tutorialCurve(
+                  data
+                )}%`;
+                document.getElementById("progress-inner").style.height = `${data}%`;
+                playUserAudio(id + " monitor", officeCurve(data));
+                whitenoise.volume = ambienceCurve(data);
               });
 
               displayName = e.detail.username;
