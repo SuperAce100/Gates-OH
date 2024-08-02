@@ -123,7 +123,10 @@ document.addEventListener("AcceptedPermissions", async function () {
   function updateCurrentUser(user_id) {
     const userRef = ref(db, `users/${user_id}`);
     console.log("user ", visitorName);
-    audio.play();
+    const whitenoise = new Audio("../../white-noise.mp3");
+    whitenoise.loop = true;
+    whitenoise.volume = 0.1;
+    whitenoise.play();
 
     return onValue(
       userRef,
@@ -139,10 +142,17 @@ document.addEventListener("AcceptedPermissions", async function () {
         document.getElementById("label").classList.add("monitor-large");
 
         const progressRef = ref(db, `users/${user_id}/interactionProgress`);
+        let playedKnock = false;
         onValue(progressRef, (snapshot) => {
           const data = snapshot.val();
           document.getElementById("my-video-container").style.filter = `blur(${20 - data / 5}px)`;
           playUserAudio(user_id, data);
+          whitenoise.volume = Math.max(0, 0.1 - data / 300);
+
+          if (data > 40 && data <= 45 && !playedKnock) {
+            audio.play();
+            playedKnock = true;
+          }
         });
       },
       (error) => {

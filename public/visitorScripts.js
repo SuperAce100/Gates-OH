@@ -105,7 +105,10 @@ document.addEventListener("DOMContentLoaded", async function () {
             );
             document.addEventListener("AcceptedPermissions", async function (e) {
               const audio = new Audio("../../door-knock.mp3");
-              audio.play();
+              const whitenoise = new Audio("../../white-noise.mp3");
+              whitenoise.loop = true;
+              whitenoise.volume = 0.1;
+              whitenoise.play();
 
               const scrollOverlay = document.getElementById("scroll-overlay");
               const userRef = ref(db, `users/${uid}`);
@@ -121,6 +124,7 @@ document.addEventListener("DOMContentLoaded", async function () {
               scrollOverlay.onscroll = updateScrollPosition;
 
               const progressRef = ref(db, `users/${uid}/interactionProgress`);
+              let playedKnock = false;
               onValue(progressRef, (snapshot) => {
                 const data = snapshot.val();
                 document.getElementById("hallcam-video-container").style.filter = `blur(${
@@ -131,6 +135,12 @@ document.addEventListener("DOMContentLoaded", async function () {
                 ).style.opacity = `max(calc(100% - 5% * ${data}), 0%)`;
                 document.getElementById("progress-inner").style.width = `${data}%`;
                 playUserAudio(id + " monitor", data);
+                whitenoise.volume = Math.max(0, 0.1 - data / 300);
+
+                if (data > 40 && data <= 45 && !playedKnock) {
+                  audio.play();
+                  playedKnock = true;
+                }
               });
 
               displayName = e.detail.username;

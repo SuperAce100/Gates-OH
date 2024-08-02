@@ -550,6 +550,7 @@ video-player {
   background-color: #f25c54;
   margin-top: 0px;
   height: 70px;
+  z-index: 1000;
 }
 
 .video {
@@ -1067,7 +1068,7 @@ video {
   pointer-events: auto;
   overflow-y: scroll;
   opacity: 100%;
-  z-index: 9999;
+  z-index: 999;
 }
 
 #scroll-inner {
