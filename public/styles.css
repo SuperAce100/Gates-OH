@@ -1108,3 +1108,33 @@ video {
   font-size: 2.5em;
   font-weight: 300;
 }
+
+.segmented-control {
+  display: flex;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+}
+
+.segment {
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.28);
+  border-right: 1px solid rgba(0, 0, 0, 0.3);
+  user-select: none;
+  transition: background-color 0.3s;
+}
+
+.segment:last-child {
+  border-right: none;
+}
+
+.segment:hover {
+  background-color: #f0f0f0;
+}
+
+.segment.active {
+  background-color: #0093af;
+  color: #fff;
+}

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Control Panel</title>
+    <link rel="icon" href="favicon.ico" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Inter:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container glass">
+      <h1>Adjust Curves</h1>
+      <div class="segmented-control">
+        <div class="segment" id="blur">Blur</div>
+        <div class="segment" id="ambience">Ambience</div>
+        <div class="segment" id="tutorial">Tutorial</div>
+        <div class="segment" id="office">Office Volume</div>
+        <div class="segment" id="translation">Center Location</div>
+        <div class="segment" id="scale">Scale</div>
+      </div>
+      <canvas id="equalizer" width="600" height="300"></canvas>
+    </div>
+    <script src="./dist/controlScripts-bundle.js"></script>
+  </body>
+</html>
