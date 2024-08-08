@@ -1,5 +1,5 @@
 import app from "./firebase-config.js";
-import { getDatabase, ref, onValue, update } from "firebase/database";
+import { getDatabase, ref, onValue, update, get } from "firebase/database";
 
 // data is an object with keys like "0%", "10%", "20%", ..., "100%"
 // x is a number between 0 and 100
@@ -23,19 +23,26 @@ function interpolate(data, x) {
   const upperValue = data[upperKey];
   const lowerX = parseInt(lowerKey);
   const upperX = parseInt(upperKey);
-  const value = lowerValue + ((upperValue - lowerValue) * (x - lowerX)) / (upperX - lowerX);
+  let value;
+  if (lowerX === upperX) {
+    value = lowerValue;
+  } else {
+    value = lowerValue + ((upperValue - lowerValue) * (x - lowerX)) / (upperX - lowerX);
+  }
 
   return value;
 }
 
 // x between 0 and 100 -> blur value from 20 to 0
-function blurCurve(x) {
+async function blurCurve(x) {
   const db = getDatabase(app);
   let blurRef = ref(db, `globalValues/curves/blur`);
   let data = {};
-  let unsubscriber = onValue(blurRef, (snapshot) => {
+  return await get(blurRef).then((snapshot) => {
     data = snapshot.val();
-    unsubscriber();
+    let blur = 20 * interpolate(data, x);
+    console.log("Blur", blur);
+    if (isNaN(blur)) console.log("Data", data, x, interpolate(data, x));
     return 20 * interpolate(data, x);
   });
 
@@ -43,14 +50,13 @@ function blurCurve(x) {
 }
 
 // x between 0 and 100 -> volume value from 0.1 to 0
-function ambienceCurve(x) {
+async function ambienceCurve(x) {
   const db = getDatabase(app);
   let ambienceRef = ref(db, `globalValues/curves/ambience`);
   let data = {};
-  let unsubscriber = onValue(ambienceRef, (snapshot) => {
+  return await get(ambienceRef).then((snapshot) => {
     data = snapshot.val();
-    unsubscriber();
-    return 0.1 * interpolate(data, x);
+    return interpolate(data, x);
   });
 
   // return Math.max(0, 0.1 - x / 300);

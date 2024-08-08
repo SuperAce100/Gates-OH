@@ -98,7 +98,7 @@ async function playUserAudio(username, volume) {
     const stream = client.getMediaStream();
     try {
       stream.adjustUserAudioVolumeLocally(user.userId, volume);
-      console.log(`Playing ${username}'s audio at volume: ${volume}`);
+      // console.log(`Playing ${username}'s audio at volume: ${volume}`);
     } catch (error) {
       console.error("Error playing user's audio:", error);
     }

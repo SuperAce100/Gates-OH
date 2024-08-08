@@ -117,7 +117,10 @@ document.addEventListener("DOMContentLoaded", async function () {
               const updateScrollPosition = () => {
                 const maxScrollTop = scrollOverlay.scrollHeight - scrollOverlay.clientHeight;
                 const scrollPosition = scrollOverlay.scrollTop;
-                const scrollPercentage = (scrollPosition / maxScrollTop) * 100;
+                let scrollPercentage = 0;
+                if (maxScrollTop !== 0) {
+                  scrollPercentage = Math.min(100, (scrollPosition / maxScrollTop) * 100);
+                }
                 update(userRef, { interactionProgress: scrollPercentage });
               };
 
@@ -125,17 +128,18 @@ document.addEventListener("DOMContentLoaded", async function () {
               scrollOverlay.onscroll = updateScrollPosition;
 
               const progressRef = ref(db, `users/${uid}/interactionProgress`);
-              onValue(progressRef, (snapshot) => {
+              onValue(progressRef, async (snapshot) => {
                 const data = snapshot.val();
-                document.getElementById("hallcam-video-container").style.filter = `blur(${blurCurve(
-                  data
-                )}px)`;
+                document.getElementById("hallcam-video-container").style.filter = `blur(20px)`;
+                document.getElementById(
+                  "hallcam-video-container"
+                ).style.filter = `blur(${await blurCurve(data)}px)`;
                 document.getElementById("visitor-tutorial").style.opacity = `${tutorialCurve(
                   data
                 )}%`;
                 document.getElementById("progress-inner").style.height = `${data}%`;
                 playUserAudio(id + " monitor", officeCurve(data));
-                whitenoise.volume = ambienceCurve(data);
+                whitenoise.volume = await ambienceCurve(data);
               });
 
               displayName = e.detail.username;
