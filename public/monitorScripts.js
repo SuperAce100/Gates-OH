@@ -145,13 +145,11 @@ document.addEventListener("AcceptedPermissions", async function () {
         const progressRef = ref(db, `users/${user_id}/interactionProgress`);
         onValue(progressRef, async (snapshot) => {
           const data = snapshot.val();
-
           document.getElementById("my-video-container").style.filter = `blur(20px)`;
           document.getElementById("my-video-container").style.filter = `blur(${await blurCurve(
             data
           )}px)`;
-
-          playUserAudio(id + " monitor", officeCurve(data));
+          playUserAudio(user_id, await officeCurve(data));
           whitenoise.volume = await ambienceCurve(data);
         });
       },
