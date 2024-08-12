@@ -127,6 +127,8 @@ document.addEventListener("AcceptedPermissions", async function () {
         visitorId = office.currentVisitorId;
         visitorName = office.currentVisitorName;
 
+        document.getElementById("my-video-container").classList.remove("monitor-video-hidden");
+
         setTimeout(() => {
           unsubscriber = updateCurrentUser(visitorId, curves, whitenoise);
         }, 0);
@@ -160,6 +162,7 @@ document.addEventListener("AcceptedPermissions", async function () {
           visitorName = displayName;
         }
         console.log("changing user data with new user", displayName);
+        document.getElementById("my-video-container").style.opacity = 0.01;
 
         document.getElementById("my-video-container").style.transform = `scale(${scaleCurve(
           100,
@@ -184,7 +187,7 @@ document.addEventListener("AcceptedPermissions", async function () {
 
         const progressRef = ref(db, `users/${user_id}/interactionProgress`);
         setTimeout(() => {
-          document.getElementById("my-video-container").classList.remove("monitor-video-hidden");
+          document.getElementById("my-video-container").style.opacity = 1;
           onValue(progressRef, async (snapshot) => {
             const data = snapshot.val();
             document.getElementById("my-video-container").style.filter = `blur(20px)`;
