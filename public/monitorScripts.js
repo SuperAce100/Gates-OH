@@ -18,7 +18,14 @@ import {
   muteAllUsersAudio,
 } from "./zoom-sdk.js";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { ambienceCurve, blurCurve, officeCurve } from "./curves.js";
+import {
+  ambienceCurve,
+  blurCurve,
+  officeCurve,
+  scaleCurve,
+  translationXCurve,
+  translationYCurve,
+} from "./curves.js";
 
 let tokens = window.location.pathname.split("/");
 let id = tokens[tokens.length - 2];
@@ -93,11 +100,13 @@ document.addEventListener("AcceptedPermissions", async function () {
 
       visitorId = office.currentVisitorId;
       visitorName = office.currentVisitorName;
+      const whitenoise = new Audio("../../white-noise.mp3");
 
       // Check if there is no current visitor
       if (!office.currentVisitorId) {
         if (unsubscriber) unsubscriber();
         muteAllUsersAudio();
+        whitenoise.pause();
 
         let visitLog = await generateVisitLog(document.getElementById("label"));
         console.log("VisitLog: ", visitLog);
@@ -108,9 +117,18 @@ document.addEventListener("AcceptedPermissions", async function () {
         document.getElementById("visitor-video-container").innerHTML = "";
         return;
       } else {
+        const curvesRef = ref(db, `globalValues/curves`);
+        let curves = (await get(curvesRef)).val();
+        onValue(curvesRef, (snapshot) => {
+          const data = snapshot.val();
+          curves = data;
+        });
+
         visitorId = office.currentVisitorId;
         visitorName = office.currentVisitorName;
-        unsubscriber = updateCurrentUser(visitorId);
+        setTimeout(() => {
+          unsubscriber = updateCurrentUser(visitorId, curves, whitenoise);
+        }, 3000);
         // unsubscriber();
         await displayUserVideo(visitorId, document.getElementById("visitor-video-container"));
         runInteraction();
@@ -121,23 +139,37 @@ document.addEventListener("AcceptedPermissions", async function () {
     }
   );
 
-  function updateCurrentUser(user_id) {
-    const userRef = ref(db, `users/${user_id}`);
+  function updateCurrentUser(user_id, curves, whitenoise) {
+    const userRef = ref(db, `users/${user_id}/displayName`);
     console.log("user ", visitorName);
-    const whitenoise = new Audio("../../white-noise.mp3");
-    whitenoise.loop = true;
-    whitenoise.volume = 0.1;
+    whitenoise.volume = ambienceCurve(0, curves);
+
+    document.getElementById("my-video-container").style.transform = `scale(${scaleCurve(
+      100,
+      curves
+    )}) translateX(${translationXCurve(0, curves)}%) translateY(${translationYCurve(0, curves)}%)`;
+    console.log(
+      `scale(${scaleCurve(0, curves)}) translateX(${translationXCurve(
+        0,
+        curves
+      )}%) translateY(${translationYCurve(0, curves)}%)`
+    );
+    document.getElementById("my-video-container").style.filter = `blur(${blurCurve(0, curves)}px)`;
+
     whitenoise.play();
+    setTimeout(() => {
+      whitenoise.pause();
+    }, 9000);
 
     return onValue(
       userRef,
       (snapshot) => {
         const data = snapshot.val();
-        const user = data;
-        if (user) {
-          visitorName = user.displayName;
+        const displayName = data;
+        if (displayName) {
+          visitorName = displayName;
         }
-        console.log("changing user data with new user", user);
+        console.log("changing user data with new user", displayName);
 
         document.getElementById("label").textContent = visitorName + " is here.";
         document.getElementById("label").classList.add("monitor-large");
@@ -146,9 +178,19 @@ document.addEventListener("AcceptedPermissions", async function () {
         onValue(progressRef, async (snapshot) => {
           const data = snapshot.val();
           document.getElementById("my-video-container").style.filter = `blur(20px)`;
-          document.getElementById("my-video-container").style.filter = `blur(${blurCurve(data)}px)`;
-          playUserAudio(user_id, officeCurve(data));
-          whitenoise.volume = ambienceCurve(data);
+          document.getElementById("my-video-container").style.filter = `blur(${blurCurve(
+            data,
+            curves
+          )}px)`;
+          playUserAudio(user_id, officeCurve(data, curves));
+          whitenoise.volume = ambienceCurve(data, curves);
+          document.getElementById("my-video-container").style.transform = `scale(${scaleCurve(
+            data,
+            curves
+          )}) translateX(${translationXCurve(data, curves)}%) translateY(${translationYCurve(
+            data,
+            curves
+          )}%)`;
         });
       },
       (error) => {
