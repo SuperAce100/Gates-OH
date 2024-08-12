@@ -126,12 +126,12 @@ document.addEventListener("AcceptedPermissions", async function () {
 
         visitorId = office.currentVisitorId;
         visitorName = office.currentVisitorName;
+        await displayUserVideo(visitorId, document.getElementById("visitor-video-container"));
+
         setTimeout(() => {
           unsubscriber = updateCurrentUser(visitorId, curves, whitenoise);
         }, 0);
         // unsubscriber();
-        await displayUserVideo(visitorId, document.getElementById("visitor-video-container"));
-        runInteraction();
       }
     },
     (error) => {
@@ -158,7 +158,6 @@ document.addEventListener("AcceptedPermissions", async function () {
           visitorName = displayName;
         }
         console.log("changing user data with new user", displayName);
-        document.getElementById("monitor-video-supercontainer").style.display = "none";
 
         document.getElementById("my-video-container").style.transform = `scale(${scaleCurve(
           100,
@@ -183,7 +182,7 @@ document.addEventListener("AcceptedPermissions", async function () {
 
         const progressRef = ref(db, `users/${user_id}/interactionProgress`);
         setTimeout(() => {
-          document.getElementById("monitor-video-supercontainer").style.display = "block";
+          document.getElementById("my-video-container").classList.remove("monitor-video-hidden");
           onValue(progressRef, async (snapshot) => {
             const data = snapshot.val();
             document.getElementById("my-video-container").style.filter = `blur(20px)`;
@@ -207,10 +206,6 @@ document.addEventListener("AcceptedPermissions", async function () {
         console.error("Error reading data:", error);
       }
     );
-  }
-
-  function runInteraction() {
-    document.getElementById("my-video-container").classList.remove("monitor-video-hidden");
   }
 
   async function generateVisitLog(container) {
