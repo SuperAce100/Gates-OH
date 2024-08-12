@@ -11,7 +11,17 @@ import {
 } from "firebase/database";
 import { getAuth, onAuthStateChanged, signInAnonymously } from "firebase/auth";
 import { displayUserVideo, leaveMeeting, playUserAudio, requestPermissions } from "./zoom-sdk.js";
-import { blurCurve, officeCurve, tutorialCurve, ambienceCurve } from "./curves.js";
+import {
+  blurCurve,
+  officeCurve,
+  tutorialCurve,
+  ambienceCurve,
+  scaleCurve,
+  translationXCurve,
+  translationYCurve,
+} from "./curves.js";
+import { on } from "process";
+import { doc } from "firebase/firestore";
 
 let interactionType = "scale";
 
@@ -108,7 +118,31 @@ document.addEventListener("DOMContentLoaded", async function () {
               const audio = new Audio("../../door-knock.mp3");
               const whitenoise = new Audio("../../white-noise.mp3");
               whitenoise.loop = true;
-              whitenoise.volume = 0.1;
+
+              const curvesRef = ref(db, `globalValues/curves`);
+              let curves = (await get(curvesRef)).val();
+              onValue(curvesRef, (snapshot) => {
+                const data = snapshot.val();
+                curves = data;
+              });
+
+              document.getElementById("hallcam-video-container").style.filter = `blur(${blurCurve(
+                0,
+                curves
+              )}px)`;
+              whitenoise.volume = ambienceCurve(0, curves);
+              document.getElementById(
+                "hallcam-video-container"
+              ).style.transform = `scale(${scaleCurve(0, curves)}) translateX(${translationXCurve(
+                0,
+                curves
+              )}%) translateY(${translationYCurve(0, curves)}%)`;
+              console.log(
+                `scale(${scaleCurve(0, curves)}) translateX(${translationXCurve(
+                  0,
+                  curves
+                )}%) translateY(${translationYCurve(0, curves)}%)`
+              );
               whitenoise.play();
 
               const scrollOverlay = document.getElementById("scroll-overlay");
@@ -130,16 +164,27 @@ document.addEventListener("DOMContentLoaded", async function () {
               const progressRef = ref(db, `users/${uid}/interactionProgress`);
               onValue(progressRef, async (snapshot) => {
                 const data = snapshot.val();
-                document.getElementById("hallcam-video-container").style.filter = `blur(20px)`;
+
+                document.getElementById("hallcam-video-container").style.filter = `blur(${blurCurve(
+                  data,
+                  curves
+                )}px)`;
+                document.getElementById("visitor-tutorial").style.opacity = `${tutorialCurve(
+                  data,
+                  curves
+                )}`;
+                document.getElementById("progress-inner").style.height = `${data}%`;
+                playUserAudio(id + " monitor", officeCurve(data, curves));
+                whitenoise.volume = ambienceCurve(data, curves);
                 document.getElementById(
                   "hallcam-video-container"
-                ).style.filter = `blur(${await blurCurve(data)}px)`;
-                document.getElementById("visitor-tutorial").style.opacity = `${tutorialCurve(
-                  data
-                )}%`;
-                document.getElementById("progress-inner").style.height = `${data}%`;
-                playUserAudio(id + " monitor", officeCurve(data));
-                whitenoise.volume = await ambienceCurve(data);
+                ).style.transform = `scale(${scaleCurve(
+                  data,
+                  curves
+                )}) translateX(${translationXCurve(data, curves)}%) translateY(${translationYCurve(
+                  data,
+                  curves
+                )}%)`;
               });
 
               displayName = e.detail.username;

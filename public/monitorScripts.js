@@ -146,11 +146,9 @@ document.addEventListener("AcceptedPermissions", async function () {
         onValue(progressRef, async (snapshot) => {
           const data = snapshot.val();
           document.getElementById("my-video-container").style.filter = `blur(20px)`;
-          document.getElementById("my-video-container").style.filter = `blur(${await blurCurve(
-            data
-          )}px)`;
-          playUserAudio(user_id, await officeCurve(data));
-          whitenoise.volume = await ambienceCurve(data);
+          document.getElementById("my-video-container").style.filter = `blur(${blurCurve(data)}px)`;
+          playUserAudio(user_id, officeCurve(data));
+          whitenoise.volume = ambienceCurve(data);
         });
       },
       (error) => {

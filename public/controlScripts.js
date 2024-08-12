@@ -6,7 +6,15 @@ document.addEventListener("DOMContentLoaded", () => {
   let unsubscriber = null;
   const db = getDatabase(app);
 
-  const segments = ["blur", "ambience", "tutorial", "translation", "scale", "office"];
+  const segments = [
+    "blur",
+    "ambience",
+    "tutorial",
+    "translationX",
+    "translationY",
+    "scale",
+    "office",
+  ];
   segments.forEach((segment, index) => {
     document.getElementById(segment).addEventListener("click", () => {
       // Update the global variable with the selected segment
