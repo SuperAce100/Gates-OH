@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", async function () {
               whitenoise.volume = ambienceCurve(0, curves);
               document.getElementById(
                 "hallcam-video-container"
-              ).style.transform = `scale(${scaleCurve(0, curves)}) translateX(${translationXCurve(
+              ).style.transform = `scale(${scaleCurve(100, curves)}) translateX(${translationXCurve(
                 0,
                 curves
               )}%) translateY(${translationYCurve(0, curves)}%)`;
@@ -162,30 +162,34 @@ document.addEventListener("DOMContentLoaded", async function () {
               scrollOverlay.onscroll = updateScrollPosition;
 
               const progressRef = ref(db, `users/${uid}/interactionProgress`);
-              onValue(progressRef, async (snapshot) => {
-                const data = snapshot.val();
+              document.getElementById("hallcam-container").style.display = "none";
 
-                document.getElementById("hallcam-video-container").style.filter = `blur(${blurCurve(
-                  data,
-                  curves
-                )}px)`;
-                document.getElementById("visitor-tutorial").style.opacity = `${tutorialCurve(
-                  data,
-                  curves
-                )}`;
-                document.getElementById("progress-inner").style.height = `${data}%`;
-                playUserAudio(id + " monitor", officeCurve(data, curves));
-                whitenoise.volume = ambienceCurve(data, curves);
-                document.getElementById(
-                  "hallcam-video-container"
-                ).style.transform = `scale(${scaleCurve(
-                  data,
-                  curves
-                )}) translateX(${translationXCurve(data, curves)}%) translateY(${translationYCurve(
-                  data,
-                  curves
-                )}%)`;
-              });
+              setTimeout(() => {
+                document.getElementById("hallcam-container").style.display = "block";
+                onValue(progressRef, async (snapshot) => {
+                  const data = snapshot.val();
+
+                  document.getElementById(
+                    "hallcam-video-container"
+                  ).style.filter = `blur(${blurCurve(data, curves)}px)`;
+                  document.getElementById("visitor-tutorial").style.opacity = `${tutorialCurve(
+                    data,
+                    curves
+                  )}`;
+                  document.getElementById("progress-inner").style.height = `${data}%`;
+                  playUserAudio(id + " monitor", officeCurve(data, curves));
+                  whitenoise.volume = ambienceCurve(data, curves);
+                  document.getElementById(
+                    "hallcam-video-container"
+                  ).style.transform = `scale(${scaleCurve(
+                    data,
+                    curves
+                  )}) translateX(${translationXCurve(
+                    data,
+                    curves
+                  )}%) translateY(${translationYCurve(data, curves)}%)`;
+                });
+              }, 3000);
 
               displayName = e.detail.username;
               unsubscriber();
