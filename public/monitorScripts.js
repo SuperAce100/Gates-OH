@@ -126,11 +126,13 @@ document.addEventListener("AcceptedPermissions", async function () {
 
         visitorId = office.currentVisitorId;
         visitorName = office.currentVisitorName;
-        await displayUserVideo(visitorId, document.getElementById("visitor-video-container"));
 
         setTimeout(() => {
           unsubscriber = updateCurrentUser(visitorId, curves, whitenoise);
         }, 0);
+
+        await displayUserVideo(visitorId, document.getElementById("visitor-video-container"));
+
         // unsubscriber();
       }
     },
