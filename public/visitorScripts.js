@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", async function () {
               scrollOverlay.onscroll = updateScrollPosition;
 
               const progressRef = ref(db, `users/${uid}/interactionProgress`);
-              // document.getElementById("hallcam-container").style.display = "none";
+              document.getElementById("hallcam-container").style.display = "none";
               document.getElementById("hallcam-video-container").style.filter = `blur(${blurCurve(
                 0,
                 curves

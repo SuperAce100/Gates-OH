@@ -158,6 +158,7 @@ document.addEventListener("AcceptedPermissions", async function () {
           visitorName = displayName;
         }
         console.log("changing user data with new user", displayName);
+        document.getElementById("monitor-video-supercontainer").style.display = "none";
 
         document.getElementById("my-video-container").style.transform = `scale(${scaleCurve(
           100,
@@ -182,6 +183,7 @@ document.addEventListener("AcceptedPermissions", async function () {
 
         const progressRef = ref(db, `users/${user_id}/interactionProgress`);
         setTimeout(() => {
+          document.getElementById("monitor-video-supercontainer").style.display = "block";
           onValue(progressRef, async (snapshot) => {
             const data = snapshot.val();
             document.getElementById("my-video-container").style.filter = `blur(20px)`;
