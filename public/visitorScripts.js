@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", async function () {
               scrollOverlay.onscroll = updateScrollPosition;
 
               const progressRef = ref(db, `users/${uid}/interactionProgress`);
-              document.getElementById("hallcam-container").style.display = "none";
+              // document.getElementById("hallcam-container").style.display = "none";
               document.getElementById("hallcam-video-container").style.filter = `blur(${blurCurve(
                 0,
                 curves
@@ -153,7 +153,7 @@ document.addEventListener("DOMContentLoaded", async function () {
               whitenoise.volume = ambienceCurve(0, curves);
               document.getElementById(
                 "hallcam-video-container"
-              ).style.transform = `scale(${scaleCurve(100, curves)}) translateX(${translationXCurve(
+              ).style.transform = `scale(1) translateX(${translationXCurve(
                 0,
                 curves
               )}%) translateY(${translationYCurve(0, curves)}%)`;

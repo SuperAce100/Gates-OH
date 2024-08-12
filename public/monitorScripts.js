@@ -128,7 +128,7 @@ document.addEventListener("AcceptedPermissions", async function () {
         visitorName = office.currentVisitorName;
         setTimeout(() => {
           unsubscriber = updateCurrentUser(visitorId, curves, whitenoise);
-        }, 3000);
+        }, 0);
         // unsubscriber();
         await displayUserVideo(visitorId, document.getElementById("visitor-video-container"));
         runInteraction();
@@ -143,18 +143,6 @@ document.addEventListener("AcceptedPermissions", async function () {
     const userRef = ref(db, `users/${user_id}/displayName`);
     console.log("user ", visitorName);
     whitenoise.volume = ambienceCurve(0, curves);
-
-    document.getElementById("my-video-container").style.transform = `scale(${scaleCurve(
-      100,
-      curves
-    )}) translateX(${translationXCurve(0, curves)}%) translateY(${translationYCurve(0, curves)}%)`;
-    console.log(
-      `scale(${scaleCurve(0, curves)}) translateX(${translationXCurve(
-        0,
-        curves
-      )}%) translateY(${translationYCurve(0, curves)}%)`
-    );
-    document.getElementById("my-video-container").style.filter = `blur(${blurCurve(0, curves)}px)`;
 
     whitenoise.play();
     setTimeout(() => {
@@ -171,27 +159,47 @@ document.addEventListener("AcceptedPermissions", async function () {
         }
         console.log("changing user data with new user", displayName);
 
+        document.getElementById("my-video-container").style.transform = `scale(${scaleCurve(
+          100,
+          curves
+        )}) translateX(${translationXCurve(0, curves)}%) translateY(${translationYCurve(
+          0,
+          curves
+        )}%)`;
+        console.log(
+          `scale(${scaleCurve(0, curves)}) translateX(${translationXCurve(
+            0,
+            curves
+          )}%) translateY(${translationYCurve(0, curves)}%)`
+        );
+        document.getElementById("my-video-container").style.filter = `blur(${blurCurve(
+          0,
+          curves
+        )}px)`;
+
         document.getElementById("label").textContent = visitorName + " is here.";
         document.getElementById("label").classList.add("monitor-large");
 
         const progressRef = ref(db, `users/${user_id}/interactionProgress`);
-        onValue(progressRef, async (snapshot) => {
-          const data = snapshot.val();
-          document.getElementById("my-video-container").style.filter = `blur(20px)`;
-          document.getElementById("my-video-container").style.filter = `blur(${blurCurve(
-            data,
-            curves
-          )}px)`;
-          playUserAudio(user_id, officeCurve(data, curves));
-          whitenoise.volume = ambienceCurve(data, curves);
-          document.getElementById("my-video-container").style.transform = `scale(${scaleCurve(
-            data,
-            curves
-          )}) translateX(${translationXCurve(data, curves)}%) translateY(${translationYCurve(
-            data,
-            curves
-          )}%)`;
-        });
+        setTimeout(() => {
+          onValue(progressRef, async (snapshot) => {
+            const data = snapshot.val();
+            document.getElementById("my-video-container").style.filter = `blur(20px)`;
+            document.getElementById("my-video-container").style.filter = `blur(${blurCurve(
+              data,
+              curves
+            )}px)`;
+            playUserAudio(user_id, officeCurve(data, curves));
+            whitenoise.volume = ambienceCurve(data, curves);
+            document.getElementById("my-video-container").style.transform = `scale(${scaleCurve(
+              data,
+              curves
+            )}) translateX(${translationXCurve(data, curves)}%) translateY(${translationYCurve(
+              data,
+              curves
+            )}%)`;
+          });
+        }, 3000);
       },
       (error) => {
         console.error("Error reading data:", error);
