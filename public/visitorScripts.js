@@ -126,23 +126,6 @@ document.addEventListener("DOMContentLoaded", async function () {
                 curves = data;
               });
 
-              document.getElementById("hallcam-video-container").style.filter = `blur(${blurCurve(
-                0,
-                curves
-              )}px)`;
-              whitenoise.volume = ambienceCurve(0, curves);
-              document.getElementById(
-                "hallcam-video-container"
-              ).style.transform = `scale(${scaleCurve(100, curves)}) translateX(${translationXCurve(
-                0,
-                curves
-              )}%) translateY(${translationYCurve(0, curves)}%)`;
-              console.log(
-                `scale(${scaleCurve(0, curves)}) translateX(${translationXCurve(
-                  0,
-                  curves
-                )}%) translateY(${translationYCurve(0, curves)}%)`
-              );
               whitenoise.play();
 
               const scrollOverlay = document.getElementById("scroll-overlay");
@@ -163,6 +146,23 @@ document.addEventListener("DOMContentLoaded", async function () {
 
               const progressRef = ref(db, `users/${uid}/interactionProgress`);
               document.getElementById("hallcam-container").style.display = "none";
+              document.getElementById("hallcam-video-container").style.filter = `blur(${blurCurve(
+                0,
+                curves
+              )}px)`;
+              whitenoise.volume = ambienceCurve(0, curves);
+              document.getElementById(
+                "hallcam-video-container"
+              ).style.transform = `scale(${scaleCurve(100, curves)}) translateX(${translationXCurve(
+                0,
+                curves
+              )}%) translateY(${translationYCurve(0, curves)}%)`;
+              console.log(
+                `scale(${scaleCurve(0, curves)}) translateX(${translationXCurve(
+                  0,
+                  curves
+                )}%) translateY(${translationYCurve(0, curves)}%)`
+              );
 
               setTimeout(() => {
                 document.getElementById("hallcam-container").style.display = "block";
