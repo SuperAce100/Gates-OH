@@ -331,9 +331,19 @@ async function requestPermissions(
     permissionsForm.appendChild(usernameInput);
   }
 
+  const loaderContainer = document.createElement("div");
+  loaderContainer.className = "loader-container";
+  const loader = document.createElement("div");
+  loader.className = "loader";
+  const loadingText = document.createElement("p");
+  loadingText.textContent = "Loading...";
+  loaderContainer.appendChild(loader);
+  loaderContainer.appendChild(loadingText);
+
   permissionsForm.appendChild(acceptButton);
   permissionsForm.style.display = "none";
 
+  container.appendChild(loaderContainer);
   container.appendChild(permissionsForm);
 
   content.style.display = "none";
@@ -345,14 +355,10 @@ async function requestPermissions(
   generateMicDropdown(micDropdownContainer);
   generateSpeakerDropdown(speakerDropdownContainer);
   permissionsForm.style.display = "flex";
+  container.removeChild(loaderContainer);
 
   acceptButton.disabled = false;
   acceptButton.id = "acceptButton";
-
-  document.addEventListener("AcceptedPermissions", async function () {
-    content.style.display = "block";
-    permissionsForm.style.display = "none";
-  });
 
   let displayName = null;
 
@@ -370,6 +376,8 @@ async function requestPermissions(
       detail: { username: displayName },
     });
 
+    content.style.display = "block";
+    permissionsForm.style.display = "none";
     document.dispatchEvent(acceptPermissionsEvent);
   });
 }

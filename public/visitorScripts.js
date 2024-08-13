@@ -118,7 +118,18 @@ document.addEventListener("DOMContentLoaded", async function () {
               const audio = new Audio("../../door-knock.mp3");
               const whitenoise = new Audio("../../white-noise.mp3");
               whitenoise.loop = true;
-              document.getElementById("hallcam-container").style.display = "none";
+
+              const loaderContainer = document.createElement("div");
+              loaderContainer.className = "loader-container";
+              const loader = document.createElement("div");
+              loader.className = "loader";
+              const loadingText = document.createElement("p");
+              loadingText.textContent = "Loading...";
+              loaderContainer.appendChild(loader);
+              loaderContainer.appendChild(loadingText);
+
+              document.getElementById("visitor-page").appendChild(loaderContainer);
+              document.getElementById("main-content").style.display = "none";
 
               const curvesRef = ref(db, `globalValues/curves`);
               let curves = (await get(curvesRef)).val();
@@ -146,7 +157,6 @@ document.addEventListener("DOMContentLoaded", async function () {
               };
 
               // Attach the update function to the scroll event
-              scrollOverlay.onscroll = updateScrollPosition;
 
               const progressRef = ref(db, `users/${uid}/interactionProgress`);
               document.getElementById("hallcam-video-container").style.filter = `blur(${blurCurve(
@@ -167,8 +177,13 @@ document.addEventListener("DOMContentLoaded", async function () {
                 )}%) translateY(${translationYCurve(0, curves)}%)`
               );
 
+              await joinOffice();
+
               setTimeout(() => {
-                document.getElementById("hallcam-container").style.display = "block";
+                document.getElementById("visitor-page").removeChild(loaderContainer);
+                document.getElementById("main-content").style.display = "block";
+
+                scrollOverlay.onscroll = updateScrollPosition;
                 onValue(progressRef, async (snapshot) => {
                   const data = snapshot.val();
 
@@ -200,8 +215,9 @@ document.addEventListener("DOMContentLoaded", async function () {
                 update(userRef, { displayName: displayName });
               }
 
-              await joinOffice();
-              runInteraction();
+              document
+                .getElementById("preview-video-container")
+                .classList.remove("preview-video-hidden");
             });
           }
         },
@@ -236,10 +252,10 @@ document.addEventListener("DOMContentLoaded", async function () {
       console.log("Visit log updated!");
     });
 
-    document.getElementById("hallcam-container").style.display = "none";
+    // document.getElementById("hallcam-container").style.display = "none";
     await displayUserVideo(id + " monitor", document.getElementById("hallcam-video"));
     await displayUserVideo(user_id, document.getElementById("preview-video"));
-    document.getElementById("hallcam-container").style.display = "block";
+    // document.getElementById("hallcam-container").style.display = "block";
 
     const officeRef = ref(db, `offices/${id}`);
     update(officeRef, { currentVisitorId: user_id, currentVisitorName: displayName }).then(() => {
@@ -251,10 +267,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     update(currentUserRef, { currentOffice: id }).then(() => {
       console.log("Current office updated!");
     });
-  }
-
-  function runInteraction() {
-    document.getElementById("preview-video-container").classList.remove("preview-video-hidden");
   }
 
   async function leaveOffice() {

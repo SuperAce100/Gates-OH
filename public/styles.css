@@ -485,6 +485,7 @@ video-player {
 .visitor-heading-box {
   border-radius: 16px;
   padding: 10px;
+  min-width: fit-content;
   background: #00000088;
 }
 
@@ -1132,6 +1133,8 @@ video {
   align-items: center;
   flex-direction: column;
   padding: 50px;
+  width: 100%;
+  height: 100vh;
 }
 
 .loader-container > p {
