@@ -506,13 +506,14 @@ video-player {
   width: calc(100vw);
   margin: auto;
   z-index: 999;
+  color: whitesmoke;
 }
 
 .visitor-heading-box {
   padding: 20px;
   border-radius: 16px;
   min-width: 500px;
-  background: #ffffffad;
+  background: #00000088;
 }
 
 .visitor-container {
@@ -1089,19 +1090,20 @@ video {
 
 #visitor-tutorial {
   position: fixed;
-  top: min(calc(100vw * 9 / 16 / 2 - 0.5em), calc(50% - 0.5em));
+  top: min(calc(100vw * 9 / 16 / 2 - 0.5em + 20vh), calc(50% - 0.5em + 20vh));
   min-width: 500px;
   border: 1px solid rgba(255, 255, 255, 0.5);
   left: calc(50% - 250px);
   text-align: center;
-  background: #ffffffad;
+  background: #00000088;
   border-radius: 16px;
   z-index: 99;
 }
 
 #visitor-tutorial > h2 {
-  font-size: 2.5em;
+  font-size: 2em;
   font-weight: 300;
+  color: whitesmoke;
 }
 
 .segmented-control {
