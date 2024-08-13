@@ -109,12 +109,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const y = padding + drawHeight * (1 - levels[i]);
       ctx.lineTo(x, y);
     }
-    ctx.strokeStyle = "rgba(0, 0, 0, 0.3)";
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
     ctx.lineWidth = 2;
     ctx.stroke();
 
     // Draw points
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "#0093af";
     for (let i = 0; i < levels.length; i++) {
       const x = padding + (i / (levels.length - 1)) * drawWidth;
       const y = padding + drawHeight * (1 - levels[i]);
@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Draw frequency labels
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "white";
     ctx.font = "12px Arial";
     ctx.textAlign = "center";
     for (let i = 0; i < frequencies.length; i++) {

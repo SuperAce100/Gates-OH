@@ -33,10 +33,6 @@ getCurrentUser()
           currentUserID = userData[userKey].id;
           console.log("user", userData[userKey]);
 
-          document.getElementById("monitor-button").addEventListener("click", () => {
-            window.location.href = `/offices/${currentUserID}/monitor`;
-          });
-
           onValue(officesRef, (snapshot) => {
             const data = snapshot.val();
             const offices = Object.values(data);
@@ -52,47 +48,6 @@ getCurrentUser()
   .catch((error) => {
     console.error("Error fetching the current user: ", error);
   });
-
-let interactionRef = ref(db, "globalValues");
-
-onValue(interactionRef, (snapshot) => {
-  let data = snapshot.val();
-  let chosenType = data.interactionType;
-  console.log("chosenType", chosenType);
-  generateDropdownContent(chosenType);
-});
-
-// Function to generate the dropdown content
-function generateDropdownContent(chosenType) {
-  const interactions = ["Scale", "Blur", "Slide"];
-  const dropdownContent = document.getElementById("dropdownContent");
-
-  // Clear existing content
-  dropdownContent.innerHTML = "";
-
-  interactions.forEach((interaction) => {
-    const a = document.createElement("a");
-    a.href = "#";
-    a.textContent = interaction;
-    a.id = interaction.toLowerCase();
-
-    // Add selected class if it matches the interactionType
-    if (interaction.toLowerCase() === chosenType) {
-      console.log("selecting type", chosenType);
-      a.classList.add("selected");
-    }
-
-    // Add click event listener to update interactionType
-    a.addEventListener("click", (e) => {
-      e.preventDefault();
-      let interactionType = interaction.toLowerCase();
-      update(interactionRef, { interactionType });
-    });
-
-    dropdownContent.appendChild(a);
-  });
-}
-generateDropdownContent();
 
 function displayOffices(offices) {
   const officesContainer = document.getElementById("rows");

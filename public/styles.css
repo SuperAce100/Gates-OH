@@ -1,9 +1,9 @@
 body {
   font-family: "Inter Tight", Inter, Arial, Helvetica, sans-serif;
   /* background-color: skyblue; */
-  background-color: #404040;
+  background-image: url("./background2.jpg");
   background-size: 100% auto;
-  color: #161f27;
+  color: #f0f0f0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -43,17 +43,18 @@ h1 {
 }
 
 .glass {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 24px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .people {
   border-radius: 16px;
   overflow: hidden;
+  background: none;
 }
 
 .person-container {
@@ -80,7 +81,7 @@ h1 {
 }
 
 .person:hover {
-  background-color: rgba(0, 0, 0, 0.06);
+  background-color: rgba(255, 255, 255, 0.06);
   cursor: pointer;
 }
 
@@ -215,68 +216,41 @@ form {
   color: #0093af;
 }
 
-input[type="text"] {
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  background-color: rgba(255, 255, 255, 0.3) !important;
+  -webkit-box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.7) inset !important;
+  box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.7) inset !important;
+  -webkit-text-fill-color: whitesmoke !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  outline: none !important;
+}
+
+input {
+  background-color: rgba(255, 255, 255, 0.3);
   padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
+  border-radius: 10px !important;
+  border: 1px solid rgba(255, 255, 255, 0.4);
   font-size: large;
-  color: #161f27;
+  color: whitesmoke;
   outline: none;
   transition: 0.2s;
 }
 
-input[type="text"]:hover {
+input:hover {
   background: rgba(255, 255, 255, 0.4);
   box-shadow: 0 8px 10px rgba(0, 0, 0, 0.07);
 }
 
-input[type="text"]:focus {
-  background: rgba(255, 255, 255, 0.7);
-  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.07);
-}
-
-input[type="email"] {
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-  font-size: large;
-  color: #161f27;
-  outline: none;
-  transition: 0.2s;
-}
-
-input[type="email"]:hover {
-  background: rgba(255, 255, 255, 0.4);
-  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.07);
-}
-
-input[type="email"]:focus {
-  background: rgba(255, 255, 255, 0.7);
-  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.07);
-}
-
-input[type="password"] {
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-  font-size: large;
-  color: #161f27;
-  outline: none;
-  transition: 0.2s;
-}
-
-input[type="password"]:hover {
-  background: rgba(255, 255, 255, 0.4);
-  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.07);
-}
-
-input[type="password"]:focus {
-  background: rgba(255, 255, 255, 0.7);
+input:focus {
+  background: rgba(255, 255, 255, 0.5);
   box-shadow: 0 8px 10px rgba(0, 0, 0, 0.07);
 }
 
 label {
-  color: #777;
+  color: #aaa;
   margin-top: 10px;
   font-family: Inter, Arial, Helvetica, sans-serif;
   margin-bottom: 3px;
@@ -290,7 +264,6 @@ label {
   border-radius: 10px;
   background-color: #0093af;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  opacity: 0.7;
   border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(30px);
   color: rgba(255, 255, 255, 1);
@@ -572,7 +545,6 @@ video-player {
   border-radius: 8px;
   background-color: #0093af;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  opacity: 0.7;
   border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(30px);
   color: rgba(255, 255, 255, 1);
@@ -626,7 +598,6 @@ video-player {
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {
-  opacity: 0.9;
   border-radius: 8px 8px 0px 8px;
 }
 
@@ -1104,7 +1075,7 @@ video {
 
 .segmented-control {
   display: flex;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
@@ -1117,6 +1088,9 @@ video {
   border-right: 1px solid rgba(0, 0, 0, 0.3);
   user-select: none;
   transition: background-color 0.3s;
+  flex-grow: 1;
+  flex-basis: auto;
+  text-align: center;
 }
 
 .segment:last-child {
@@ -1132,7 +1106,34 @@ video {
   color: #fff;
 }
 
-#monitor-body {
-  background-color: #404040;
-  background-image: none;
+.loader {
+  border: 10px solid transparent;
+  border-top: 10px solid whitesmoke;
+  border-right: 10px solid whitesmoke;
+  border-bottom: 10px solid whitesmoke;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 50px;
+}
+
+.loader-container > p {
+  font-size: larger;
 }
