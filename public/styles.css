@@ -510,9 +510,7 @@ video-player {
 }
 
 .visitor-heading-box {
-  padding: 20px;
   border-radius: 16px;
-  min-width: 500px;
   background: #00000088;
 }
 
@@ -1091,18 +1089,15 @@ video {
 #visitor-tutorial {
   position: fixed;
   top: min(calc(100vw * 9 / 16 / 2 - 0.5em + 20vh), calc(50% - 0.5em + 20vh));
-  min-width: 500px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
   left: calc(50% - 250px);
   text-align: center;
-  background: #00000088;
   border-radius: 16px;
   z-index: 99;
 }
 
 #visitor-tutorial > h2 {
-  font-size: 2em;
-  font-weight: 300;
+  font-size: 2.5em;
+  font-weight: bold;
   color: whitesmoke;
 }
 
