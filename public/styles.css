@@ -511,6 +511,7 @@ video-player {
 
 .visitor-heading-box {
   border-radius: 16px;
+  padding: 10px;
   background: #00000088;
 }
 
@@ -1089,7 +1090,7 @@ video {
 #visitor-tutorial {
   position: fixed;
   top: min(calc(100vw * 9 / 16 / 2 - 0.5em + 20vh), calc(50% - 0.5em + 20vh));
-  left: calc(50% - 250px);
+  width: 100%;
   text-align: center;
   border-radius: 16px;
   z-index: 99;
