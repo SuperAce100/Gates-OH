@@ -353,16 +353,9 @@ video-player {
   margin: -2px;
 }
 
-#label {
-  margin-left: 15%;
-}
-
 #label > span > p {
   margin-top: 0px;
   display: inline;
-}
-
-#label > span {
 }
 
 .monitor-name {
@@ -380,8 +373,10 @@ video-player {
   transition: 1s;
   text-align: left;
   position: absolute;
+  left: 20px;
   z-index: 10;
   top: 15%;
+  color: whitesmoke;
 }
 
 .monitor-large {
@@ -394,8 +389,7 @@ video-player {
   top: 20px;
   left: 20px;
   transition: 1s;
-  background-color: #ffffffad;
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  background-color: #00000088;
   border-radius: 8px;
   padding: 20px;
 }
@@ -1138,4 +1132,9 @@ video {
 .segment.active {
   background-color: #0093af;
   color: #fff;
+}
+
+#monitor-body {
+  background-color: #404040;
+  background-image: none;
 }

@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("main-content"),
             id + " monitor",
             "Gates-OH",
-            "Setup office!"
+            "Start virtual office!"
           );
           unsubscriber();
         } else {
@@ -182,7 +182,7 @@ document.addEventListener("AcceptedPermissions", async function () {
           curves
         )}px)`;
 
-        document.getElementById("label").textContent = visitorName + " is here.";
+        document.getElementById("label").textContent = visitorName;
         document.getElementById("label").classList.add("monitor-large");
 
         const progressRef = ref(db, `users/${user_id}/interactionProgress`);
@@ -235,8 +235,12 @@ document.addEventListener("AcceptedPermissions", async function () {
       return wordOptions[Math.floor(Math.random() * wordOptions.length)];
     }
 
+    let length = 5;
+    let startingOpacity = 0.1;
+    let step = (1 - startingOpacity) / (length - 1);
+
     const visitLogRef = ref(db, `offices/${id}/visitLog`);
-    const queryRef = query(visitLogRef, orderByChild("time"), limitToLast(5));
+    const queryRef = query(visitLogRef, orderByChild("time"), limitToLast(length));
 
     // Set up a real-time listener
     onValue(queryRef, (snapshot) => {
@@ -245,7 +249,6 @@ document.addEventListener("AcceptedPermissions", async function () {
         let sentences = [];
         let index = 0;
         for (const key in visitLogs) {
-          index++;
           const visitLog = visitLogs[key];
           const visitTime = new Date(visitLog.time);
           const now = new Date();
@@ -265,11 +268,12 @@ document.addEventListener("AcceptedPermissions", async function () {
             : visitTime.toLocaleString("en-US", { weekday: "long" });
 
           const sentence = `<span style="opacity: ${
-            0.4 + 0.15 * index
+            1 - step * (length - 1 - index)
           }"><p class="monitor-name" id="visitlog-${index}">${
             visitLog.displayName
-          }</p> <p class="monitor-time">${dayDescriptor} at ${formattedTime}.</p></span>`;
+          }</p> <p class="monitor-time">${dayDescriptor} at ${formattedTime}</p></span>`;
           sentences.unshift(sentence);
+          index++;
         }
 
         const result = sentences.join("<br>");

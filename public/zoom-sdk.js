@@ -332,6 +332,7 @@ async function requestPermissions(
   }
 
   permissionsForm.appendChild(acceptButton);
+  permissionsForm.style.display = "none";
 
   container.appendChild(permissionsForm);
 
@@ -343,6 +344,7 @@ async function requestPermissions(
   generateCameraDropdown(cameraDropdownContainer);
   generateMicDropdown(micDropdownContainer);
   generateSpeakerDropdown(speakerDropdownContainer);
+  permissionsForm.style.display = "flex";
 
   acceptButton.disabled = false;
   acceptButton.id = "acceptButton";
