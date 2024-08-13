@@ -193,7 +193,7 @@ document.addEventListener("AcceptedPermissions", async function () {
 
             document.getElementById("my-video-container").style.opacity = 1;
             const data = snapshot.val();
-            document.getElementById("my-video-container").style.filter = `blur(20px)`;
+            document.getElementById("my-video-container").style.filter = `blur(50px)`;
             document.getElementById("my-video-container").style.filter = `blur(${blurCurve(
               data,
               curves

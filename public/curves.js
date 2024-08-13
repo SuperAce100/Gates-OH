@@ -40,7 +40,7 @@ function interpolate(data, x) {
 
 // x between 0 and 100 -> blur value from 20 to 0
 function blurCurve(x, curves = null) {
-  return 20 * interpolate(curves.blur, x);
+  return 50 * interpolate(curves.blur, x);
 
   // return 20 - x / 5;
 }
