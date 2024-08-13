@@ -118,6 +118,7 @@ document.addEventListener("DOMContentLoaded", async function () {
               const audio = new Audio("../../door-knock.mp3");
               const whitenoise = new Audio("../../white-noise.mp3");
               whitenoise.loop = true;
+              document.getElementById("hallcam-container").style.display = "none";
 
               const curvesRef = ref(db, `globalValues/curves`);
               let curves = (await get(curvesRef)).val();
@@ -145,7 +146,6 @@ document.addEventListener("DOMContentLoaded", async function () {
               scrollOverlay.onscroll = updateScrollPosition;
 
               const progressRef = ref(db, `users/${uid}/interactionProgress`);
-              document.getElementById("hallcam-container").style.display = "none";
               document.getElementById("hallcam-video-container").style.filter = `blur(${blurCurve(
                 0,
                 curves

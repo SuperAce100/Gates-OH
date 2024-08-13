@@ -187,10 +187,9 @@ document.addEventListener("AcceptedPermissions", async function () {
 
         const progressRef = ref(db, `users/${user_id}/interactionProgress`);
         setTimeout(() => {
-          document.getElementById("my-video-container").style.transition = "opacity 1s all 0s";
+          document.getElementById("my-video-container").style.transition = "0s opacity 1s";
           onValue(progressRef, async (snapshot) => {
-            document.getElementById("my-video-container").style.transition =
-              "opacity 1s all 0.05s ";
+            document.getElementById("my-video-container").style.transition = "0.05s opacity 1s";
 
             document.getElementById("my-video-container").style.opacity = 1;
             const data = snapshot.val();
