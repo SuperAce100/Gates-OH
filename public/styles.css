@@ -1,7 +1,7 @@
 body {
   font-family: "Inter Tight", Inter, Arial, Helvetica, sans-serif;
   /* background-color: skyblue; */
-  background-image: url(./background2.jpg);
+  background-color: #404040;
   background-size: 100% auto;
   color: #161f27;
   display: flex;
