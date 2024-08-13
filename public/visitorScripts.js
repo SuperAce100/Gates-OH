@@ -128,6 +128,9 @@ document.addEventListener("DOMContentLoaded", async function () {
               });
 
               whitenoise.play();
+              setTimeout(() => {
+                whitenoise.pause();
+              }, 9000);
 
               const scrollOverlay = document.getElementById("scroll-overlay");
               const userRef = ref(db, `users/${uid}`);
