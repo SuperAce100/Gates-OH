@@ -129,7 +129,7 @@ document.addEventListener("DOMContentLoaded", async function () {
               loaderContainer.appendChild(loadingText);
 
               document.getElementById("visitor-page").appendChild(loaderContainer);
-              document.getElementById("main-content").style.display = "none";
+              document.getElementById("main-content").style.opacity = 0;
 
               const curvesRef = ref(db, `globalValues/curves`);
               let curves = (await get(curvesRef)).val();
@@ -159,23 +159,23 @@ document.addEventListener("DOMContentLoaded", async function () {
               // Attach the update function to the scroll event
 
               const progressRef = ref(db, `users/${uid}/interactionProgress`);
-              document.getElementById("hallcam-video-container").style.filter = `blur(${blurCurve(
-                0,
-                curves
-              )}px)`;
-              whitenoise.volume = ambienceCurve(0, curves);
-              document.getElementById(
-                "hallcam-video-container"
-              ).style.transform = `scale(1) translateX(${translationXCurve(
-                0,
-                curves
-              )}%) translateY(${translationYCurve(0, curves)}%)`;
-              console.log(
-                `scale(${scaleCurve(0, curves)}) translateX(${translationXCurve(
-                  0,
-                  curves
-                )}%) translateY(${translationYCurve(0, curves)}%)`
-              );
+              // document.getElementById("hallcam-video-container").style.filter = `blur(${blurCurve(
+              //   0,
+              //   curves
+              // )}px)`;
+              // whitenoise.volume = ambienceCurve(0, curves);
+              // document.getElementById(
+              //   "hallcam-video-container"
+              // ).style.transform = `scale(1) translateX(${translationXCurve(
+              //   0,
+              //   curves
+              // )}%) translateY(${translationYCurve(0, curves)}%)`;
+              // console.log(
+              //   `scale(${scaleCurve(0, curves)}) translateX(${translationXCurve(
+              //     0,
+              //     curves
+              //   )}%) translateY(${translationYCurve(0, curves)}%)`
+              // );
 
               await joinOffice();
 
@@ -195,7 +195,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                   )}%) translateY(${translationYCurve(0, curves)}%)`
                 );
 
-                document.getElementById("main-content").style.display = "block";
+                document.getElementById("main-content").style.opacity = 1;
 
                 scrollOverlay.onscroll = updateScrollPosition;
                 onValue(progressRef, async (snapshot) => {
@@ -231,7 +231,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                     curves
                   )}%) translateY(${translationYCurve(data, curves)}%)`;
                 });
-              }, 3000);
+              }, 4000);
 
               displayName = e.detail.username;
               unsubscriber();
@@ -279,6 +279,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     // document.getElementById("hallcam-container").style.display = "none";
     await displayUserVideo(id + " monitor", document.getElementById("hallcam-video"));
     await displayUserVideo(user_id, document.getElementById("preview-video"));
+    console.log("User video displayed!");
     // document.getElementById("hallcam-container").style.display = "block";
 
     const officeRef = ref(db, `offices/${id}`);
