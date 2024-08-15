@@ -129,9 +129,7 @@ document.addEventListener("AcceptedPermissions", async function () {
 
         document.getElementById("my-video-container").classList.remove("monitor-video-hidden");
 
-        setTimeout(() => {
-          unsubscriber = updateCurrentUser(visitorId, curves, whitenoise);
-        }, 0);
+        unsubscriber = await updateCurrentUser(visitorId, curves, whitenoise);
 
         await displayUserVideo(visitorId, document.getElementById("visitor-video-container"));
 
@@ -143,7 +141,7 @@ document.addEventListener("AcceptedPermissions", async function () {
     }
   );
 
-  function updateCurrentUser(user_id, curves, whitenoise) {
+  async function updateCurrentUser(user_id, curves, whitenoise) {
     const userRef = ref(db, `users/${user_id}/displayName`);
     console.log("user ", visitorName);
     whitenoise.volume = ambienceCurve(0, curves);
@@ -162,7 +160,7 @@ document.addEventListener("AcceptedPermissions", async function () {
           visitorName = displayName;
         }
         console.log("changing user data with new user", displayName);
-        document.getElementById("my-video-container").style.opacity = 0.01;
+        document.getElementById("monitor-video-supercontainer").style.opacity = 0;
 
         document.getElementById("my-video-container").style.transform = `scale(${scaleCurve(
           100,
@@ -187,11 +185,7 @@ document.addEventListener("AcceptedPermissions", async function () {
 
         const progressRef = ref(db, `users/${user_id}/interactionProgress`);
         setTimeout(() => {
-          document.getElementById("my-video-container").style.transition = "0s opacity 1s";
           onValue(progressRef, async (snapshot) => {
-            document.getElementById("my-video-container").style.transition = "0.05s opacity 1s";
-
-            document.getElementById("my-video-container").style.opacity = 1;
             const data = snapshot.val();
             document.getElementById("my-video-container").style.filter = `blur(50px)`;
             document.getElementById("my-video-container").style.filter = `blur(${blurCurve(
@@ -208,7 +202,10 @@ document.addEventListener("AcceptedPermissions", async function () {
               curves
             )}%)`;
           });
-        }, 3000);
+          setTimeout(() => {
+            document.getElementById("monitor-video-supercontainer").style.opacity = 1;
+          }, 100);
+        }, 4000);
       },
       (error) => {
         console.error("Error reading data:", error);
