@@ -75,6 +75,7 @@ document.addEventListener("AcceptedPermissions", async function () {
 
   let visitorId = null;
   let visitorName = null;
+  let visitorMessage = null;
   let unsubscriber = null;
 
   let interactionType = null;
@@ -100,6 +101,7 @@ document.addEventListener("AcceptedPermissions", async function () {
 
       visitorId = office.currentVisitorId;
       visitorName = office.currentVisitorName;
+      visitorMessage = office.currentVisitorIntention;
       const whitenoise = new Audio("../../white-noise.mp3");
 
       // Check if there is no current visitor
@@ -180,7 +182,19 @@ document.addEventListener("AcceptedPermissions", async function () {
           curves
         )}px)`;
 
-        document.getElementById("label").textContent = visitorName;
+        switch (visitorMessage.toLowerCase()) {
+          case "just need 1 minute":
+            document.getElementById("label").textContent = visitorName + " just needs a minute.";
+            break;
+          case "waiting":
+            document.getElementById("label").textContent = visitorName + " is waiting.";
+            break;
+          case "want to chat":
+            document.getElementById("label").textContent = visitorName + " wants to chat.";
+            break;
+          default:
+            document.getElementById("label").textContent = visitorName;
+        }
         document.getElementById("label").classList.add("monitor-large");
 
         const progressRef = ref(db, `users/${user_id}/interactionProgress`);

@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   let user_id = null;
   let displayName = null;
+  let intentionMessage = "";
 
   let tokens = window.location.pathname.split("/");
   let id = tokens[tokens.length - 1];
@@ -112,7 +113,8 @@ document.addEventListener("DOMContentLoaded", async function () {
               uid,
               "Gates-OH",
               message,
-              user.displayName == null
+              user.displayName == null,
+              true
             );
             document.addEventListener("AcceptedPermissions", async function (e) {
               const audio = new Audio("../../door-knock.mp3");
@@ -159,23 +161,9 @@ document.addEventListener("DOMContentLoaded", async function () {
               // Attach the update function to the scroll event
 
               const progressRef = ref(db, `users/${uid}/interactionProgress`);
-              // document.getElementById("hallcam-video-container").style.filter = `blur(${blurCurve(
-              //   0,
-              //   curves
-              // )}px)`;
-              // whitenoise.volume = ambienceCurve(0, curves);
-              // document.getElementById(
-              //   "hallcam-video-container"
-              // ).style.transform = `scale(1) translateX(${translationXCurve(
-              //   0,
-              //   curves
-              // )}%) translateY(${translationYCurve(0, curves)}%)`;
-              // console.log(
-              //   `scale(${scaleCurve(0, curves)}) translateX(${translationXCurve(
-              //     0,
-              //     curves
-              //   )}%) translateY(${translationYCurve(0, curves)}%)`
-              // );
+              intentionMessage = e.detail.message;
+              console.log("intentionMessage", intentionMessage);
+              displayName = e.detail.username;
 
               await joinOffice();
 
@@ -233,7 +221,6 @@ document.addEventListener("DOMContentLoaded", async function () {
                 });
               }, 4000);
 
-              displayName = e.detail.username;
               unsubscriber();
               if (displayName) {
                 update(userRef, { displayName: displayName });
@@ -283,7 +270,11 @@ document.addEventListener("DOMContentLoaded", async function () {
     // document.getElementById("hallcam-container").style.display = "block";
 
     const officeRef = ref(db, `offices/${id}`);
-    update(officeRef, { currentVisitorId: user_id, currentVisitorName: displayName }).then(() => {
+    update(officeRef, {
+      currentVisitorId: user_id,
+      currentVisitorName: displayName,
+      currentVisitorIntention: intentionMessage,
+    }).then(() => {
       console.log("Current visitor updated!");
     });
 
@@ -296,7 +287,11 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   async function leaveOffice() {
     const officeRef = ref(db, `offices/${id}`);
-    update(officeRef, { currentVisitorId: null, currentVisitorName: null }).then(() => {
+    update(officeRef, {
+      currentVisitorId: null,
+      currentVisitorName: null,
+      currentVisitorIntention: null,
+    }).then(() => {
       console.log("Current visitor cleared!");
       // stop animation?
     });

@@ -269,7 +269,8 @@ async function requestPermissions(
   username,
   meetingName,
   message = "Accept permissions to drop in!",
-  isAnonymous = false
+  isAnonymous = false,
+  showMessage = false
 ) {
   const permissionsForm = document.createElement("div");
 
@@ -331,6 +332,37 @@ async function requestPermissions(
     permissionsForm.appendChild(usernameInput);
   }
 
+  let chosenMessage = "";
+
+  if (showMessage) {
+    const messages = ["Just need 1 minute", "Waiting", "Want to chat", "No reason"];
+
+    // Create the main segmented control container
+    const segmentedControl = document.createElement("div");
+    segmentedControl.className = "segmented-control";
+
+    // Loop through the messages and create segments
+    messages.forEach((message, index) => {
+      const segment = document.createElement("div");
+      segment.className = "segment";
+      segment.textContent = message;
+      segment.setAttribute("data-message", message);
+
+      // Add click event listener to handle segment selection
+      segment.addEventListener("click", () => {
+        document.querySelectorAll(".segment").forEach((seg) => seg.classList.remove("active"));
+        segment.classList.add("active");
+        chosenMessage = message;
+      });
+
+      // Append the segment to the segmented control
+      segmentedControl.appendChild(segment);
+    });
+
+    // Append the segmented control to the container in the DOM
+    permissionsForm.appendChild(segmentedControl);
+  }
+
   const loaderContainer = document.createElement("div");
   loaderContainer.className = "loader-container";
   const loader = document.createElement("div");
@@ -372,8 +404,9 @@ async function requestPermissions(
     }
 
     await detachVideo(username, document.getElementById("permissions-video"));
+
     const acceptPermissionsEvent = new CustomEvent("AcceptedPermissions", {
-      detail: { username: displayName },
+      detail: { username: displayName, message: chosenMessage },
     });
 
     content.style.display = "block";
