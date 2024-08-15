@@ -181,6 +181,20 @@ document.addEventListener("DOMContentLoaded", async function () {
 
               setTimeout(() => {
                 document.getElementById("visitor-page").removeChild(loaderContainer);
+
+                document.getElementById(
+                  "hallcam-video-container"
+                ).style.transform = `scale(${scaleCurve(0, curves)}) translateX(${translationXCurve(
+                  0,
+                  curves
+                )}%) translateY(${translationYCurve(0, curves)}%)`;
+                console.log(
+                  `scale(${scaleCurve(0, curves)}) translateX(${translationXCurve(
+                    0,
+                    curves
+                  )}%) translateY(${translationYCurve(0, curves)}%)`
+                );
+
                 document.getElementById("main-content").style.display = "block";
 
                 scrollOverlay.onscroll = updateScrollPosition;
@@ -190,10 +204,20 @@ document.addEventListener("DOMContentLoaded", async function () {
                   document.getElementById(
                     "hallcam-video-container"
                   ).style.filter = `blur(${blurCurve(data, curves)}px)`;
+
+                  if (data < 30) {
+                    document.getElementById("visitor-tutorial").children[0].textContent =
+                      "Scroll down to move closer";
+                  } else {
+                    document.getElementById("visitor-tutorial").children[0].textContent =
+                      "Sharing audio with office";
+                  }
+
                   document.getElementById("visitor-tutorial").style.opacity = `${tutorialCurve(
                     data,
                     curves
                   )}`;
+
                   document.getElementById("progress-inner").style.height = `${data}%`;
                   playUserAudio(id + " monitor", officeCurve(data, curves));
                   whitenoise.volume = ambienceCurve(data, curves);
