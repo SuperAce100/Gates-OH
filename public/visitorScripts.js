@@ -197,7 +197,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                       "Scroll down to move closer";
                   } else {
                     document.getElementById("visitor-tutorial").children[0].textContent =
-                      "Sharing audio with office";
+                      "Audio enabled, feel free to talk";
                   }
 
                   document.getElementById("visitor-tutorial").style.opacity = `${tutorialCurve(

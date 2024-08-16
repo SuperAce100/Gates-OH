@@ -1078,6 +1078,8 @@ video {
   text-align: center;
   border-radius: 16px;
   z-index: 99;
+  background-color: #00000088;
+  padding: 10px;
 }
 
 #visitor-tutorial > h2 {

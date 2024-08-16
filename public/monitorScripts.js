@@ -149,9 +149,9 @@ document.addEventListener("AcceptedPermissions", async function () {
     whitenoise.volume = ambienceCurve(0, curves);
 
     whitenoise.play();
-    setTimeout(() => {
-      whitenoise.pause();
-    }, 9000);
+    // setTimeout(() => {
+    //   whitenoise.pause();
+    // }, 9000);
 
     return onValue(
       userRef,
