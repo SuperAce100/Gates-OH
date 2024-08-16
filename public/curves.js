@@ -69,7 +69,7 @@ function scaleCurve(x, curves = null) {
 }
 
 function officeCurve(x, curves = null) {
-  return interpolate(curves.office, x);
+  return interpolate(curves.office, x) * 100;
 }
 
 export {

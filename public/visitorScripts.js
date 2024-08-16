@@ -207,6 +207,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
                   document.getElementById("progress-inner").style.height = `${data}%`;
                   playUserAudio(id + " monitor", officeCurve(data, curves));
+                  console.log("Office curve", officeCurve(data, curves));
                   whitenoise.volume = ambienceCurve(data, curves);
                   document.getElementById(
                     "hallcam-video-container"
