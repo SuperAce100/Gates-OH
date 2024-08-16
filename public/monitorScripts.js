@@ -274,6 +274,20 @@ document.addEventListener("AcceptedPermissions", async function () {
             minute: "numeric",
           });
 
+          let intentionMessage = "";
+
+          switch (visitLog.intention.toLowerCase()) {
+            case "just need 1 minute":
+              intentionMessage = " needed a minute on ";
+              break;
+            case "waiting":
+              intentionMessage = " was waiting on ";
+              break;
+
+            default:
+              intentionMessage = "";
+          }
+
           const dayDescriptor = isToday
             ? "today"
             : visitTime.toLocaleString("en-US", { weekday: "long" });

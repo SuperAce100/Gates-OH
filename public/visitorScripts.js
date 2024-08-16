@@ -245,7 +245,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   async function joinOffice() {
     const visitLogRef = ref(db, `offices/${id}/visitLog`);
-    const currentTime = new Date().toLocaleString();
+    const currentTime = new Date().getTime();
 
     if (!displayName) {
       const userRef = ref(db, `users/${user_id}`);
@@ -258,8 +258,9 @@ document.addEventListener("DOMContentLoaded", async function () {
       displayName: displayName,
       id: user_id,
       time: currentTime,
+      intention: intentionMessage,
     };
-    update(visitLogRef, { [currentTime.replace(/\//g, "-")]: visitData }).then(() => {
+    update(visitLogRef, { [currentTime.toString()]: visitData }).then(() => {
       console.log("Visit log updated!");
     });
 
