@@ -47,7 +47,8 @@ function blurCurve(x, curves = null) {
 
 // x between 0 and 100 -> volume value from 0.1 to 0
 function ambienceCurve(x, curves = null) {
-  return interpolate(curves.ambience, x);
+  let maxVolume = 0.2;
+  return maxVolume * interpolate(curves.ambience, x);
 }
 
 // x between 0 and 100 -> opacity value from 100 to 0
