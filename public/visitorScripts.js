@@ -140,11 +140,6 @@ document.addEventListener("DOMContentLoaded", async function () {
                 curves = data;
               });
 
-              whitenoise.play();
-              setTimeout(() => {
-                whitenoise.pause();
-              }, 9000);
-
               const scrollOverlay = document.getElementById("scroll-overlay");
               const userRef = ref(db, `users/${uid}`);
 
@@ -169,6 +164,10 @@ document.addEventListener("DOMContentLoaded", async function () {
 
               setTimeout(() => {
                 document.getElementById("visitor-page").removeChild(loaderContainer);
+                whitenoise.play();
+                // setTimeout(() => {
+                //   whitenoise.pause();
+                // }, 9000);
 
                 document.getElementById(
                   "hallcam-video-container"
