@@ -114,6 +114,8 @@ document.addEventListener("AcceptedPermissions", async function () {
         let visitLog = await generateVisitLog(document.getElementById("label"));
         console.log("VisitLog: ", visitLog);
 
+        document.getElementById("visitor-tutorial").style.opacity = `0`;
+
         document.getElementById("label").classList.remove("monitor-large");
         visitorId = null; // Clear the visitorId
         document.getElementById("my-video-container").classList.add("monitor-video-hidden");
