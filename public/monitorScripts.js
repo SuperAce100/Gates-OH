@@ -25,6 +25,7 @@ import {
   scaleCurve,
   translationXCurve,
   translationYCurve,
+  tutorialCurve,
 } from "./curves.js";
 
 let tokens = window.location.pathname.split("/");
@@ -149,9 +150,6 @@ document.addEventListener("AcceptedPermissions", async function () {
     whitenoise.volume = ambienceCurve(0, curves);
 
     whitenoise.play();
-    // setTimeout(() => {
-    //   whitenoise.pause();
-    // }, 9000);
 
     return onValue(
       userRef,
@@ -208,6 +206,18 @@ document.addEventListener("AcceptedPermissions", async function () {
             )}px)`;
             playUserAudio(user_id, officeCurve(data, curves));
             whitenoise.volume = ambienceCurve(data, curves);
+            document.getElementById("progress-inner").style.height = `${data}%`;
+            if (data < 30) {
+              document.getElementById("visitor-tutorial").children[0].textContent =
+                "Visitor can't hear you yet";
+            } else {
+              document.getElementById("visitor-tutorial").children[0].textContent =
+                "Audio enabled, feel free to talk";
+            }
+            document.getElementById("visitor-tutorial").style.opacity = `${tutorialCurve(
+              data,
+              curves
+            )}`;
             document.getElementById("my-video-container").style.transform = `scale(${scaleCurve(
               data,
               curves
