@@ -516,6 +516,7 @@ video-player {
 .hallcam-container {
   min-height: calc(100vh - 20px);
   overflow: hidden;
+  position: relative;
 }
 
 #home-button {
@@ -1171,4 +1172,5 @@ video {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  height: 530%;
 }
