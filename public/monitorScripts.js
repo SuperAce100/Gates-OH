@@ -26,6 +26,7 @@ import {
   translationXCurve,
   translationYCurve,
   tutorialCurve,
+  wallCurve,
 } from "./curves.js";
 
 let tokens = window.location.pathname.split("/");
@@ -164,19 +165,18 @@ document.addEventListener("AcceptedPermissions", async function () {
         console.log("changing user data with new user", displayName);
         document.getElementById("monitor-video-supercontainer").style.opacity = 0;
 
-        document.getElementById("my-video-container").style.transform = `scale(${scaleCurve(
-          100,
-          curves
-        )}) translateX(${translationXCurve(0, curves)}%) translateY(${translationYCurve(
+        document.getElementById(
+          "my-video-container"
+        ).style.transform = `translateX(${translationXCurve(
           0,
           curves
-        )}%)`;
-        console.log(
-          `scale(${scaleCurve(0, curves)}) translateX(${translationXCurve(
-            0,
-            curves
-          )}%) translateY(${translationYCurve(0, curves)}%)`
-        );
+        )}%) translateY(${translationYCurve(0, curves)}%) scale(1)`;
+
+        document.getElementById("wall").style.transform = `translateX(${translationXCurve(
+          data,
+          curves
+        )}%) translateY(${translationYCurve(data, curves)}%) scale(2.15) `;
+
         document.getElementById("my-video-container").style.filter = `blur(${blurCurve(
           0,
           curves
@@ -220,13 +220,22 @@ document.addEventListener("AcceptedPermissions", async function () {
               data,
               curves
             )}`;
-            document.getElementById("my-video-container").style.transform = `scale(${scaleCurve(
+            document.getElementById(
+              "my-video-container"
+            ).style.transform = `translateX(${translationXCurve(
               data,
               curves
-            )}) translateX(${translationXCurve(data, curves)}%) translateY(${translationYCurve(
+            )}%) translateY(${translationYCurve(data, curves)}%) scale(${scaleCurve(
               data,
               curves
-            )}%)`;
+            )})`;
+            document.getElementById("wall").style.transform = `translateX(${translationXCurve(
+              data,
+              curves
+            )}%) translateY(${translationYCurve(data, curves)}%) scale(${wallCurve(
+              data,
+              curves
+            )}) `;
           });
           setTimeout(() => {
             document.getElementById("monitor-video-supercontainer").style.opacity = 1;

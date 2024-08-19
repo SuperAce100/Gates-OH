@@ -301,6 +301,9 @@ label {
 }
 
 #my-video-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
   border-radius: 12px;
   background: #ffffff4d;
   aspect-ratio: 16/9;
@@ -422,6 +425,9 @@ video-player {
 }
 
 #hallcam-video-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
   border-radius: 12px;
   background: #ffffff4d;
   width: auto;
@@ -509,6 +515,7 @@ video-player {
 
 .hallcam-container {
   min-height: calc(100vh - 20px);
+  overflow: hidden;
 }
 
 #home-button {
@@ -1073,7 +1080,7 @@ video {
 
 #visitor-tutorial {
   position: fixed;
-  top: min(calc(100vw * 9 / 16 / 2 - 0.5em + 30vh), calc(50% - 0.5em + 30vh));
+  top: min(calc(100vw * 9 / 16 / 2 - 0.5em + 25vh), calc(50% - 0.5em + 25vh));
   width: 100%;
   text-align: center;
   border-radius: 16px;
@@ -1157,4 +1164,11 @@ video {
 
 .loader-container > p {
   font-size: larger;
+}
+
+#wall {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

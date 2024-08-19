@@ -19,6 +19,7 @@ import {
   scaleCurve,
   translationXCurve,
   translationYCurve,
+  wallCurve,
 } from "./curves.js";
 import { on } from "process";
 import { doc } from "firebase/firestore";
@@ -171,16 +172,16 @@ document.addEventListener("DOMContentLoaded", async function () {
 
                 document.getElementById(
                   "hallcam-video-container"
-                ).style.transform = `scale(${scaleCurve(0, curves)}) translateX(${translationXCurve(
+                ).style.transform = `translateX(${translationXCurve(
                   0,
                   curves
-                )}%) translateY(${translationYCurve(0, curves)}%)`;
-                console.log(
-                  `scale(${scaleCurve(0, curves)}) translateX(${translationXCurve(
-                    0,
-                    curves
-                  )}%) translateY(${translationYCurve(0, curves)}%)`
-                );
+                )}%) translateY(${translationYCurve(0, curves)}%) scale(${scaleCurve(0, curves)}) `;
+                document.getElementById(
+                  "wall"
+                ).style.transform = `translateX(-50%) translateY(-50%) scale(${wallCurve(
+                  0,
+                  curves
+                )}) `;
 
                 document.getElementById("main-content").style.opacity = 1;
 
@@ -211,13 +212,19 @@ document.addEventListener("DOMContentLoaded", async function () {
                   whitenoise.volume = ambienceCurve(data, curves);
                   document.getElementById(
                     "hallcam-video-container"
-                  ).style.transform = `scale(${scaleCurve(
+                  ).style.transform = ` translateX(${translationXCurve(
                     data,
                     curves
-                  )}) translateX(${translationXCurve(
+                  )}%) translateY(${translationYCurve(data, curves)}%) scale(${scaleCurve(
                     data,
                     curves
-                  )}%) translateY(${translationYCurve(data, curves)}%)`;
+                  )}) `;
+                  document.getElementById(
+                    "wall"
+                  ).style.transform = ` translateX(-50%) translateY(-50%) scale(${wallCurve(
+                    data,
+                    curves
+                  )})`;
                 });
               }, 4000);
 

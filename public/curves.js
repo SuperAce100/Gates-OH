@@ -57,20 +57,24 @@ function tutorialCurve(x, curves = null) {
 }
 
 function translationXCurve(x, curves = null) {
-  return interpolate(curves.translationX, x) * 200 - 100;
+  return interpolate(curves.translationX, x) * -100;
 }
 
 function translationYCurve(x, curves = null) {
-  return interpolate(curves.translationY, x) * 200 - 100;
+  return interpolate(curves.translationY, x) * -100;
 }
 
 function scaleCurve(x, curves = null) {
-  console.log("Scale Progress", x, interpolate(curves.scale, x));
+  // console.log("Scale Progress", x, interpolate(curves.scale, x));
   return interpolate(curves.scale, x);
 }
 
 function officeCurve(x, curves = null) {
   return interpolate(curves.office, x) * 100;
+}
+function wallCurve(x, curves = null) {
+  let wallScaleFactor = 2.15;
+  return scaleCurve(x, curves) * wallScaleFactor;
 }
 
 export {
@@ -81,4 +85,5 @@ export {
   translationYCurve,
   scaleCurve,
   officeCurve,
+  wallCurve,
 };
