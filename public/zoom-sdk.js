@@ -177,12 +177,12 @@ async function detachVideo(username, container) {
 function leaveMeeting(container) {
   client
     .leave()
+    .catch((error) => {
+      console.error("Error leaving the meeting:", error);
+    })
     .then(() => {
       console.log("Left the meeting");
       container.innerHTML = ""; // Clear the video stream container
-    })
-    .catch((error) => {
-      console.error("Error leaving the meeting:", error);
     });
 }
 

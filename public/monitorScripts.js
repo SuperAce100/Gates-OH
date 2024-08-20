@@ -9,6 +9,7 @@ import {
   equalTo,
   limitToLast,
   get,
+  set,
 } from "firebase/database";
 import {
   displayUserVideo,
@@ -16,6 +17,9 @@ import {
   playUserAudio,
   requestPermissions,
   muteAllUsersAudio,
+  joinMeeting,
+  startCurrentUserAudio,
+  startCurrentUserVideo,
 } from "./zoom-sdk.js";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import {
@@ -28,6 +32,7 @@ import {
   tutorialCurve,
   wallCurve,
 } from "./curves.js";
+import { join } from "path-browserify";
 
 let tokens = window.location.pathname.split("/");
 let id = tokens[tokens.length - 2];
@@ -74,6 +79,7 @@ document.addEventListener("AcceptedPermissions", async function () {
 
   // Get the entry from the offices table where urlid = id
   const officeRef = ref(db, `offices/${id}`);
+  update(officeRef, { resetCount: null });
 
   let visitorId = null;
   let visitorName = null;
@@ -339,7 +345,33 @@ document.addEventListener("AcceptedPermissions", async function () {
     });
   }
 
-  document.addEventListener("click", initializeAudio, { once: true });
+  // document.addEventListener("click", initializeAudio, { once: true });
+  async function resetMeeting() {
+    const officeRef = ref(db, `offices/${id}`);
+    update(officeRef, {
+      currentVisitorId: null,
+      currentVisitorName: null,
+      currentVisitorIntention: null,
+    });
+
+    await leaveMeeting(document.getElementById("preview-video"));
+
+    await joinMeeting(id + " monitor", "Gates-OH", "", true);
+    await startCurrentUserVideo();
+    await startCurrentUserAudio();
+
+    console.log("Resetting meeting", id + " monitor");
+    await displayUserVideo(id + " monitor", document.getElementById("preview-video"), true);
+  }
+
+  const resetRef = ref(db, `offices/${id}/resetCount`);
+  onValue(resetRef, (snapshot) => {
+    const data = snapshot.val();
+    if (data) {
+      resetMeeting();
+      set(resetRef, null);
+    }
+  });
 });
 
 async function closeOffice() {

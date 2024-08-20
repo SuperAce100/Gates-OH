@@ -82,8 +82,23 @@ function displayOffices(offices) {
 
     const spacer = document.createElement("div");
     spacer.classList.add("spacer");
+    officeDiv.append(nameHeading, descriptionParagraph, spacer);
+    if (office.adminUser === currentUserID) {
+      const resetButton = document.createElement("button");
+      resetButton.textContent = "Reset";
+      resetButton.classList.add("glass-button");
+      resetButton.id = "reset-button";
+      const officeRef = ref(db, `offices/${office.urlid}`);
+      resetButton.addEventListener("click", (event) => {
+        event.stopPropagation();
 
-    officeDiv.append(nameHeading, descriptionParagraph, spacer, indicatorDiv);
+        const time = new Date().getTime();
+        update(officeRef, { resetCount: time });
+      });
+      officeDiv.append(resetButton);
+    }
+    officeDiv.append(indicatorDiv);
+
     officeDiv.id = office.urlid;
 
     officesContainer.appendChild(officeDiv);
