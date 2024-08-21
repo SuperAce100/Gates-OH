@@ -1177,3 +1177,14 @@ video {
   transform: translate(-50%, -50%);
   height: 530%;
 }
+
+#reset-button {
+  font-size: smaller;
+  margin-top: 0px;
+  margin-right: 20px;
+}
+
+#logout-button {
+  font-size: medium;
+  margin-top: 0px;
+}
