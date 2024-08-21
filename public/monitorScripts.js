@@ -121,7 +121,10 @@ document.addEventListener("AcceptedPermissions", async function () {
         let visitLog = await generateVisitLog(document.getElementById("label"));
         console.log("VisitLog: ", visitLog);
 
-        document.getElementById("visitor-tutorial").style.opacity = 0;
+        setTimeout(() => {
+          document.getElementById("visitor-tutorial").style.opacity = `0`;
+        }, 100);
+        console.log("tutorial opacity", document.getElementById("visitor-tutorial").style.opacity);
         document.getElementById("wall").style.opacity = `0`;
 
         document.getElementById("label").classList.remove("monitor-large");
@@ -183,7 +186,7 @@ document.addEventListener("AcceptedPermissions", async function () {
         document.getElementById("wall").style.transform = `translateX(${translationXCurve(
           data,
           curves
-        )}%) translateY(${translationYCurve(data, curves)}%) scale(2.15) `;
+        )}%) translateY(${translationYCurve(data, curves)}%) scale(2) `;
 
         document.getElementById("my-video-container").style.filter = `blur(${blurCurve(
           0,
@@ -237,13 +240,13 @@ document.addEventListener("AcceptedPermissions", async function () {
               data,
               curves
             )})`;
-            document.getElementById("wall").style.transform = `translateX(${translationXCurve(
-              data,
-              curves
-            )}%) translateY(${translationYCurve(data, curves)}%) scale(${wallCurve(
-              data,
-              curves
-            )}) `;
+            // document.getElementById("wall").style.transform = `translateX(${translationXCurve(
+            //   data,
+            //   curves
+            // )}%) translateY(${translationYCurve(data, curves)}%) scale(${wallCurve(
+            //   data,
+            //   curves
+            // )}) `;
           });
           setTimeout(() => {
             document.getElementById("monitor-video-supercontainer").style.opacity = 1;
@@ -370,6 +373,15 @@ document.addEventListener("AcceptedPermissions", async function () {
     if (data) {
       resetMeeting();
       set(resetRef, null);
+    }
+  });
+
+  const knockRef = ref(db, `offices/${id}/knockCount`);
+  onValue(knockRef, (snapshot) => {
+    const data = snapshot.val();
+    if (data) {
+      audio.play();
+      set(knockRef, null);
     }
   });
 });

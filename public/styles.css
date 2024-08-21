@@ -1177,9 +1177,3 @@ video {
   transform: translate(-50%, -50%);
   height: 530%;
 }
-
-#reset-button {
-  margin-top: 0px;
-  margin-right: 20px;
-  font-size: small;
-}
