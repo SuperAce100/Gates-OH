@@ -120,7 +120,39 @@ document.addEventListener("DOMContentLoaded", async function () {
             document.addEventListener("AcceptedPermissions", async function (e) {
               const audio = new Audio("../../door-knock.mp3");
               const whitenoise = new Audio("../../white-noise.mp3");
-              whitenoise.loop = true;
+              let fadeOutDuration = 5000; // 7 seconds in milliseconds
+              let fadeOutInterval = 50; // Interval for fading out
+              let isPlaying = false;
+              let fadeOutTimer;
+
+              function startAudio() {
+                whitenoise.currentTime = 0;
+                whitenoise.play();
+                isPlaying = true;
+                fadeOutAudio();
+              }
+
+              function restartAudio() {
+                clearTimeout(fadeOutTimer);
+                whitenoise.currentTime = 0;
+                whitenoise.play();
+                fadeOutAudio();
+              }
+
+              function fadeOutAudio() {
+                let volume = 1.0;
+                fadeOutTimer = setTimeout(function fade() {
+                  if (volume > 0) {
+                    volume -= fadeOutInterval / fadeOutDuration;
+                    if (volume < 0) volume = 0;
+                    whitenoise.volume = volume;
+                    setTimeout(fade, fadeOutInterval);
+                  } else {
+                    whitenoise.pause();
+                    isPlaying = false;
+                  }
+                }, fadeOutInterval);
+              }
 
               const loaderContainer = document.createElement("div");
               loaderContainer.className = "loader-container";
@@ -164,11 +196,8 @@ document.addEventListener("DOMContentLoaded", async function () {
               await joinOffice();
 
               setTimeout(() => {
+                // startAudio();
                 document.getElementById("visitor-page").removeChild(loaderContainer);
-                whitenoise.play();
-                // setTimeout(() => {
-                //   whitenoise.pause();
-                // }, 9000);
 
                 document.getElementById(
                   "hallcam-video-container"
@@ -208,8 +237,15 @@ document.addEventListener("DOMContentLoaded", async function () {
 
                   document.getElementById("progress-inner").style.height = `${data}%`;
                   playUserAudio(id + " monitor", officeCurve(data, curves));
-                  console.log("Office curve", officeCurve(data, curves));
-                  whitenoise.volume = ambienceCurve(data, curves);
+
+                  if (19 < data && data < 21) {
+                    if (!isPlaying) {
+                      startAudio();
+                    } else {
+                      restartAudio();
+                    }
+                  }
+
                   document.getElementById(
                     "hallcam-video-container"
                   ).style.transform = ` translateX(${translationXCurve(

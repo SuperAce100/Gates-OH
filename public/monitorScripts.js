@@ -111,6 +111,10 @@ document.addEventListener("AcceptedPermissions", async function () {
       visitorName = office.currentVisitorName;
       visitorMessage = office.currentVisitorIntention;
       const whitenoise = new Audio("../../white-noise.mp3");
+      let fadeOutDuration = 5000; // 7 seconds in milliseconds
+      let fadeOutInterval = 50; // Interval for fading out
+      let isPlaying = false;
+      let fadeOutTimer;
 
       // Check if there is no current visitor
       if (!office.currentVisitorId) {
@@ -160,9 +164,35 @@ document.addEventListener("AcceptedPermissions", async function () {
   async function updateCurrentUser(user_id, curves, whitenoise) {
     const userRef = ref(db, `users/${user_id}/displayName`);
     console.log("user ", visitorName);
-    whitenoise.volume = ambienceCurve(0, curves);
 
-    whitenoise.play();
+    function startAudio() {
+      whitenoise.currentTime = 0;
+      whitenoise.play();
+      isPlaying = true;
+      fadeOutAudio();
+    }
+
+    function restartAudio() {
+      clearTimeout(fadeOutTimer);
+      whitenoise.currentTime = 0;
+      whitenoise.play();
+      fadeOutAudio();
+    }
+
+    function fadeOutAudio() {
+      let volume = 1.0;
+      fadeOutTimer = setTimeout(function fade() {
+        if (volume > 0) {
+          volume -= fadeOutInterval / fadeOutDuration;
+          if (volume < 0) volume = 0;
+          whitenoise.volume = volume;
+          setTimeout(fade, fadeOutInterval);
+        } else {
+          whitenoise.pause();
+          isPlaying = false;
+        }
+      }, fadeOutInterval);
+    }
 
     return onValue(
       userRef,
@@ -218,7 +248,15 @@ document.addEventListener("AcceptedPermissions", async function () {
               curves
             )}px)`;
             playUserAudio(user_id, officeCurve(data, curves));
-            whitenoise.volume = ambienceCurve(data, curves);
+
+            if (19 < data && data < 21) {
+              if (!isPlaying) {
+                startAudio();
+              } else {
+                restartAudio();
+              }
+            }
+
             document.getElementById("progress-inner").style.height = `${data}%`;
             if (data < 30) {
               document.getElementById("visitor-tutorial").children[0].textContent =
