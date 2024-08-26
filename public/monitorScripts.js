@@ -111,10 +111,6 @@ document.addEventListener("AcceptedPermissions", async function () {
       visitorName = office.currentVisitorName;
       visitorMessage = office.currentVisitorIntention;
       const whitenoise = new Audio("../../white-noise.mp3");
-      let fadeOutDuration = 5000; // 7 seconds in milliseconds
-      let fadeOutInterval = 50; // Interval for fading out
-      let isPlaying = false;
-      let fadeOutTimer;
 
       // Check if there is no current visitor
       if (!office.currentVisitorId) {
@@ -162,6 +158,11 @@ document.addEventListener("AcceptedPermissions", async function () {
   );
 
   async function updateCurrentUser(user_id, curves, whitenoise) {
+    let fadeOutDuration = 5000; // 7 seconds in milliseconds
+    let fadeOutInterval = 50; // Interval for fading out
+    let isPlaying = false;
+    let fadeOutTimer;
+
     const userRef = ref(db, `users/${user_id}/displayName`);
     console.log("user ", visitorName);
 
@@ -278,13 +279,10 @@ document.addEventListener("AcceptedPermissions", async function () {
               data,
               curves
             )})`;
-            // document.getElementById("wall").style.transform = `translateX(${translationXCurve(
-            //   data,
-            //   curves
-            // )}%) translateY(${translationYCurve(data, curves)}%) scale(${wallCurve(
-            //   data,
-            //   curves
-            // )}) `;
+            document.getElementById("wall").style.transform = `translateX(${translationXCurve(
+              data,
+              curves
+            )}%) translateY(${translationYCurve(data, curves)}%) scale(1.75) `;
           });
           setTimeout(() => {
             document.getElementById("monitor-video-supercontainer").style.opacity = 1;
