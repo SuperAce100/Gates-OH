@@ -21,8 +21,6 @@ import {
   translationYCurve,
   wallCurve,
 } from "./curves.js";
-import { on } from "process";
-import { doc } from "firebase/firestore";
 
 let interactionType = "scale";
 
@@ -31,7 +29,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   document.getElementById("main-content").style.display = "none";
 
   document.getElementById("home-button").addEventListener("click", () => {
-    window.location.href = "/";
+    leaveOffice();
   });
   const auth = getAuth(app);
   let uid = null;
@@ -39,6 +37,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   let user_id = null;
   let displayName = null;
   let intentionMessage = "";
+  let startTime = 0;
 
   let tokens = window.location.pathname.split("/");
   let id = tokens[tokens.length - 1];
@@ -124,6 +123,8 @@ document.addEventListener("DOMContentLoaded", async function () {
               let fadeOutInterval = 50; // Interval for fading out
               let isPlaying = false;
               let fadeOutTimer;
+
+              startTime = new Date().getTime();
 
               function startAudio() {
                 whitenoise.currentTime = 0;
@@ -329,6 +330,95 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   }
 
+  function generateFeedbackForm() {
+    // Create the feedback form elements dynamically
+    const feedbackForm = document.createElement("div");
+    feedbackForm.classList.add("container");
+    feedbackForm.classList.add("glass");
+    feedbackForm.classList.add("feedback-form");
+
+    const formTitle = document.createElement("h2");
+    formTitle.textContent = "Tell us what you think";
+
+    const formElement = document.createElement("form");
+    formElement.id = "feedbackForm";
+
+    const starRatingDiv = document.createElement("div");
+    starRatingDiv.classList.add("star-rating");
+
+    // Create star rating inputs and labels
+    for (let i = 5; i >= 1; i--) {
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.id = "star" + i;
+      input.name = "rating";
+      input.value = i;
+
+      const label = document.createElement("label");
+      label.htmlFor = "star" + i;
+      label.textContent = "★";
+
+      starRatingDiv.appendChild(input);
+      starRatingDiv.appendChild(label);
+    }
+
+    const label = document.createElement("label");
+    label.htmlFor = "comments";
+    label.textContent =
+      "What about the interaction was intimidating? What was comfortable? Would you use it again?";
+
+    const commentsTextarea = document.createElement("textarea");
+    commentsTextarea.name = "comments";
+    commentsTextarea.id = "comments";
+    commentsTextarea.classList.add("glass");
+    commentsTextarea.placeholder = "";
+
+    const submitButton = document.createElement("button");
+    submitButton.type = "submit";
+    submitButton.classList.add("glass-button");
+    submitButton.textContent = "Submit";
+
+    // Append all created elements to the form
+    formElement.appendChild(starRatingDiv);
+    formElement.appendChild(label);
+    formElement.appendChild(commentsTextarea);
+    formElement.appendChild(submitButton);
+
+    // Append the form and title to the feedback form container
+    feedbackForm.appendChild(formTitle);
+    feedbackForm.appendChild(formElement);
+
+    // Append the feedback form to the main-content div
+    document.getElementById("main-content").appendChild(feedbackForm);
+
+    // Add form submission handler
+    formElement.addEventListener("submit", async function (e) {
+      e.preventDefault(); // Prevent the form from submitting the traditional way
+
+      const rating = document.querySelector('input[name="rating"]:checked')?.value;
+      const comments = document.getElementById("comments").value;
+
+      console.log("Rating:", rating);
+      console.log("Comments:", comments);
+
+      alert("Thank you for your feedback!");
+      // Here you can add code to send the data to a server if needed
+      const feedbackRef = ref(db, `feedback`);
+      const feedbackData = {
+        rating: rating,
+        comments: comments,
+        submit_time: new Date().toLocaleString(),
+        time_spent: Math.floor((new Date().getTime() - startTime) / 1000),
+        office_visited: id,
+        user_id: user_id,
+        displayName: displayName,
+      };
+      await update(feedbackRef, { [new Date().getTime().toString()]: feedbackData });
+
+      window.location.href = "/";
+    });
+  }
+
   async function leaveOffice() {
     const officeRef = ref(db, `offices/${id}`);
     update(officeRef, {
@@ -346,6 +436,11 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
 
     leaveMeeting(document.getElementById("preview-video-container"));
+
+    document.getElementById("main-content").innerHTML = "";
+    document.getElementById("main-content").style.display = "block";
+
+    generateFeedbackForm();
   }
 
   window.addEventListener("beforeunload", async () => {
