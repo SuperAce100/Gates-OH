@@ -55,6 +55,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     shouldABTest = data.shouldABTest;
     probability_a = data.probability_a;
   });
+  const isGroupA = Math.random() < probability_a && shouldABTest;
 
   // get the entry from the offices table where urlid = id
   const officeRef = ref(db, `offices/${id}`);
@@ -180,8 +181,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
               const scrollOverlay = document.getElementById("scroll-overlay");
               const userRef = ref(db, `users/${uid}`);
-
-              const isGroupA = Math.random() < probability_a && shouldABTest;
 
               const updateScrollPosition = () => {
                 if (isGroupA) {
@@ -434,6 +433,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         time_spent: Math.floor((new Date().getTime() - startTime) / 1000),
         office_visited: id,
         user_id: user_id,
+        isGroupA: isGroupA,
         displayName: displayName ? displayName : "Display name not found",
       };
       await update(feedbackRef, { [new Date().getTime().toString()]: feedbackData });
