@@ -45,11 +45,15 @@ document.addEventListener("DOMContentLoaded", async function () {
   console.log("id", id);
 
   const db = getDatabase(app);
+  let shouldABTest = false;
+  let probability_a = 1;
 
   const globalRef = ref(db, "globalValues");
   onValue(globalRef, (snapshot) => {
     const data = snapshot.val();
     interactionType = data.interactionType;
+    shouldABTest = data.shouldABTest;
+    probability_a = data.probability_a;
   });
 
   // get the entry from the offices table where urlid = id
@@ -177,7 +181,14 @@ document.addEventListener("DOMContentLoaded", async function () {
               const scrollOverlay = document.getElementById("scroll-overlay");
               const userRef = ref(db, `users/${uid}`);
 
+              const isGroupA = Math.random() < probability_a && shouldABTest;
+
               const updateScrollPosition = () => {
+                if (isGroupA) {
+                  // console.log("User is in no-interaction group!");
+                  update(userRef, { interactionProgress: 100 });
+                  return;
+                }
                 const maxScrollTop = scrollOverlay.scrollHeight - scrollOverlay.clientHeight;
                 const scrollPosition = scrollOverlay.scrollTop;
                 let scrollPercentage = 0;
@@ -197,6 +208,10 @@ document.addEventListener("DOMContentLoaded", async function () {
               await joinOffice();
 
               setTimeout(() => {
+                if (isGroupA) {
+                  console.log("User is in no-interaction group!");
+                  updateScrollPosition();
+                }
                 // startAudio();
                 document.getElementById("visitor-page").removeChild(loaderContainer);
 
