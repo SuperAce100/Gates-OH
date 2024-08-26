@@ -687,6 +687,10 @@ video {
   overflow: scroll;
 }
 
+#permissions-form > input {
+  margin-bottom: 20px;
+}
+
 #permissions-video-container {
   aspect-ratio: 16/9;
   flex: 1;

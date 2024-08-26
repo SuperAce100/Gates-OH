@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   // get the entry from the offices table where urlid = id
   const officeRef = ref(db, `offices/${id}`);
-  onValue(
+  let officeUnsubscriber = onValue(
     officeRef,
     (snapshot) => {
       const data = snapshot.val();
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       console.log("office", office);
       document.title = office.name;
       document.getElementById("heading").textContent = office.name;
-      if (!office.doorOpen) {
+      if (!office.doorOpen || office.currentVisitorId) {
         document.getElementById(
           "main-content"
         ).innerHTML = `<h1>${office.name}'s door is closed.</h1><p>Redirecting to home...</p>`;
@@ -330,6 +330,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     // document.getElementById("hallcam-container").style.display = "block";
 
     const officeRef = ref(db, `offices/${id}`);
+    officeUnsubscriber();
     update(officeRef, {
       currentVisitorId: user_id,
       currentVisitorName: displayName,
@@ -416,8 +417,15 @@ document.addEventListener("DOMContentLoaded", async function () {
       console.log("Rating:", rating);
       console.log("Comments:", comments);
 
+      if (!displayName) {
+        const userRef = ref(db, `users/${user_id}`);
+        const userSnapshot = await get(userRef);
+        const userData = userSnapshot.val();
+        displayName = userData.displayName;
+      }
+
       alert("Thank you for your feedback!");
-      // Here you can add code to send the data to a server if needed
+
       const feedbackRef = ref(db, `feedback`);
       const feedbackData = {
         rating: rating,
@@ -426,7 +434,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         time_spent: Math.floor((new Date().getTime() - startTime) / 1000),
         office_visited: id,
         user_id: user_id,
-        displayName: displayName,
+        displayName: displayName ? displayName : "Display name not found",
       };
       await update(feedbackRef, { [new Date().getTime().toString()]: feedbackData });
 
