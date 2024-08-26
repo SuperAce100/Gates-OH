@@ -48,6 +48,8 @@ document.addEventListener("DOMContentLoaded", async function () {
   let shouldABTest = false;
   let probability_a = 1;
 
+  let timeGraph = {};
+
   const globalRef = ref(db, "globalValues");
   onValue(globalRef, (snapshot) => {
     const data = snapshot.val();
@@ -211,6 +213,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                   console.log("User is in no-interaction group!");
                   updateScrollPosition();
                 }
+
                 // startAudio();
                 document.getElementById("visitor-page").removeChild(loaderContainer);
 
@@ -230,8 +233,18 @@ document.addEventListener("DOMContentLoaded", async function () {
                 document.getElementById("main-content").style.opacity = 1;
 
                 scrollOverlay.onscroll = updateScrollPosition;
+
+                let mostRecentData = 0;
+                let timeGraphStart = new Date().getTime();
+                setInterval(() => {
+                  const timeFromStart = new Date().getTime() - timeGraphStart;
+                  timeGraph[timeFromStart] = mostRecentData;
+                  // console.log({ timeFromStart, mostRecentData });
+                }, 500);
+
                 onValue(progressRef, async (snapshot) => {
                   const data = snapshot.val();
+                  mostRecentData = data;
 
                   document.getElementById(
                     "hallcam-video-container"
@@ -434,6 +447,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         office_visited: id,
         user_id: user_id,
         isGroupA: isGroupA,
+        timeGraph: timeGraph,
         displayName: displayName ? displayName : "Display name not found",
       };
       await update(feedbackRef, { [new Date().getTime().toString()]: feedbackData });
