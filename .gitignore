@@ -75,3 +75,6 @@ gates-oh-firebase-adminsdk-bsk0p-a4ea214204.json
 
 secrets
 secrets2
+
+analysis/myenv
+analysis/gates-oh-default-rtdb-timeGraph-export.json
