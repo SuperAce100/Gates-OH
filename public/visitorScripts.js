@@ -239,7 +239,6 @@ document.addEventListener("DOMContentLoaded", async function () {
                 setInterval(() => {
                   const timeFromStart = new Date().getTime() - timeGraphStart;
                   timeGraph[timeFromStart] = mostRecentData;
-                  // console.log({ timeFromStart, mostRecentData });
                 }, 500);
 
                 onValue(progressRef, async (snapshot) => {
